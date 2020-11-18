@@ -1,0 +1,10 @@
+#header{
+    width: 100%;
+    background-color: #121212;
+    color: darkgray;
+    text-align: center;
+    font-size: 4em;
+    margin: auto;
+    padding: 2em 2em;
+    border: 0.5em solid green;
+}
