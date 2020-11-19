@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>index.html template</title>
+    <title>Firebase demo page</title>
 
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/8.0.2/firebase-app.js"></script>
@@ -23,11 +23,22 @@
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-    <!-- Our own JS script containing functions for backend access -->
-    <script src="./index.js"></script>
+    <script src="./demo.js"></script>
 
   </head>
   <body>
-    Success
+
+    Document ID: <input type="text" id="eingabeID"> <br \>
+    Name: <input type="text" id="eingabeData"> <br \>
+
+    <button onclick="getName()">get name</button>
+    <button onclick="addName()">add name</button>
+    <button onclick="updateName()">update name</button>
+
+    <br \>
+    <button onclick="getNumber()">get me some random number</button>
+
+    <p id="ausgabe"></p>
+
   </body>
 </html>
