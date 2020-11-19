@@ -1,20 +1,38 @@
 :root{
     font-size: 16px;
-    font-family: 'Open Sans';
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 
     --layer0: #161616;
     --layer1: #242424;
     --layer2: #323232;
     --layer3: #404040;
     --layer4: #484848;
-    --accent: #ff8411;
-    --accentDark: #c77800;
+    --accent: #ffa726;
+    --accent-Light: #ffb74d;
+    --accent-Dark: #f57c00;
     --textPrimary: #e6e6e6;
     --textSecondary: #afafaf;
     --transition-speed: 600ms;
     --navbar-size: 5rem;
     --navbar-extended: 20rem;
 }
+
+.col-1 {width: 6.25%;}
+.col-2 {width: 12.5%;}
+.col-3 {width: 18.75%;}
+.col-4 {width: 25%;}
+.col-5 {width: 31.25%;}
+.col-6 {width: 37.5%;}
+.col-7 {width: 43.75%;}
+.col-8 {width: 50%;}
+.col-9 {width: 56.25%;}
+.col-10 {width: 62.5%;}
+.col-11 {width: 68.75%;}
+.col-12 {width: 75%;}
+.col-13 {width: 81.25%;}
+.col-14 {width: 87.5%;}
+.col-15 {width: 93.75%;}
+.col-16 {width: 100%;}
 
 
 body{
@@ -48,7 +66,7 @@ main{
     height: 100vh;
     position: fixed;
     background-color: var(--layer2);
-    transition: width var(--transition-speed) ease;
+    transition: width 200ms ease;
 }
 
 .navbar-nav{
@@ -81,7 +99,7 @@ main{
 .nav-link:hover{
     filter: grayscale(0%) opacity(1);
     background: var(--layer4);
-    color: var(--textSecondary);
+    color: var(--accent-Light);
 }
 
 .link-text{
@@ -128,7 +146,7 @@ main{
 }
 
 .fa-secondary{
-    color: var(--accentDark);
+    color: var(--accent-Dark);
 }
 
 .fa-primary,.fa-secondary{
@@ -145,7 +163,6 @@ main{
     font-size: 4em;
     padding: 5% 5%;
     letter-spacing: 0.15em;
-    position: relative;
 }
 
 
