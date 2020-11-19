@@ -1,6 +1,7 @@
-const functions = require('firebase-functions');
+// List of all functions to be considerd while deploying to Firebase
 
-exports.randomNumber = functions.https.onCall((data, context) => {
-    const number = Math.round(Math.random() * 100);
-    return number;
-});
+// temp.js contains testing functions
+exports.temp = require('./temp');
+
+//database.js contains Firestore connection functions
+exports.database = require('./database');
