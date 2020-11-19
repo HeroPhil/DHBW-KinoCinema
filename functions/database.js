@@ -7,7 +7,7 @@ exports.getDocumentByID = functions.https.onCall((data, context) => {
 });
 
 exports.setDocumentByID = functions.https.onCall((data, context) => {
-    return databaseBasics.getDocumentByID(data.id, data.data);
+    return databaseBasics.setDocumentByID(data.id, data.data);
 });
 
 exports.updateDocumentByID = functions.https.onCall((data, context) => {

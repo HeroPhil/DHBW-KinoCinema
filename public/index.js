@@ -12,6 +12,7 @@ function getNumber() {
 function getName() {
     let eingabeID = document.getElementById("eingabeID");
     let eingabeData = document.getElementById("eingabeData");
+    let ausgabeP = document.getElementById("ausgabe");
 
     ausgabeP.innerHTML = "";
 
