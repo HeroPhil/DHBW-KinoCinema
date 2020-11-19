@@ -13,6 +13,8 @@ function getName() {
     let eingabeID = document.getElementById("eingabeID");
     let eingabeData = document.getElementById("eingabeData");
 
+    ausgabeP.innerHTML = "";
+
     const id = nameCollectionPath+eingabeID.value;
     const param = {id: id};
 
@@ -27,6 +29,8 @@ async function addName() {
     let eingabeID = document.getElementById("eingabeID");
     let eingabeData = document.getElementById("eingabeData");
     let ausgabeP = document.getElementById("ausgabe");
+
+    ausgabeP.innerHTML = "";
 
     const id = nameCollectionPath+eingabeID.value;
     const param = {
@@ -44,6 +48,8 @@ async function updateName() {
     let eingabeID = document.getElementById("eingabeID");
     let eingabeData = document.getElementById("eingabeData");
     let ausgabeP = document.getElementById("ausgabe");
+
+    ausgabeP.innerHTML = "";
 
     const id = nameCollectionPath+eingabeID.value;
     const param = {
