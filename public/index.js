@@ -1,3 +1,5 @@
+const nameCollectionPath = 'temp/demo/names/';
+
 function getNumber() {
     let ausgabeP = document.getElementById("ausgabe");
     firebase.functions().httpsCallable('temp-randomNumber')()
@@ -11,10 +13,10 @@ function getName() {
     let eingabeID = document.getElementById("eingabeID");
     let eingabeData = document.getElementById("eingabeData");
 
-    const id = 'temp/names/'+eingabeID.value;
-    const data = {id: id};
+    const id = nameCollectionPath+eingabeID.value;
+    const param = {id: id};
 
-    firebase.functions().httpsCallable('database-getDocumentByID')(data)
+    firebase.functions().httpsCallable('database-getDocumentByID')(param)
     .then(result => {
         console.log(result.data);
         eingabeData.value = result.data.name;
@@ -26,15 +28,15 @@ async function addName() {
     let eingabeData = document.getElementById("eingabeData");
     let ausgabeP = document.getElementById("ausgabe");
 
-    const id = 'temp/names/'+eingabeID.value;
-    const data = {
+    const id = nameCollectionPath+eingabeID.value;
+    const param = {
         id: id,
         data: {
             name: eingabeData.value
         }
     };
 
-    await firebase.functions().httpsCallable('database-setDocumentByID')(data);
+    await firebase.functions().httpsCallable('database-setDocumentByID')(param);
     ausgabeP.innerHTML = "successfully added";
 }
 
@@ -43,14 +45,14 @@ async function updateName() {
     let eingabeData = document.getElementById("eingabeData");
     let ausgabeP = document.getElementById("ausgabe");
 
-    const id = 'temp/names/'+eingabeID.value;
-    const data = {
+    const id = nameCollectionPath+eingabeID.value;
+    const param = {
         id: id,
         data: {
             name: eingabeData.value
         }
     };
 
-    await firebase.functions().httpsCallable('database-updateDocumentByID')(data);
+    await firebase.functions().httpsCallable('database-updateDocumentByID')(param);
     ausgabeP.innerHTML = "successfully updated";
 }
