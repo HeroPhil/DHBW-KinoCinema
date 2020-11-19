@@ -7,15 +7,50 @@ function getNumber() {
     });
 }
 
-function getDoc() {
-    let eingabeInput = document.getElementById("eingabe");
-    let ausgabeP = document.getElementById("ausgabe");
+function getName() {
+    let eingabeID = document.getElementById("eingabeID");
+    let eingabeData = document.getElementById("eingabeData");
 
-    const data = {id: eingabeInput.value};
+    const id = 'temp/names/'+eingabeID.value;
+    const data = {id: id};
 
-    firebase.functions().httpsCallable('database-getDocument')(data)
+    firebase.functions().httpsCallable('database-getDocumentByID')(data)
     .then(result => {
         console.log(result.data);
-        ausgabeP.innerHTML = result.data.name;
+        eingabeData.value = result.data.name;
     });
+}
+
+async function addName() {
+    let eingabeID = document.getElementById("eingabeID");
+    let eingabeData = document.getElementById("eingabeData");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = 'temp/names/'+eingabeID.value;
+    const data = {
+        id: id,
+        data: {
+            name: eingabeData.value
+        }
+    };
+
+    await firebase.functions().httpsCallable('database-setDocumentByID')(data);
+    ausgabeP.innerHTML = "successfully added";
+}
+
+async function updateName() {
+    let eingabeID = document.getElementById("eingabeID");
+    let eingabeData = document.getElementById("eingabeData");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = 'temp/names/'+eingabeID.value;
+    const data = {
+        id: id,
+        data: {
+            name: eingabeData.value
+        }
+    };
+
+    await firebase.functions().httpsCallable('database-updateDocumentByID')(data);
+    ausgabeP.innerHTML = "successfully updated";
 }
