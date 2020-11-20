@@ -79,3 +79,20 @@ async function updateName() {
     await firebase.functions().httpsCallable('database-updateDocumentByID')(param);
     ausgabeP.innerHTML = "successfully updated";
 }
+
+async function getMovies() {
+    let ausgabeP = document.getElementById("ausgabe");
+
+    ausgabeP.innerHTML = "";
+
+    let movies = await firebase.functions().httpsCallable('database-getAllMovies')();
+    console.log(movies);
+
+    let ausgabeString = "";
+    movies.data.forEach( movie => {
+        console.log(movie);
+        let content = movie.data;
+        ausgabeString += "<b>" + content.name + "</b><br \\>" + content.description + "<br \\><hr \\>";
+    });
+    ausgabeP.innerHTML = ausgabeString;
+}
