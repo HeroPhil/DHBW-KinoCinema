@@ -2,7 +2,7 @@ const basics = require('./basics');
 
 const moviesCollectionPath = 'live/events/movies';
 const topPriority = 'priority';
-const descOrder = 'desc';
+const order = 'desc';
 
 function Movie (id, data){
     this.id = id;
@@ -10,7 +10,6 @@ function Movie (id, data){
 }
 
 exports.getAllMovies = async function () {
-
     let movies = [];
 
     const collection = await basics.getCollectionByID(moviesCollectionPath);
@@ -29,7 +28,7 @@ exports.getMovieByID = async function (id) {
 exports.getTopMovies = async function (amount) {
     let movies = [];
 
-    const collection = await basics.getCollectionByIDLimitAmount(moviesCollectionPath, parseInt(amount), topPriority, descOrder);
+    const collection = await basics.getCollectionByIDLimitAmount(moviesCollectionPath, parseInt(amount), topPriority, order);
     collection.forEach(movie => {
         movies.push(new Movie(movie.id, movie.data()));
     });
