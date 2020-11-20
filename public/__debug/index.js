@@ -110,7 +110,6 @@ async function getOneMovie() {
     firebase.functions().httpsCallable('database-getDocumentByID')(param)
         .then(result => {
             console.log(result.data);
-            eingabeData.value = result.data.name;
         });
 }
 
@@ -124,12 +123,7 @@ async function getTopMovies() {
 
     const param = {amount: amount};
 
-    let movies = firebase.functions().httpsCallable('database-getTopMovies')(param)
-        .then(result => {
-            console.log(result.data);
-            eingabeData.value = result.data.name;
-        });
-
+    let movies = await firebase.functions().httpsCallable('database-getTopMovies')(param);
 
     console.log(movies);
 
