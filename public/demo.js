@@ -96,3 +96,20 @@ async function getMovies() {
     });
     ausgabeP.innerHTML = ausgabeString;
 }
+
+async function getOneMovie() {
+    let eingabeID = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = "live/events/movies/"+eingabeID.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {id: id};
+
+    firebase.functions().httpsCallable('database-getDocumentByID')(param)
+        .then(result => {
+            console.log(result.data);
+            eingabeData.value = result.data.name;
+        });
+}

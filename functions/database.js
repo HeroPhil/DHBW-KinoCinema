@@ -17,4 +17,8 @@ exports.updateDocumentByID = functions.https.onCall((data, context) => {
 
 exports.getAllMovies = functions.https.onCall((data, context) => {
     return databaseMovies.getAllMovies();
-})
+});
+
+exports.getMovieByID = functions.https.onCall((data, context) => {
+    return databaseMovies.getMovieByID(data.id);
+});
