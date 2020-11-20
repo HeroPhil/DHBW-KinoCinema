@@ -22,3 +22,7 @@ exports.getAllMovies = functions.https.onCall((data, context) => {
 exports.getMovieByID = functions.https.onCall((data, context) => {
     return databaseMovies.getMovieByID(data.id);
 });
+
+exports.getTopMovies = functions.https.onCall((data, context) => {
+    return databaseMovies.getTopMovies(data.amount);
+});
