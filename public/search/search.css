@@ -99,7 +99,7 @@ body::-webkit-scrollbar-thumb {
 
 
 .navbar{
-    z-index: 5;
+    
     position: fixed;
     background-color: var(--layer1);
     transition: width 200ms ease;
@@ -191,9 +191,6 @@ main{
 
 
 #header{
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.3ch;
     background-color: var(--layer2);
     color: var(--textPrimary);
     height: 10vh;
@@ -232,6 +229,25 @@ main{
     }
 }
 
+.box{
+    height:50vh;
+    background: linear-gradient(to top, var(--layer1), var(--layer10));
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.cover{
+    height: 80%;
+    max-height: 100%;
+    max-width: 100%;
+    margin: 3% 10%;
+}
+
+.cover img{
+    height: 100%;
+    width: auto;
+}
 
 #copyright {
     padding: 20px;
@@ -245,7 +261,7 @@ main{
 
 
 
-@media only screen and (max-width: 720px){
+@media only screen and (max-width: 600px){
 
     .navbar{
         bottom: 0;
@@ -268,8 +284,7 @@ main{
 
 }
 
-
-@media only screen and (min-width: 720px){
+@media only screen and (min-width: 600px){
     .navbar{
         width: var(--navbar-size);
     }
