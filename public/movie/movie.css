@@ -99,7 +99,7 @@ body::-webkit-scrollbar-thumb {
 
 
 .navbar{
-    z-index: 5;
+    
     position: fixed;
     background-color: var(--layer1);
     transition: width 200ms ease;
@@ -191,9 +191,6 @@ main{
 
 
 #header{
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.3ch;
     background-color: var(--layer2);
     color: var(--textPrimary);
     height: 10vh;
@@ -232,24 +229,58 @@ main{
     }
 }
 
-.bar{
-    height: 7vh;
-    background-color: var(--layer3);
-    color: var(--textPrimary);
-    align-items: center;
-    margin: 20px;
-}
-.bar p{
-    margin: 2.0vh 3vh;
-    font-size: 2.5vh;
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+.movie-poster img{
+    width: 100%;
+    height: auto;
 }
 
-.dropdown{
-    background: var(--layer3);
-    color: var(--textPrimary);
-    width: 20vh;
-    font-size: 2.3vh;
+.movie-content{
+    padding: 2rem 0rem 2rem 4rem;
 }
+
+.title{
+    font-size: 4rem;
+    font-weight: bold;
+    letter-spacing: 0.2ch;
+}
+
+.description{
+    margin-top: 2rem;
+    font-size: 1.2rem;
+}
+
+.times{
+    margin-top: 2rem;
+    width: 10rem;
+}
+
+.times input[type="radio"]{
+    display: none;
+}
+
+.times label{
+    position: relative;
+    color: var(--textPrimary);
+    font-size: 1.2rem;
+    border: 0.2rem solid var(--accent);
+    border-radius: 1rem;
+    padding: 10px 50px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.times input[type="radio"]:checked + label{
+    background-color: var(--accent-Dark);
+}
+
+
+
+
+/*-----------------------------------------------------------------------------------------------------------------*/
 
 #copyright {
     padding: 20px;
@@ -263,7 +294,7 @@ main{
 
 
 
-@media only screen and (max-width: 720px){
+@media only screen and (max-width: 600px){
 
     .navbar{
         bottom: 0;
@@ -286,8 +317,7 @@ main{
 
 }
 
-
-@media only screen and (min-width: 720px){
+@media only screen and (min-width: 600px){
     .navbar{
         width: var(--navbar-size);
     }
