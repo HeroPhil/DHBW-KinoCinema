@@ -101,13 +101,13 @@ async function getOneMovie() {
     let eingabeID = document.getElementById("eingabeID");
     let ausgabeP = document.getElementById("ausgabe");
 
-    const id = "live/events/movies/"+eingabeID.value;
+    const id = eingabeID.value;
 
     ausgabeP.innerHTML = "";
 
     const param = {id: id};
 
-    firebase.functions().httpsCallable('database-getDocumentByID')(param)
+    firebase.functions().httpsCallable('database-getMovieByID')(param)
         .then(result => {
             console.log(result.data);
         });
