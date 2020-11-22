@@ -4,7 +4,7 @@ const moviesCollectionPath = 'live/events/movies';
 const topPriority = 'priority';
 const order = 'desc';
 
-function Movie (id, data){
+exports.Movie = function(id, data){
     this.id = id;
     this.data = data;
 }

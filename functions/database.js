@@ -28,6 +28,6 @@ exports.getTopMovies = functions.https.onCall((data, context) => {
     return databaseMovies.getTopMovies(data.amount);
 });
 
-exports.getAllScreenings = functions.https.onCall(data, context) => {
-    return databaseScreenings.getAllScreenings();
+exports.getAllScreenings = functions.https.onCall((data, context) => {
+    return databaseScreenings.getAllScreenings(data.sublevel || 0);
 });

@@ -1,7 +1,12 @@
 const admin = require('./admin').admin;
 
+// Documents
 exports.getDocumentByID = function(documentPath) {
     return admin.firestore().doc(documentPath).get();
+}
+
+exports.getDocumentByRef = function(documentReference) {
+    return documentReference.get();
 }
 
 exports.setDocumentByID = function(documentPath, data) {
@@ -12,12 +17,14 @@ exports.updateDocumentByID = function(documentPath, data) {
     return admin.firestore().doc(documentPath).update(data);
 }
 
+
+//Collections
 exports.getCollectionByID = function(collectionPath) {
     return admin.firestore().collection(collectionPath).get();
 }
 
 exports.getCollectionByIDWhere = function(collectionPath, field, operator, value) {
-    if (typeof value == "undefined") {
+    if (typeof value === "undefined") {
         value = operator;
         operator = "==";
     }
