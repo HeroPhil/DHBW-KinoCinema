@@ -47,13 +47,20 @@ exports.getScreeningByID = async function(id) {
 }
 
 exports.getAllScreenings = async function(sublevel = 0) {
-    let screenings = [];
+    var screenings = [];
 
     const collection = await basics.getCollectionByID(screeningsCollectionPath);
     
+    var promises = [];
     for (const screening of collection.docs) {
-        screenings.push(await new Screening(screening.id, screening.data()).resolveRefs(sublevel));
+        promises.push(new Screening(screening.id, screening.data()).resolveRefs(sublevel)
+            .then((screeningObj => {
+                screenings.push(screeningObj);
+            }))
+        );
     }
+
+    await Promise.all(promises);
 
     return screenings;
 }

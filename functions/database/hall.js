@@ -21,6 +21,7 @@ exports.Hall = class {
                 basics.getDocumentByRef(row.type)
                 .then(rowTypeDoc => {
                     row.type = new RowType(rowTypeDoc.id, rowTypeDoc.data());
+                    return;
                 })
             );
         });
