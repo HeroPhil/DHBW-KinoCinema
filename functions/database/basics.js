@@ -27,4 +27,3 @@ exports.getCollectionByIDWhere = function(collectionPath, field, operator, value
 exports.getCollectionByIDLimitAmount = function(collectionPath, amount, orderedByAttribute, order) {
     return admin.firestore().collection(collectionPath).orderBy(orderedByAttribute, order).limit(amount).get();
 }
-

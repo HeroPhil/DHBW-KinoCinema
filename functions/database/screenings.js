@@ -24,13 +24,13 @@ exports.getAllScreenings = function() {
     return screenings;
 }
 
-exports.getAllScreeningsOfMovieByID = function(id) {
-    let screenings = [];
+// exports.getAllScreeningsOfMovieByID = function(id) {
+//     let screenings = [];
 
-    const collection = await basics.getCollectionByID(screeningsCollectionPath);
-    collection.forEach(screening => {
-        movies.push(new Screening(screening.id, screening.data()));
-    });
+//     const collection = await basics.getCollectionByID(screeningsCollectionPath);
+//     collection.forEach(screening => {
+//         movies.push(new Screening(screening.id, screening.data()));
+//     });
 
-    return screenings;
-}
+//     return screenings;
+// }

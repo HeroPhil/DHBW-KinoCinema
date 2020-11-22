@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 
 const databaseBasics = require('./database/basics');
 const databaseMovies = require('./database/movies');
+const databaseScreenings = require('./database/screenings');
 
 exports.getDocumentByID = functions.https.onCall((data, context) => {
     return databaseBasics.getDocumentByID(data.id);
@@ -25,4 +26,8 @@ exports.getMovieByID = functions.https.onCall((data, context) => {
 
 exports.getTopMovies = functions.https.onCall((data, context) => {
     return databaseMovies.getTopMovies(data.amount);
+});
+
+exports.getAllScreenings = functions.https.onCall(data, context) => {
+    return databaseScreenings.getAllScreenings();
 });
