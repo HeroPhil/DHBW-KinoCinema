@@ -8,8 +8,8 @@ exports.Hall = class {
         this.data = data;
     }
 
-    async resolveRefs(sublevel) {
-        var sublevel = sublevel || 0;
+    async resolveRefs(sl) {
+        var sublevel = sl || 0;
         if (sublevel < 1) {
             return this;
         }

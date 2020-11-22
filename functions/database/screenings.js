@@ -10,8 +10,8 @@ class Screening {
         this.data = data;
     }
     
-    async resolveRefs(sublevel = 0) {
-        var sublevel = sublevel || 0;
+    async resolveRefs(sl = 0) {
+        var sublevel = sl || 0;
         if (sublevel < 1) {
             return this;
         }
@@ -56,6 +56,7 @@ exports.getAllScreenings = async function(sublevel = 0) {
         promises.push(new Screening(screening.id, screening.data()).resolveRefs(sublevel)
             .then((screeningObj => {
                 screenings.push(screeningObj);
+                return;
             }))
         );
     }
