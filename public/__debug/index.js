@@ -135,3 +135,17 @@ async function getTopMovies() {
     });
     ausgabeP.innerHTML = ausgabeString;
 }
+
+
+async function getAllScreenings() {
+
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const param = {sublevel: 4};
+
+    let screenings = await firebase.functions().httpsCallable('database-getAllScreenings')(param);
+
+    console.log(screenings);
+
+
+}
