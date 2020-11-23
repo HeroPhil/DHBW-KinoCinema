@@ -140,12 +140,33 @@ async function getTopMovies() {
 async function getAllScreenings() {
 
     let ausgabeP = document.getElementById("ausgabe");
+    ausgabeP.innerHTML = "";
 
-    const param = {sublevel: 4};
+    const date = Math.floor(Date.now() / 1000);
+    const param = {
+        sublevel: 4,
+        since: date
+    };
 
     let screenings = await firebase.functions().httpsCallable('database-getAllScreenings')(param);
 
     console.log(screenings);
+}
 
+async function getScreeningsOfMovie() {
+    let ausgabeP = document.getElementById("ausgabe");
+    let eingabeID = document.getElementById("eingabeID");
 
+    ausgabeP.innerHTML = "";
+
+    const date = Math.floor(Date.now() / 1000);
+    const param = {
+        sublevel: 4,
+        since: date,
+        id: eingabeID.value
+    };
+
+    let screenings = await firebase.functions().httpsCallable('database-getScreeningsOfMovieByID')(param);
+
+    console.log(screenings);
 }

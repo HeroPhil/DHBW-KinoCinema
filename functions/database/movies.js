@@ -1,6 +1,6 @@
 const basics = require('./basics');
 
-const moviesCollectionPath = 'live/events/movies';
+const moviesCollectionPath = exports.moviesCollectionPath = 'live/events/movies';
 const topPriority = 'priority';
 const order = 'desc';
 

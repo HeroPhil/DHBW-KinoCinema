@@ -1,8 +1,9 @@
 const basics = require('./basics');
 const Movie = require('./movies').Movie;
+const moviesCollectionPath = require('./movies').moviesCollectionPath;
 const Hall = require('./hall').Hall;
 
-const screeningsCollectionPath = 'live/events/screening'
+const screeningsCollectionPath = 'live/events/screenings'
 
 class Screening {
     constructor (id, data) {
@@ -16,7 +17,7 @@ class Screening {
             return this;
         }
 
-        let promises = [];
+        var promises = [];
     
         promises.push(
             basics.getDocumentByRef(this.data.movie)
@@ -46,10 +47,12 @@ exports.getScreeningByID = async function(id) {
     return await new Screening(document.id, document.data().resolveRefs());
 }
 
-exports.getAllScreenings = async function(sublevel = 0) {
+exports.getAllScreenings = async function(since = 0, sublevel = 0) {
     var screenings = [];
 
-    const collection = await basics.getCollectionByID(screeningsCollectionPath);
+    const query = await basics.getCollectionRefByID(screeningsCollectionPath)
+        .where("startTime", ">=", since);
+    const collection = await basics.getCollectionByRef(query);
     
     var promises = [];
     for (const screening of collection.docs) {
@@ -66,13 +69,28 @@ exports.getAllScreenings = async function(sublevel = 0) {
     return screenings;
 }
 
-// exports.getAllScreeningsOfMovieByID = function(id) {
-//     let screenings = [];
+exports.getScreeningsOfMovieByID = async function(id, since = 0, sublevel = 0) {
+    var screenings = [];
 
-//     const collection = await basics.getCollectionByID(screeningsCollectionPath);
-//     collection.forEach(screening => {
-//         movies.push(new Screening(screening.id, screening.data()));
-//     });
+    var movieDocRef = basics.getDocumentRefByID(moviesCollectionPath + '/' + id);
+    console.log(movieDocRef);
 
-//     return screenings;
-// }
+    const query = await basics.getCollectionRefByID(screeningsCollectionPath)
+        .where("startTime", ">=", since)
+        .where("movie", "==", movieDocRef);
+    const collection = await basics.getCollectionByRef(query);
+    
+    var promises = [];
+    for (const screening of collection.docs) {
+        promises.push(new Screening(screening.id, screening.data()).resolveRefs(sublevel)
+            .then((screeningObj => {
+                screenings.push(screeningObj);
+                return;
+            }))
+        );
+    }
+
+    await Promise.all(promises);
+
+    return screenings;
+}

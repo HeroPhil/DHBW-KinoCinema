@@ -29,5 +29,9 @@ exports.getTopMovies = functions.https.onCall((data, context) => {
 });
 
 exports.getAllScreenings = functions.https.onCall((data, context) => {
-    return databaseScreenings.getAllScreenings(data.sublevel || 0);
+    return databaseScreenings.getAllScreenings(data.since || 0, data.sublevel || 0);
+});
+
+exports.getScreeningsOfMovieByID = functions.https.onCall((data, context) => {
+    return databaseScreenings.getScreeningsOfMovieByID(data.id, data.since || 0, data.sublevel || 0);
 });
