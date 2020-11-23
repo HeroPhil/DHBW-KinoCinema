@@ -191,6 +191,9 @@ main{
 
 
 #header{
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.3ch;
     background-color: var(--layer2);
     color: var(--textPrimary);
     height: 10vh;
