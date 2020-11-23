@@ -4,9 +4,11 @@ const moviesCollectionPath = 'live/events/movies';
 const topPriority = 'priority';
 const order = 'desc';
 
-exports.Movie = function(id, data){
-    this.id = id;
-    this.data = data;
+let Movie = exports.Movie = class {
+    constructor(id, data) {
+        this.id = id;
+        this.data = data;
+    }
 }
 
 exports.getAllMovies = async function () {
