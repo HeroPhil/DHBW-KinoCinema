@@ -129,6 +129,13 @@ main{
     color: var(--textPrimary);
 }
 
+#copyright {
+    padding: 20px;
+    height: auto;
+    color: var(--textSecondary);
+    background-color: var(--layer1);
+    text-align: center;
+}
 
 
 #rainbow:hover{

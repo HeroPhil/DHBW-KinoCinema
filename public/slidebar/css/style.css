@@ -14,13 +14,14 @@ a{
 	width: 100%;
 	height: 80vh;
 	background: var(--layer4);
-	display:flex;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 		
 }
 
 .box{
+	width: 98%;
 	height:50vh;
 	background: linear-gradient(to top, var(--layer4), var(--layer8));
 	border-radius: 10px;
@@ -28,7 +29,7 @@ a{
 	display: flex;
 	flex-direction: column;
 	align-items: left;
-	justify-content: space-between;
+	justify-content: center;
 	box-sizing: border-box;
 	margin: 30px 10px;
 }
@@ -49,29 +50,16 @@ a{
     width: auto;
 }
 
-.model{
-	height: 350px;
-	max-height: 100%;
-	max-width: 100%;
-}
 
 .details{
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 90vh;
+	width: 65vw;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	color: var(--textprimary);
 	text-align: left;
-}
-
-.marvel{
-	color:#32323e;
-	font-weight: bold;
-	letter-spacing: 2px;
-	font-family: bebas kai;
-	font-size: 25px;
 }
 
 .box:hover{
@@ -80,7 +68,11 @@ a{
 	transform: scale(1.02);
 	transition: all ease 0.3s;
 }
-.box:hover .marvel{
-	color:#c0292b;
-	transition: all ease 0.5s;
+
+@media(max-width:720px){
+	.box{
+		width: 98%;
+		height: 50vh;
+	}
+	
 }
