@@ -35,3 +35,8 @@ exports.getAllScreenings = functions.https.onCall((data, context) => {
 exports.getScreeningsOfMovieByID = functions.https.onCall((data, context) => {
     return databaseScreenings.getScreeningsOfMovieByID(data.id, data.since || 0, data.sublevel || 0);
 });
+
+
+exports.getSecuredData = functions.https.onCall((data, context) => {
+    return databaseMovies.getSecuredData(context.auth);
+});
