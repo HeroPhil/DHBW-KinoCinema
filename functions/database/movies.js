@@ -37,3 +37,19 @@ exports.getTopMovies = async function (amount) {
 
     return movies;
 }
+
+exports.getSecuredData = async function (userContext){
+    if (userContext != null) {
+        let movies = [];
+
+        const collection = await basics.getCollectionByID(moviesCollectionPath);
+        collection.forEach(movie => {
+            movies.push( new Movie(movie.id, movie.data()) );
+        });
+        movies.push(userContext);
+    
+        return movies;
+    } else {
+        return { error: "You are not signed in!"};
+    }
+}

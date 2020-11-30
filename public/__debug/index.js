@@ -174,6 +174,61 @@ async function getScreeningsOfMovie() {
     console.log(screenings);
 }
 
+
+function signIn() {
+    let ausgabeP = document.getElementById("ausgabe");
+    let email = document.getElementById("email");
+    let pass = document.getElementById("pass");
+
+    ausgabeP.innerHTML = "";
+
+    firebase.auth().signInWithEmailAndPassword(email.value, pass.value)
+    .then((user) => {
+        // Signed in 
+        console.log(user);
+        email.innerHTML = "";
+        pass.innerHTML = "";
+        ausgabeP.innerHTML = "Signed in as user with uid: "+ user.user.uid;
+    })
+    .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(error);
+    });   
+}
+
+function signOut(){
+    let ausgabeP = document.getElementById("ausgabe");
+
+    firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        ausgabeP.innerHTML = "Signed out";
+      }).catch(function(error) {
+        // An error happened.
+      });
+}
+
+async function getSecuredData() {
+    let ausgabeP = document.getElementById("ausgabe");
+    let eingabeID = document.getElementById("eingabeID");
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        
+    };
+
+    let result = await firebase.functions().httpsCallable('database-getSecuredData')(param);
+
+    console.log(result);
+    
+    if (result.data.error) {
+        ausgabeP.innerHTML = "ERROR! You are not signed in!";
+    } else{ 
+        ausgabeP.innerHTML = "Look into the console";
+    }
+}
+
 async function googleLogin() {
     ausgabeP = document.getElementById("ausgabe");
     const providerGoogle = new firebase.auth.GoogleAuthProvider();
