@@ -21,7 +21,6 @@ a{
 }
 
 .box{
-	width: 98%;
 	height:50vh;
 	background: linear-gradient(to top, var(--layer4), var(--layer8));
 	border-radius: 10px;
@@ -35,7 +34,7 @@ a{
 }
 
 .item-a{
-	width: 98vw;
+	width: 92vw;
 }
 
 .cover{

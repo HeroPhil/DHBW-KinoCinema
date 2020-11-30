@@ -35,6 +35,12 @@
         
         <script defer src="../theme.js"></script>
         
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script> 
+            jQuery(document).ready(function(){
+                jQuery(".navbar").load("navbar.html"); 
+            });
+        </script>
         
     </head>
     
@@ -43,12 +49,11 @@
 
 
     <body class="dark">
+
+        <div class="navbar"></div>
+
         <main>
-            <div class="row">
-                <div id = "header" class="col-16">
-                    <div id="title"><div id="rainbow">KinoCinema</div></div> 
-                </div>
-            </div>
+            <div id="headerX"></div>
 
             
 
@@ -326,7 +331,7 @@
                                 You have selected <span id="count">0</span> seats for a price of $<span id="price">0</span>
                             </p>
 
-                            <button aria-expanded="false">test button</button>
+                            <button type="button" onclick="location.href='#Zahlung'">test button</button>
                         
                             <script src="booking.js" type="text/javascript"></script>
                     </details>
@@ -336,9 +341,27 @@
             <div class="row">
               <div id="test" class="col-1">&nbsp;</div>
               <div id="test" class="col-14">
-                  <details>
+                <details>
                     <summary class="expand">Zahlung</summary>
-                    <p>Hier kommt der ausführliche Inhalt zum Punkt 1</p>
+                    <form>
+                        <fieldset>
+                            <legend>Lieferadresse</legend>
+                            <input id ="Vorname" placeholder="Vorname" requiered><br>
+                            <input id ="Nachname" placeholder="Nachname" requiered><br>
+                            <input id ="email" type="email" placeholder="E-Mail-Adresse" requiered><br>
+                            <input id ="Rufnummer" type="tel" placeholder="Rufnummer" requiered><br>
+                            <input id ="Postleitzahl" type="number" placeholder="Postleitzahl" requiered><br>
+                            <input id ="Straße" placeholder="Straße" requiered><br>
+                            <input id ="Hausnummer" type="number" placeholder="Hausnummer" requiered><br>
+                            <input id ="Stadt" placeholder="Stadt" requiered><br>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Rechnungsadresse</legend>
+                            <input type="checkbox" id="check" checked>
+                            <label for="check">Rechnungsadresse identisch mit Lieferadresse</label>
+                        </fieldset>
+                        <button formnovalidate>Kaufen</button>
+                    </form>                  
                 </details>
               </div>
             </div>
@@ -352,14 +375,31 @@
                 </details>
               </div>
             </div>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <details>
+                <summary id="Zahlung" class="expand">Zahlung</summary>
+                <p>Hier kommt der ausführliche Inhalt zum Punkt 1</p>
+            </details>
 
         </main>
 
-        <footer>
-            <div id="copyright">
-                <u id="rainbow">&copy; Karotten Kameraden</u> Developed by: Christian Bettermann | Christoph Fischer | Philip Herold | Michael Kaiser | Nicklas Platz
-            </div>
-        </footer>
+        <footer id="footer"></footer>
 
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script type="text/javascript" charset="utf-8"> 
+            (function($) {
+                $(".navbar").load("../snippets/navbar.html", function() {
+                    $("#logo").load("../snippets/navLogo.html");
+                    $("#Program").load("../snippets/navProgram.html");
+                    $("#Account").load("../snippets/navAccount.html");
+                    $("#Info").load("../snippets/navInfo.html");
+                    $("#Search").load("../snippets/navSearch.html");
+                    $("#themeButton").load("../snippets/navThemeButton.html");
+                }); 
+                $("#footer").load("../snippets/footer.html");
+                $("#headerX").load("../snippets/header.html");
+            }(jQuery));
+        </script>
     </body>
 </html>

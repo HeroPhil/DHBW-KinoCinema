@@ -70,7 +70,9 @@
     display: table;
 }
 
-
+main{
+    margin-left: var(--navbar-size);
+}
 
 
 body{
@@ -170,4 +172,121 @@ main{
 
 .fa-primary,.fa-secondary{
     transition: var(--transition-speed);
+}
+
+.navbar{
+    z-index: 5;
+    position: fixed;
+    background-color: var(--layer1);
+    transition: width 200ms ease;
+}
+
+.navbar-nav{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.nav-item{
+    width: 100%;
+}
+
+.nav-item:last-child{
+    margin-top: auto;
+}
+
+.nav-link{
+    display: flex;
+    align-items: center;
+    height: var(--navbar-size);
+    color: var(--textPrimary);
+    text-decoration: none;
+    filter: grayscale(100%) opacity(0.7);
+    transition: var(--transition-speed);
+}
+
+.nav-link:hover{
+    filter: grayscale(0%) opacity(1);
+    background: var(--layer2);
+    color: var(--accent-Light);
+}
+
+.link-text{
+    display: none;
+    margin-left: 1rem;
+}
+
+.nav-link svg{
+    min-width: 2rem;
+    margin: 0 1.5rem;
+}
+
+
+
+.logo{
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: var(--textSecondary);
+    background: var(--layer2);
+    font-size: 1.5rem;
+    letter-spacing: 0.3ch;
+    width: 100%;
+}
+
+.logo svg{
+    transform: rotate(0deg);
+    transition: transform var(--transition-speed);
+}
+
+.navbar:hover .logo svg{
+    transform: rotate(-180deg);
+}
+
+@media only screen and (max-width: 720px){
+
+    .navbar{
+        bottom: 0;
+        width: 100vw;
+        height: var(--navbar-size);
+    }
+    .logo{
+        display: none;
+    }
+
+    .navbar-nav{
+        flex-direction: row;
+    }
+    .nav-link{
+        justify-content: center;
+    }
+    .main{
+        margin:0;
+    }
+
+}
+
+
+@media only screen and (min-width: 720px){
+    .navbar{
+        width: var(--navbar-size);
+    }
+    .navbar-nav{
+        height: 100vh;
+        flex-direction: column;
+    }
+    .navbar:hover{
+        width: var(--navbar-extended);
+    }
+    
+    .navbar:hover .link-text{
+        display: block;
+    }
+
+    .main{
+        margin-left: var(--navbar-size);
+    }
 }
