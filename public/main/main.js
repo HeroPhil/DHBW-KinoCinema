@@ -22,7 +22,6 @@ async function loadMovies() {
     sixedMovie = document.getElementById("MovieSix");
     movies = await firebase.functions().httpsCallable('database-getAllMovies')();
     console.log(movies);
-    output = "";
     i = 0;
     movies.data.forEach( movie => {
         console.log(movie);
@@ -44,5 +43,4 @@ async function loadMovies() {
         }
         i++;
     });
-    information.innerHTML = output;
 }
