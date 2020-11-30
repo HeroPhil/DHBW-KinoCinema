@@ -13,6 +13,8 @@
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
+const { gunzipSync } = require("zlib");
+
 document.addEventListener("DOMContentLoaded", event => {
     const app = firebase.app();
 });
@@ -172,6 +174,15 @@ async function getScreeningsOfMovie() {
     let screenings = await firebase.functions().httpsCallable('database-getScreeningsOfMovieByID')(param);
 
     console.log(screenings);
+}
+
+function getImage() {
+    eingabeID = document.getElementById("eingabeID");
+    image = document.getElementById("image");
+
+    firebase.storage().refFromURL(eingabeID.value).getDownloadURL().then(url => {
+        image.src = url;
+    });
 }
 
 
