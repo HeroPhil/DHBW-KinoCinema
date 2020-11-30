@@ -39,7 +39,7 @@ exports.getTopMovies = async function (amount) {
 }
 
 exports.getSecuredData = async function (userContext){
-    if (userContext != null) {
+    if (userContext !== null) {
         let movies = [];
 
         const collection = await basics.getCollectionByID(moviesCollectionPath);
