@@ -13,6 +13,9 @@
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
+document.addEventListener("DOMContentLoaded", event => {
+    const app = firebase.app();
+});
 
 const nameCollectionPath = 'temp/demo/names/';
 
@@ -169,4 +172,13 @@ async function getScreeningsOfMovie() {
     let screenings = await firebase.functions().httpsCallable('database-getScreeningsOfMovieByID')(param);
 
     console.log(screenings);
+}
+
+async function googleLogin() {
+    const providerGoogle = new firebase.auth.GoogleAuthProvider();
+
+    firebase.auth().signInWithPopup(providerGoogle).then(result => {
+        const user = result.user;
+        ausgabeP.innerHTML = user.displayName;
+    }).catch(console.log)
 }

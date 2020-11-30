@@ -18,6 +18,8 @@
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+        <script src="main.js"></script>
+
 
         <!-- update the version number as needed -->
         <script defer src="/__/firebase/8.0.2/firebase-app.js"></script>
@@ -53,7 +55,7 @@
 
 
 
-    <body class="dark">
+    <body class="dark" onload="loadMovies()">
         <main>
             <div class="row">
                 <div id = "header" class="col-16">
@@ -71,7 +73,7 @@
                                     <table class="cover" width="100%">
                                         <tr>
                                             <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
-                                            <td class="details" width="70%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</td>
+                                            <td class="details" id="MovieOne" width="70%"></td>
                                         </tr>
                                     </table>
                                 
@@ -84,7 +86,7 @@
                                     <table class="cover" width="100%">
                                         <tr>
                                             <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
-                                            <td class="details" width="70%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</td>
+                                            <td class="details" id="MovieTwo" width="70%"></td>
                                         </tr>
                                     </table>
                                 
@@ -97,7 +99,7 @@
                                     <table class="cover" width="100%">
                                         <tr>
                                             <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
-                                            <td class="details" width="70%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</td>
+                                            <td class="details" id="MovieThree" width="70%"></td>
                                         </tr>
                                     </table>
                                 
@@ -110,7 +112,7 @@
                                     <table class="cover" width="100%">
                                         <tr>
                                             <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
-                                            <td class="details" width="70%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</td>
+                                            <td class="details" id="MovieFour" width="70%"></td>
                                         </tr>
                                     </table>
                                 
@@ -123,7 +125,7 @@
                                     <table class="cover" width="100%">
                                         <tr>
                                             <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
-                                            <td class="details" width="70%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</td>
+                                            <td class="details" id="MovieFive" width="70%"></td>
                                         </tr>
                                     </table>
                                 
@@ -136,7 +138,7 @@
                                     <table class="cover" width="100%">
                                         <tr>
                                             <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
-                                            <td class="details">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</td>
+                                            <td class="details" id="MovieSix" width="70%"></td>
                                         </tr>
                                     </table>
                                 
@@ -213,7 +215,6 @@
                 </div>
             </div>
         </main>
-
         <footer>
             <div id="copyright">
                 <u id="rainbow">&copy; Karotten Kameraden</u> Developed by: Christian Bettermann | Christoph Fischer | Philip Herold | Michael Kaiser | Nicklas Platz
