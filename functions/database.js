@@ -3,6 +3,7 @@ const functions = require('firebase-functions');
 const databaseBasics = require('./database/basics');
 const databaseMovies = require('./database/movies');
 const databaseScreenings = require('./database/screenings');
+const databaseUsers = require('./database/users');
 
 exports.getDocumentByID = functions.region('europe-west1').https.onCall((data, context) => {
     return databaseBasics.getDocumentByID(data.id);
@@ -36,7 +37,10 @@ exports.getScreeningsOfMovieByID = functions.region('europe-west1').https.onCall
     return databaseScreenings.getScreeningsOfMovieByID(data.id, data.since || 0, data.sublevel || 0);
 });
 
-
 exports.getSecuredData = functions.region('europe-west1').https.onCall((data, context) => {
     return databaseMovies.getSecuredData(context.auth);
+});
+
+exports.createNewUserInDatabase = functions.region('europe-west1').auth.user().onCreate((user) => {
+    return databaseUsers.createNewUserInDatabase(user);
 });
