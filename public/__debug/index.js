@@ -13,6 +13,9 @@
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
+document.addEventListener("DOMContentLoaded", event => {
+    const app = firebase.app();
+});
 
 const nameCollectionPath = 'temp/demo/names/';
 
@@ -224,4 +227,13 @@ async function getSecuredData() {
     } else{ 
         ausgabeP.innerHTML = "Look into the console";
     }
+}
+
+async function googleLogin() {
+    const providerGoogle = new firebase.auth.GoogleAuthProvider();
+
+    firebase.auth().signInWithPopup(providerGoogle).then(result => {
+        const user = result.user;
+        ausgabeP.innerHTML = user.displayName;
+    }).catch(console.log)
 }
