@@ -230,10 +230,12 @@ async function getSecuredData() {
 }
 
 async function googleLogin() {
+    ausgabeP = document.getElementById("ausgabe");
     const providerGoogle = new firebase.auth.GoogleAuthProvider();
 
     firebase.auth().signInWithPopup(providerGoogle).then(result => {
         const user = result.user;
         ausgabeP.innerHTML = user.displayName;
+        console.log(user);
     }).catch(console.log)
 }
