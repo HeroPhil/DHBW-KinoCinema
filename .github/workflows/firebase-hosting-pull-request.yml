@@ -21,7 +21,7 @@ jobs:
         with:
           args: deploy --only functions
         env:
-          FIREBASE_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_TOKEN }}'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

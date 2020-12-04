@@ -19,11 +19,11 @@ jobs:
       - uses: actions/checkout@v2
       - run: npm --prefix functions/ ci
       - run: npm --prefix functions/ run build
-      - uses: w9jds/firebase-actions@master
+      - uses: w9jds/firebase-action@v2.0.0
         with:
           args: deploy --only functions
         env:
-          FIREBASE_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DHBW_KK_KINO }}'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
