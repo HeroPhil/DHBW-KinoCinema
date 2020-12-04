@@ -1,16 +1,15 @@
-const basics = require('./basics');
-const admin = require('./admin').admin;
-const db = admin.firestore();
+import { auth } from 'firebase-admin';
+import * as basics from './basics';
 
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
 
-exports.createNewUserInDatabase = async function (user){
+export async function createNewUserInDatabase(user: auth.UserRecord){
     var data = {
         email: user.email,
         displayName: user.displayName
     };
-    
+
     basics.setDocumentByID(customersCollectionPath +"/"+ user.uid, data);
     return user.uid;
 }

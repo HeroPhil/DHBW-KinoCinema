@@ -1,12 +1,13 @@
-const basics = require('./basics');
-const Movie = require('./movies').Movie;
-const moviesCollectionPath = require('./movies').moviesCollectionPath;
-const Hall = require('./hall').Hall;
+import * as basics from './basics';
+import { Movie, moviesCollectionPath } from './movies';
+import { Hall } from './hall';
 
 const screeningsCollectionPath = 'live/events/screenings'
 
 class Screening {
-    constructor (id, data) {
+    id: string;
+    data: any;
+    constructor (id: string, data: any) {
         this.id = id;
         this.data = data;
     }
@@ -17,11 +18,11 @@ class Screening {
             return this;
         }
 
-        var promises = [];
+        var promises: Promise<any>[] = [];
     
         promises.push(
             basics.getDocumentByRef(this.data.movie)
-            .then( movieDoc => {
+            .then( (movieDoc: { id: string; data: () => any; }) => {
                 this.data.movie = new Movie(movieDoc.id, movieDoc.data());
                 return;
             })
@@ -29,7 +30,7 @@ class Screening {
         
         promises.push(
             basics.getDocumentByRef(this.data.hall)
-            .then(async hallDoc => {
+            .then(async (hallDoc: { id: any; data: () => any; }) => {
                 this.data.hall = await new Hall(hallDoc.id, hallDoc.data()).resolveRefs(sublevel - 1);
                 return;
             })
@@ -42,15 +43,15 @@ class Screening {
 
 }
 
-exports.getScreeningByID = async function(id) {
+export async function getScreeningByID(id: string, sublevel = 0) {
     const document = await basics.getDocumentByID(screeningsCollectionPath + '/' + id);
-    return await new Screening(document.id, document.data().resolveRefs());
+    return new Screening(document.id, document.data()).resolveRefs(sublevel);
 }
 
-exports.getAllScreenings = async function(since = 0, sublevel = 0) {
-    var screenings = [];
+export async function getAllScreenings(since = 0, sublevel = 0) {
+    var screenings: Screening[] = [];
 
-    const query = await basics.getCollectionRefByID(screeningsCollectionPath)
+    const query = basics.getCollectionRefByID(screeningsCollectionPath)
         .where("startTime", ">=", since);
     const collection = await basics.getCollectionByRef(query);
     
@@ -69,18 +70,18 @@ exports.getAllScreenings = async function(since = 0, sublevel = 0) {
     return screenings;
 }
 
-exports.getScreeningsOfMovieByID = async function(id, since = 0, sublevel = 0) {
-    var screenings = [];
+export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel = 0) {
+    var screenings: Screening[] = [];
 
     var movieDocRef = basics.getDocumentRefByID(moviesCollectionPath + '/' + id);
     console.log(movieDocRef);
 
-    const query = await basics.getCollectionRefByID(screeningsCollectionPath)
+    const query = basics.getCollectionRefByID(screeningsCollectionPath)
         .where("startTime", ">=", since)
         .where("movie", "==", movieDocRef);
     const collection = await basics.getCollectionByRef(query);
     
-    var promises = [];
+    var promises: Promise<any>[] = [];
     for (const screening of collection.docs) {
         promises.push(new Screening(screening.id, screening.data()).resolveRefs(sublevel)
             .then((screeningObj => {

@@ -1,9 +1,9 @@
-import * as functions from 'firebase-functions';
+// List of all functions to be considerd while deploying to Firebase
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+// temp.ts contains testing functions
+import * as tempFunctions from './temp';
+export const temp = tempFunctions;
+
+//database.js contains Firestore connection functions
+import * as databaseFunctions from './database/index';
+export const database = databaseFunctions;
