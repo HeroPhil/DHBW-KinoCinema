@@ -7,9 +7,9 @@ const customersCollectionPath = userCollectionPath + "/customers";
 export async function createNewUserInDatabase(user: auth.UserRecord){
     var data = {
         email: user.email,
-        displayName: user.displayName
+        displayName: user.displayName,
     };
 
-    basics.setDocumentByID(customersCollectionPath +"/"+ user.uid, data);
+    await basics.setDocumentByID(customersCollectionPath +"/"+ user.uid, data);
     return user.uid;
 }
