@@ -7,7 +7,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
-    "watch": true
+    "watch": false
   },
   "compileOnSave": true,
   "include": [
