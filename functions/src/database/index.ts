@@ -1,4 +1,4 @@
-import {func, httpsOnCall} from '../functions';
+import { httpsOnCall, auth} from '../functions';
 
 // import * as basics from './basics';
 import * as movies from './movies';
@@ -37,6 +37,6 @@ export const getScreeningsOfMovieByID = httpsOnCall((data, context) => {
     return screenings.getScreeningsOfMovieByID(data.id, data.since || 0, data.sublevel || 0);
 });
 
-export const createNewUserInDatabase = func().auth.user().onCreate((user) => {
+export const createNewUserInDatabase = auth().user().onCreate((user) => {
     return users.createNewUserInDatabase(user);
 });
