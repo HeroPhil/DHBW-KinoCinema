@@ -45,3 +45,49 @@ container.addEventListener('click', e => {
   }
 });
 
+
+
+/*
+ * --------------------------------------------------------------------------
+ */
+
+function jumpToZahlung() {
+   document.getElementById("ZahlungDetails").open = true;
+   document.getElementById("selectionDetails").open = false;
+   document.getElementById("ZahlungDetails").hidden = false;
+   location.href = '#Zahlung';
+}
+
+ 
+
+//weiter Button click event
+
+function ausgabe() {
+  var array = [];
+  array.push(document.getElementById("Vorname").value);
+  array.push(document.getElementById("Nachname").value);
+  array.push(document.getElementById("Email").value);
+  array.push(document.getElementById("Rufnummer").value);
+  array.push(document.getElementById("Postleitzahl").value);
+  array.push(document.getElementById("Stadt").value);
+  array.push(document.getElementById("Straße").value);
+  array.push(document.getElementById("Hausnummer").value);
+  array.push(document.getElementById("Zusatz").value);
+  array.push(document.getElementById("Kartennummer").value);
+  array.push(document.getElementById("Karteninhaber").value);
+
+  document.querySelector("output").textContent = "";
+  for(i = 0; i < array.length; i++) {
+    document.querySelector("output").textContent += array[i] + "\n";
+  }
+
+  document.getElementById("zusammenfassungDetails").open = true;
+  document.getElementById("ZahlungDetails").open = false;
+  document.getElementById("zusammenfassungDetails").hidden = false;
+  location.href = '#Zusammenfassung';
+}
+
+
+function book() {
+    window.location.href = "../confirmation/confirmation.html";
+}

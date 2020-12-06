@@ -35,12 +35,7 @@
         
         <script defer src="../theme.js"></script>
         
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script> 
-            jQuery(document).ready(function(){
-                jQuery(".navbar").load("navbar.html"); 
-            });
-        </script>
+ 
         
     </head>
     
@@ -61,7 +56,7 @@
             <div class="row">
                 <div id="test" class="col-1">&nbsp;</div>
                 <div id="test" class="col-14">
-                    <details open>
+                    <details id="selectionDetails" open>
                         <summary class="expand">Platzauswahl</summary>
                         <div id="seat-selection">
                             <div class="movie-container">
@@ -331,7 +326,7 @@
                                 You have selected <span id="count">0</span> seats for a price of $<span id="price">0</span>
                             </p>
 
-                            <button type="button" onclick="location.href='#Zahlung'">test button</button>
+                            <button class="button" type="button" onclick = jumpToZahlung() >test button</button>
                         
                             <script src="booking.js" type="text/javascript"></script>
                     </details>
@@ -341,26 +336,36 @@
             <div class="row">
               <div id="test" class="col-1">&nbsp;</div>
               <div id="test" class="col-14">
-                <details>
-                    <summary class="expand">Zahlung</summary>
-                    <form>
+                <details id="ZahlungDetails" hidden = true>
+                    <summary id="Zahlung" class="expand">Zahlung</summary>
+                    <form id="formStyle">
                         <fieldset>
                             <legend>Lieferadresse</legend>
                             <input id ="Vorname" placeholder="Vorname" requiered><br>
                             <input id ="Nachname" placeholder="Nachname" requiered><br>
-                            <input id ="email" type="email" placeholder="E-Mail-Adresse" requiered><br>
-                            <input id ="Rufnummer" type="tel" placeholder="Rufnummer" requiered><br>
+                            <input id ="Email" type="email" placeholder="E-Mail-Adresse" requiered><br>
+                            <input id ="Rufnummer" type="tel" placeholder="Rufnummer"><br>
                             <input id ="Postleitzahl" type="number" placeholder="Postleitzahl" requiered><br>
+                            <input id ="Stadt" placeholder="Stadt" requiered><br>
                             <input id ="Straße" placeholder="Straße" requiered><br>
                             <input id ="Hausnummer" type="number" placeholder="Hausnummer" requiered><br>
-                            <input id ="Stadt" placeholder="Stadt" requiered><br>
+                            <input id ="Zusatz" placeholder="Adress-Zusatz"><br>
                         </fieldset>
+                        <br>
                         <fieldset>
                             <legend>Rechnungsadresse</legend>
                             <input type="checkbox" id="check" checked>
                             <label for="check">Rechnungsadresse identisch mit Lieferadresse</label>
                         </fieldset>
-                        <button formnovalidate>Kaufen</button>
+                        <br>
+                        <fieldset>
+                            <legend>Zahlungsmittel</legend>
+                            <input id="Kartennummer" type="number" placeholder="Kartennummer" required><br>
+                            <input id="Ablaufdatum" type="month" placeholder="Ablaufdatum" required><br>
+                            <input id="Karteninhaber" placeholder="Karteninhaber" required><br>
+                            <input type="number" placeholder="CVV" max="999" required>
+                        </fieldset>
+                        <button class="button" type="button" id="weiter" onclick = ausgabe()>Weiter</button>
                     </form>                  
                 </details>
               </div>
@@ -369,17 +374,17 @@
             <div class="row">
               <div id="test" class="col-1">&nbsp;</div>
               <div id="test" class="col-14">
-                <details>
+                <details id="zusammenfassungDetails" hidden = true>
                   <summary class="expand">Zusammenfassung</summary>
-                  <p>Hier kommt der ausführliche Inhalt zum Punkt 1</p>
+                    <form id="formStyle">
+                        <label>Form Output: 
+                            <output></output>
+                        </label>
+                        <button class="button" type="button" onclick = book()>Buchen</button>
+                    </form>
                 </details>
               </div>
             </div>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-            <details>
-                <summary id="Zahlung" class="expand">Zahlung</summary>
-                <p>Hier kommt der ausführliche Inhalt zum Punkt 1</p>
-            </details>
 
         </main>
 
