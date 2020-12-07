@@ -19,13 +19,6 @@ document.addEventListener("DOMContentLoaded", event => {
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-
-const { gunzipSync } = require("zlib");
-
-
-
-var functions = firebase.app().functions('europe-west1');
-
 const nameCollectionPath = 'temp/demo/names/';
 
 function getNumber() {
