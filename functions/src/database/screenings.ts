@@ -103,7 +103,7 @@ export async function getBookedSeatsByScreeningID(id: string) {
         .where("screening", "==", screeningsCollectionPath + '/' + id);
     const collection = await basics.getCollectionByRef(query);
     console.log("INIT1");
-    const screening = await getScreeningByID(id);
+    const screening = await getScreeningByID(id, 1);
     const width = screening.data.hall.data.width;
     let rows = 0;
     for(var rowEntry of screening.data.hall.data.rows) {
