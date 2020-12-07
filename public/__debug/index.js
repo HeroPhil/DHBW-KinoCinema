@@ -11,14 +11,13 @@
 // firebase.analytics().logEvent('tutorial_completed');
 // firebase.performance(); // call to activate
 //
-const functions;
+// // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
 
 document.addEventListener("DOMContentLoaded", event => {
     const app = firebase.app();
-    functions = app.functions("europe-west1");
+    const functions = app.functions("europe-west1");
 });
-// // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
 
 const nameCollectionPath = 'temp/demo/names/';
 
