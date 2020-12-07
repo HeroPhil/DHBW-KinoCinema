@@ -14,17 +14,16 @@
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 
-const { gunzipSync } = require("zlib");
-
 document.addEventListener("DOMContentLoaded", event => {
     const app = firebase.app();
+    const functions = app.functions("europe-west1");
 });
 
 const nameCollectionPath = 'temp/demo/names/';
 
 function getNumber() {
     let ausgabeP = document.getElementById("ausgabe");
-    firebase.functions().httpsCallable('temp-randomNumber')()
+    functions.httpsCallable('temp-randomNumber')()
     .then(result => {
         console.log(result.data);
         ausgabeP.innerHTML = result.data;
@@ -41,7 +40,7 @@ function getName() {
     const id = nameCollectionPath+eingabeID.value;
     const param = {id: id};
 
-    firebase.functions().httpsCallable('database-getDocumentByID')(param)
+    functions.httpsCallable('database-getDocumentByID')(param)
     .then(result => {
         console.log(result.data);
         eingabeData.value = result.data.name;
@@ -63,7 +62,7 @@ async function addName() {
         }
     };
 
-    await firebase.functions().httpsCallable('database-setDocumentByID')(param);
+    await functions.httpsCallable('database-setDocumentByID')(param);
     ausgabeP.innerHTML = "successfully added";
 }
 
@@ -82,7 +81,7 @@ async function updateName() {
         }
     };
 
-    await firebase.functions().httpsCallable('database-updateDocumentByID')(param);
+    await functions.httpsCallable('database-updateDocumentByID')(param);
     ausgabeP.innerHTML = "successfully updated";
 }
 
@@ -91,7 +90,7 @@ async function getMovies() {
 
     ausgabeP.innerHTML = "";
 
-    let movies = await firebase.functions().httpsCallable('database-getAllMovies')();
+    let movies = await functions.httpsCallable('database-getAllMovies')();
     console.log(movies);
 
     let ausgabeString = "";
@@ -113,7 +112,7 @@ async function getOneMovie() {
 
     const param = {id: id};
 
-    firebase.functions().httpsCallable('database-getMovieByID')(param)
+    functions.httpsCallable('database-getMovieByID')(param)
         .then(result => {
             console.log(result.data);
         });
@@ -129,7 +128,7 @@ async function getTopMovies() {
 
     const param = {amount: amount};
 
-    let movies = await firebase.functions().httpsCallable('database-getTopMovies')(param);
+    let movies = await functions.httpsCallable('database-getTopMovies')(param);
 
     console.log(movies);
 
@@ -154,7 +153,7 @@ async function getAllScreenings() {
         since: date
     };
 
-    let screenings = await firebase.functions().httpsCallable('database-getAllScreenings')(param);
+    let screenings = await functions.httpsCallable('database-getAllScreenings')(param);
 
     console.log(screenings);
 }
@@ -172,7 +171,7 @@ async function getScreeningsOfMovie() {
         id: eingabeID.value
     };
 
-    let screenings = await firebase.functions().httpsCallable('database-getScreeningsOfMovieByID')(param);
+    let screenings = await functions.httpsCallable('database-getScreeningsOfMovieByID')(param);
 
     console.log(screenings);
 }
@@ -230,7 +229,7 @@ async function getSecuredData() {
         
     };
 
-    let result = await firebase.functions().httpsCallable('database-getSecuredData')(param);
+    let result = await functions.httpsCallable('database-getSecuredData')(param);
 
     console.log(result);
     
