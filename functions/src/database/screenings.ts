@@ -98,18 +98,18 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel =
 }
 
 export async function getBookedSeatsByScreeningID(id: string) {
-
+    console.log("START");
     const query = basics.getCollectionRefByID(ticketsCollectionPath)
         .where("screening", "==", screeningsCollectionPath + '/' + id);
     const collection = await basics.getCollectionByRef(query);
-
+    console.log("INIT1");
     const screening = await getScreeningByID(id);
     const width = screening.data.hall.data.width;
     let rows = 0;
     for(var rowEntry of screening.data.hall.data.rows) {
         rows += rowEntry.count;
     }
-
+    console.log("INIT2");
     let seats = [];
     for(var r = 0; r < rows; r++) {
         var row = [];
@@ -118,7 +118,7 @@ export async function getBookedSeatsByScreeningID(id: string) {
         }
         seats.push(row);
     }
-
+    console.log("INIT3");
     for(var ticket of collection) {
         seats[ticket.row - 1][ticket.seat] = true;
     }
