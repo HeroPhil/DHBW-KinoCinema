@@ -10,14 +10,14 @@
 // firebase.analytics(); // call to activate
 // firebase.analytics().logEvent('tutorial_completed');
 // firebase.performance(); // call to activate
+let app;
+let functions;
+document.addEventListener("DOMContentLoaded", event => {
+    app = firebase.app();
+    functions = app.functions("europe-west1");
+});
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-
-document.addEventListener("DOMContentLoaded", event => {
-    const app = firebase.app();
-    const functions = app.functions("europe-west1");
-});
 
 const nameCollectionPath = 'temp/demo/names/';
 
@@ -90,7 +90,7 @@ async function getMovies() {
 
     ausgabeP.innerHTML = "";
 
-    let movies = await functions.httpsCallable('database-getAllMovies')();
+    let movies = await functions.httpsCallable('database-getAllMovies')({});
     console.log(movies);
 
     let ausgabeString = "";
@@ -249,4 +249,20 @@ async function googleLogin() {
         ausgabeP.innerHTML = user.displayName;
         console.log(user);
     }).catch(console.log)
+}
+
+async function getBookedSeatsByScreeningID() {
+    let eingabeID = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = eingabeID.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {id: id};
+
+    await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param)
+        .then(result => {
+            console.log(result.data);
+        });
 }
