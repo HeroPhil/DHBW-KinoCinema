@@ -16,7 +16,7 @@
         <link rel="stylesheet" type="text/css" href="../slidebar/css/lightslider.css"/>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+        <script src="index.js"></script>
 
         <!-- update the version number as needed -->
         <script defer src="/__/firebase/8.0.2/firebase-app.js"></script>
@@ -63,12 +63,12 @@
             <div class="row">
                 <div class="col-16 container">
                     <ul id="autoWidth" class="cs-hidden">
-                        <li class="item-a">
+                        <li class="item-a" id="slidebar-item-one">
                             <a class="color" href="../movie/movie.html">
                                 <div class="box">
                                     <table class="cover" width="100%">
                                         <tr>
-                                            <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
+                                            <td width="30%"><img id="coverMovieOne" src="../icons/jpg/JamesBond.jpg"></td>
                                             <td class="details" id="MovieOne" width="70%"></td>
                                         </tr>
                                     </table>
@@ -76,12 +76,12 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="item-a">
+                        <li class="item-a" id="slidebar-item-two">
                             <a href="../movie/movie.html">
                                 <div class="box">
                                     <table class="cover" width="100%">
                                         <tr>
-                                            <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
+                                            <td width="30%"><img id="coverMovieTwo" src="../icons/jpg/JamesBond.jpg"></td>
                                             <td class="details" id="MovieTwo" width="70%"></td>
                                         </tr>
                                     </table>
@@ -89,12 +89,12 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="item-a">
+                        <li class="item-a" id="slidebar-item-three">
                             <a class="color" href="../movie/movie.html">
                                 <div class="box">
                                     <table class="cover" width="100%">
                                         <tr>
-                                            <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
+                                            <td width="30%"><img id="coverMovieThree" src="../icons/jpg/JamesBond.jpg"></td>
                                             <td class="details" id="MovieThree" width="70%"></td>
                                         </tr>
                                     </table>
@@ -102,12 +102,12 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="item-a">
+                        <li class="item-a" id="slidebar-item-four">
                             <a class="color" href="../movie/movie.html">
                                 <div class="box">
                                     <table class="cover" width="100%">
                                         <tr>
-                                            <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
+                                            <td width="30%"><img id="coverMovieFour" src="../icons/jpg/JamesBond.jpg"></td>
                                             <td class="details" id="MovieFour" width="70%"></td>
                                         </tr>
                                     </table>
@@ -115,12 +115,12 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="item-a">
+                        <li class="item-a" id="slidebar-item-five">
                             <a class="color" href="../movie/movie.html">
                                 <div class="box">
                                     <table class="cover" width="100%">
                                         <tr>
-                                            <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
+                                            <td width="30%"><img id="coverMovieFive" src="../icons/jpg/JamesBond.jpg"></td>
                                             <td class="details" id="MovieFive" width="70%"></td>
                                         </tr>
                                     </table>
@@ -128,12 +128,12 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="item-a">
+                        <li class="item-a" id="slidebar-item-six">
                             <a class="color" href="../movie/movie.html">
                                 <div class="box">
                                     <table class="cover" width="100%">
                                         <tr>
-                                            <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
+                                            <td width="30%"><img id="coverMovieSix" src="../icons/jpg/JamesBond.jpg"></td>
                                             <td class="details" id="MovieSix" width="70%"></td>
                                         </tr>
                                     </table>
@@ -141,13 +141,13 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="item-a">
+                        <li class="item-a" id="slidebar-item-seven">
                             <a class="color" href="../movie/movie.html">
                                 <div class="box">
                                     <table class="cover" width="100%">
                                         <tr>
-                                            <td width="30%"><img src="../icons/jpg/JamesBond.jpg"></td>
-                                            <td class="details" width="70%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</td>
+                                            <td width="30%"><img id="coverMovieSeven" src="../icons/jpg/JamesBond.jpg"></td>
+                                            <td class="details" id="MovieSeven" width="70%">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</td>
                                         </tr>
                                     </table>
                                 

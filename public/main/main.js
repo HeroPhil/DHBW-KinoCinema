@@ -13,7 +13,7 @@
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-async function loadMovies() {
+function loadMovies() {
     firstMovie = document.getElementById("MovieOne");
     firstMovieCover = document.getElementById("coverMovieOne");
     secondMovie = document.getElementById("MovieTwo");
@@ -28,7 +28,7 @@ async function loadMovies() {
     sixedMovieCover = document.getElementById("coverMovieSix");
     movies = await firebase.functions().httpsCallable('database-getAllMovies')();
     console.log(movies);
-    i = 0;
+    var i = 0;
     var storage = firebase.storage();
     movies.data.forEach( movie => {
         console.log(movie);
@@ -74,4 +74,17 @@ async function loadMovies() {
         }
         i++;
     });
+
+    //slideBarItemOne = document.getElementByID("slidebar-item-one");
+    //slideBarItemTwo = document.getElementByID("slidebar-item-two");
+    //slideBarItemThree = document.getElementByID("slidebar-item-three");
+    //slideBarItemFour = document.getElementByID("slidebar-item-four");
+    //slideBarItemFive = document.getElementByID("slidebar-item-five");
+    //slideBarItemSix = document.getElementByID("slidebar-item-six");
+    //slideBarItemOne.onlick = loadMovie('2q0KTjjgsK2RNRg65OX6'); 
+    //slideBarItemTwo.onlick = loadMovie('J4ABKzgdB9JpmfULVfkm');
+    //slideBarItemThree.onlick = loadMovie('hP8S6gTaj7VrgEuTYg3u');
+    //slideBarItemFour.onlick = loadMovie('j84TwNaznmd6vowZXVHB');
+    //slideBarItemFive.onlick = loadMovie('jQdquoErNFeLBVh644NA');
+    //slideBarItemSix.onlick = loadMovie('jytDV8mdKIff8kleVEOc');
 }
