@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", event => {
     const app = firebase.app();
 });
 
+var functions = firebase.app().functions('europe-west1');
+
 const nameCollectionPath = 'temp/demo/names/';
 
 function getNumber() {
@@ -91,7 +93,7 @@ async function getMovies() {
 
     ausgabeP.innerHTML = "";
 
-    let movies = await firebase.functions().httpsCallable('database-getAllMovies')();
+    let movies = await functions.httpsCallable('database-getAllMovies')({});
     console.log(movies);
 
     let ausgabeString = "";
