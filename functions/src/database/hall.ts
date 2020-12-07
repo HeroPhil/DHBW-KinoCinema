@@ -1,25 +1,26 @@
-const basics = require('./basics');
-const RowType = require('./rowType').RowType;
+import * as basics from './basics';
+import {RowType} from './rowType';
 
-exports.Hall = class {
-
-    constructor (id, data) {
+export class Hall {
+    id: string;
+    data: {rows: {type: any}[]};
+    constructor (id: string, data: {rows: {type: any}[]}) {
         this.id = id;
         this.data = data;
     }
 
-    async resolveRefs(sl) {
+    async resolveRefs(sl: number): Promise<this>{
         var sublevel = sl || 0;
         if (sublevel < 1) {
             return this;
         }
 
-        let promises = [];
+        var promises: Promise<any>[] = [];
     
-        this.data.rows.forEach(row => {
+        this.data.rows.forEach((row) => {
             promises.push(
                 basics.getDocumentByRef(row.type)
-                .then(rowTypeDoc => {
+                .then((rowTypeDoc: { id: any; data: () => any; }) => {
                     row.type = new RowType(rowTypeDoc.id, rowTypeDoc.data());
                     return;
                 })
@@ -30,5 +31,7 @@ exports.Hall = class {
 
         return this;
     }
+
+
 
 }

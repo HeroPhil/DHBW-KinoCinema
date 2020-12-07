@@ -7,11 +7,23 @@ name: Deploy to Firebase Hosting on merge
     branches:
       - main
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm --prefix functions/ ci
+      - run: npm --prefix functions/ run lint
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm --prefix functions/ ci && npm --prefix functions/ run build --if-present
+      - run: npm --prefix functions/ ci
+      - run: npm --prefix functions/ run build
+      - uses: w9jds/firebase-action@v2.0.0
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DHBW_KK_KINO }}'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
