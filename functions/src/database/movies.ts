@@ -1,34 +1,37 @@
-const basics = require('./basics');
+import * as basics from './basics';
 
-const moviesCollectionPath = 'live/events/movies';
+export const moviesCollectionPath = 'live/events/movies';
 const topPriority = 'priority';
-const order = 'desc';
+const order: "desc" | "asc" = 'desc';
 
-let Movie = exports.Movie = class {
-    constructor(id, data) {
+export class Movie {
+    id: string;
+    data: any;
+    constructor(id: string, data: any) {
         this.id = id;
         this.data = data;
     }
 }
 
-exports.getAllMovies = async function () {
-    let movies = [];
+export async function getAllMovies() {
+    var movies: Movie[] = [];
 
     const collection = await basics.getCollectionByID(moviesCollectionPath);
     collection.forEach(movie => {
         movies.push(new Movie(movie.id, movie.data()));
+        return;
     });
 
     return movies;
 }
 
-exports.getMovieByID = async function (id) {
+export async function getMovieByID(id: string) {
     const document = await basics.getDocumentByID(moviesCollectionPath + '/' + id)
     return new Movie(document.id, document.data());
 }
 
-exports.getTopMovies = async function (amount) {
-    let movies = [];
+export async function getTopMovies(amount: string) {
+    let movies: Movie[] = [];
 
     const collection = await basics.getCollectionByIDLimitAmount(moviesCollectionPath, parseInt(amount), topPriority, order);
     collection.forEach(movie => {
@@ -37,3 +40,4 @@ exports.getTopMovies = async function (amount) {
 
     return movies;
 }
+

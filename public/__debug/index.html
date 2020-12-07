@@ -48,12 +48,31 @@
 
     <button onclick="getTopMovies()">get Top movies</button>
 
+    <br \>
+    
+    <button onclick="googleLogin()">Login with Google</button>
+
     <hr>
 
-    <button onclick="getAllScreenings()">get all Screenings</button>
+    <button onclick="getAllScreenings()">get all screenings</button>
     
+    <button onclick="getScreeningsOfMovie()">get screenings of Movie</button>
+
+    <hr>
+    <button onclick="getImage()">get Image with GS-link</button>
+
     <hr>
     <p id="ausgabe"></p>
+    <img id="image" src="">
 
+    <br \>
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email"><br><br>
+    <label for="pass">Password:</label>
+    <input type="password" id="pass" name="pass"><br><br>
+
+    <button onclick="signIn()">Sign In</button>
+    <button onclick="signOut()">Sign Out</button>
+    <button onclick="getSecuredData()">get data if logged in</button>
   </body>
 </html>

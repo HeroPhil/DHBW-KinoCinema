@@ -44,12 +44,11 @@
 
 
     <body class="dark">
+
+        <div class="navbar"></div>
+
         <main>
-            <div class="row">
-                <div id = "header" class="col-16">
-                    <div id="title"><div id="rainbow">KinoCinema</div></div> 
-                </div>
-            </div>
+            <div id="headerX"></div>
 
             <div class="row">
                 <div class="col-16 box">
@@ -122,10 +121,22 @@
         
         </main>
 
-        <footer>
-            <div id="copyright">
-                <u>&copy; Karotten Kameraden</u> Developed by: Christin Betterman | Christop Fischer | Philip Herold | Michael Kaiser | Nicklas Platz
-            </div>
-        </footer>
+        <footer id="footer"></footer>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script type="text/javascript" charset="utf-8"> 
+            (function($) {
+                $(".navbar").load("../snippets/navbar.html", function() {
+                    $("#logo").load("../snippets/navLogo.html");
+                    $("#Program").load("../snippets/navProgram.html");
+                    $("#Account").load("../snippets/navAccount.html");
+                    $("#Info").load("../snippets/navInfo.html");
+                    $("#Search").load("../snippets/navSearch.html");
+                    $("#themeButton").load("../snippets/navThemeButton.html");
+                }); 
+                $("#footer").load("../snippets/footer.html");
+                $("#headerX").load("../snippets/header.html");
+            }(jQuery));
+        </script>
     </body>
 </html>
