@@ -106,22 +106,26 @@ export async function getBookedSeatsByScreeningID(id: string) {
     const screening = await getScreeningByID(id, 1);
     const width = screening.data.hall.data.width;
     let rows = 0;
-    for(var rowEntry of screening.data.hall.data.rows) {
-        rows += rowEntry.count;
-    }
+
+    collection.forEach((element: { count: number; }) => {
+        rows += element.count;
+    });
+
+
+
     console.log("INIT2");
-    let seats = [];
+    let seats: (boolean[])[] = [];
     for(var r = 0; r < rows; r++) {
-        var row = [];
+        var row: boolean[] = [];
         for(var s = 0; s < width; s++) {
             row.push(false);
         }
         seats.push(row);
     }
     console.log("INIT3");
-    for(var ticket of collection) {
-        seats[ticket.row - 1][ticket.seat] = true;
-    }
-
+    collection.forEach((ticket: { row: number; seat: number; }) => {
+        seats[ticket.row - 1][ticket.seat - 1] = true;
+    });
+    
     return seats;
 }
