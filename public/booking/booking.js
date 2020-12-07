@@ -46,6 +46,30 @@ container.addEventListener('click', e => {
 });
 
 
+// dynamic seats
+function seatGeneration() {
+  var seatContainer = document.getElementById("seatContainer");
+  var rowScreen = document.createElement("div");
+    rowScreen.classList.add("seat-row");
+    var screen = document.createElement("div");
+      screen.classList.add("screen");
+    rowScreen.appendChild(screen);
+    seatContainer.appendChild(rowScreen);
+  
+  for(i = 1; i <= 14; i++) {
+    var row = document.createElement("div");
+      row.classList.add("seat-row")
+      for(j = 1; j <= 14; j++) {
+        var seat = document.createElement("div");
+        seat.classList.add("seat");
+        row.appendChild(seat);
+      }
+      seatContainer.appendChild(row);
+    
+  }
+}
+
+
 
 /*
  * --------------------------------------------------------------------------
@@ -87,6 +111,65 @@ function ausgabe() {
   location.href = '#Zusammenfassung';
 }
 
+//Checkbox Rechnungsadresse
+function otherAdr() {
+  var adresse = document.getElementById("check");
+  if(adresse.checked == true) {
+    document.getElementById("Rechnungsadresse").innerHTML = "";
+  }else {
+    var vorname = document.createElement("input");
+    vorname.setAttribute("id", "Vorname2");
+    vorname.setAttribute("type", "text");
+    vorname.setAttribute("placeholder", "Vorname");
+    vorname.required = true;
+    var name = document.createElement("input");
+    name.setAttribute("id", "Nachname2");
+    name.setAttribute("type", "text");
+    name.setAttribute("placeholder", "Nachname");
+    name.required = true;
+    var postleit = document.createElement("input");
+    postleit.setAttribute("id", "Postleitzahl2");
+    postleit.setAttribute("type", "number");
+    postleit.setAttribute("placeholder", "Postleitzahl");
+    postleit.required = true;
+    var stadt = document.createElement("input");
+    stadt.setAttribute("id", "Stadt2");
+    stadt.setAttribute("type", "text");
+    stadt.setAttribute("placeholder", "Stadt");
+    stadt.required = true;
+    var straße = document.createElement("input");
+    straße.setAttribute("id", "Straße2");
+    straße.setAttribute("type", "text");
+    straße.setAttribute("placeholder", "Straße");
+    straße.required = true;
+    var nummer = document.createElement("input");
+    nummer.setAttribute("id", "Hausnummer2");
+    nummer.setAttribute("type", "number");
+    nummer.setAttribute("placeholder", "Hausnummer");
+    nummer.required = true;
+    var zusatz = document.createElement("input");
+    zusatz.setAttribute("id", "Adress-Zusatz2");
+    zusatz.setAttribute("type", "text");
+    zusatz.setAttribute("placeholder", "Adress-Zusatz");
+    zusatz.required = true;
+
+
+    var container = document.getElementById("Rechnungsadresse");
+    container.appendChild(vorname);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(name);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(postleit);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(stadt);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(straße);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(nummer);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(zusatz);
+  }
+}
 
 function book() {
     window.location.href = "../confirmation/confirmation.html";
