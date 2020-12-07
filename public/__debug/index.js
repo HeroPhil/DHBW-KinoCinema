@@ -250,3 +250,19 @@ async function googleLogin() {
         console.log(user);
     }).catch(console.log)
 }
+
+async function getBookedSeatsByScreeningID() {
+    let eingabeID = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = eingabeID.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {id: id};
+
+    await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param)
+        .then(result => {
+            console.log(result.data);
+        });
+}

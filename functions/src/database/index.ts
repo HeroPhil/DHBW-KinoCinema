@@ -40,3 +40,7 @@ export const getScreeningsOfMovieByID = httpsOnCall((data, context) => {
 export const createNewUserInDatabase = auth().user().onCreate((user) => {
     return users.createNewUserInDatabase(user);
 });
+
+export const getBookedSeatsByScreeningID = httpsOnCall((data, context) => {
+    return screenings.getBookedSeatsByScreeningID(data.id);
+});

@@ -3,6 +3,7 @@ import { Movie, moviesCollectionPath } from './movies';
 import { Hall } from './hall';
 
 const screeningsCollectionPath = 'live/events/screenings'
+const ticketsCollectionPath = 'live/events/tickets';
 
 class Screening {
     id: string;
@@ -94,4 +95,33 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel =
     await Promise.all(promises);
 
     return screenings;
+}
+
+export async function getBookedSeatsByScreeningID(id: string) {
+
+    const query = basics.getCollectionRefByID(ticketsCollectionPath)
+        .where("screening", "==", screeningsCollectionPath + '/' + id);
+    const collection = await basics.getCollectionByRef(query);
+
+    const screening = await getScreeningByID(id);
+    const width = screening.data.hall.data.width;
+    let rows = 0;
+    for(var rowEntry of screening.data.hall.data.rows) {
+        rows += rowEntry.count;
+    }
+
+    let seats = [];
+    for(var r = 0; r < rows; r++) {
+        var row = [];
+        for(var s = 0; s < width; s++) {
+            row.push(false);
+        }
+        seats.push(row);
+    }
+
+    for(var ticket of collection) {
+        seats[ticket.row - 1][ticket.seat] = true;
+    }
+
+    return seats;
 }
