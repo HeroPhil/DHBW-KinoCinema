@@ -98,22 +98,19 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel =
 }
 
 export async function getBookedSeatsByScreeningID(id: string) {
-    console.log("START");
+    const sreeningRef = basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
     const query = basics.getCollectionRefByID(ticketsCollectionPath)
-        .where("screening", "==", screeningsCollectionPath + '/' + id);
+        .where("screening", "==", sreeningRef);
     const collection = await basics.getCollectionByRef(query);
-    console.log("INIT1");
+    
     const screening = await getScreeningByID(id, 1);
     const width = screening.data.hall.data.width;
     let rows = 0;
 
-    collection.forEach((element: { count: number; }) => {
+    screening.data.hall.data.rows.forEach((element: { count: number; }) => {
         rows += element.count;
     });
-
-
-
-    console.log("INIT2");
+        
     let seats: (boolean[])[] = [];
     for(var r = 0; r < rows; r++) {
         var row: boolean[] = [];
@@ -122,10 +119,10 @@ export async function getBookedSeatsByScreeningID(id: string) {
         }
         seats.push(row);
     }
-    console.log("INIT3");
-    collection.forEach((ticket: { row: number; seat: number; }) => {
-        seats[ticket.row - 1][ticket.seat - 1] = true;
+
+    collection.docs.forEach((ticket: { data: () => any; }) => {
+        seats[ticket.data().row - 1][ticket.data().seat - 1] = true;
     });
     
-    return seats;
+    return seats; 
 }
