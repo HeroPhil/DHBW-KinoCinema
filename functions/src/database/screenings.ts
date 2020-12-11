@@ -71,7 +71,7 @@ export async function getAllScreenings(since = 0, sublevel = 0) {
     return screenings;
 }
 
-export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel = 0) {
+export async function getScreeningsOfMovieByID(id: string, since = 0, until=999999999999, sublevel = 0) {
     var screenings: Screening[] = [];
 
     var movieDocRef = basics.getDocumentRefByID(moviesCollectionPath + '/' + id);
@@ -79,6 +79,7 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel =
 
     const query = basics.getCollectionRefByID(screeningsCollectionPath)
         .where("startTime", ">=", since)
+        .where("startTime", "<=", until)
         .where("movie", "==", movieDocRef);
     const collection = await basics.getCollectionByRef(query);
     
