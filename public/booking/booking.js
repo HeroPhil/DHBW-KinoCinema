@@ -85,7 +85,6 @@ function jumpToZahlung() {
  
 
 //weiter Button click event
-
 function ausgabe() {
   var array = [];
   array.push(document.getElementById("Vorname").value);
@@ -100,6 +99,12 @@ function ausgabe() {
   array.push(document.getElementById("Kartennummer").value);
   array.push(document.getElementById("Karteninhaber").value);
 
+  document.getElementById("ausVorname").innerHTML = array[0];
+  document.getElementById("ausNachname").innerHTML = array[1];
+  //document.getElementById("ausEmail")
+
+
+
   document.querySelector("output").textContent = "";
   for(i = 0; i < array.length; i++) {
     document.querySelector("output").textContent += array[i] + "\n";
@@ -111,63 +116,89 @@ function ausgabe() {
   location.href = '#Zusammenfassung';
 }
 
+
 //Checkbox Rechnungsadresse
 function otherAdr() {
   var adresse = document.getElementById("check");
   if(adresse.checked == true) {
     document.getElementById("Rechnungsadresse").innerHTML = "";
   }else {
+    var element1 = document.createElement("div");
+    element1.classList.add("field");
+    var element2 = document.createElement("div");
+    element2.classList.add("field");
+    var element3 = document.createElement("div");
+    element3.classList.add("field");
+    var element4 = document.createElement("div");
+    element4.classList.add("field");
+    var element5 = document.createElement("div");
+    element5.classList.add("field");
+    var element6 = document.createElement("div");
+    element6.classList.add("field");
+    var element7 = document.createElement("div");
+    element7.classList.add("field");
+    
+    
     var vorname = document.createElement("input");
     vorname.setAttribute("id", "Vorname2");
     vorname.setAttribute("type", "text");
+    vorname.classList.add("input");
     vorname.setAttribute("placeholder", "Vorname");
     vorname.required = true;
     var name = document.createElement("input");
     name.setAttribute("id", "Nachname2");
     name.setAttribute("type", "text");
+    name.classList.add("input");
     name.setAttribute("placeholder", "Nachname");
     name.required = true;
     var postleit = document.createElement("input");
     postleit.setAttribute("id", "Postleitzahl2");
     postleit.setAttribute("type", "number");
+    postleit.classList.add("input");
     postleit.setAttribute("placeholder", "Postleitzahl");
     postleit.required = true;
     var stadt = document.createElement("input");
     stadt.setAttribute("id", "Stadt2");
     stadt.setAttribute("type", "text");
+    stadt.classList.add("input");
     stadt.setAttribute("placeholder", "Stadt");
     stadt.required = true;
     var straße = document.createElement("input");
     straße.setAttribute("id", "Straße2");
     straße.setAttribute("type", "text");
+    straße.classList.add("input");
     straße.setAttribute("placeholder", "Straße");
     straße.required = true;
     var nummer = document.createElement("input");
     nummer.setAttribute("id", "Hausnummer2");
     nummer.setAttribute("type", "number");
+    nummer.classList.add("input");
     nummer.setAttribute("placeholder", "Hausnummer");
     nummer.required = true;
     var zusatz = document.createElement("input");
     zusatz.setAttribute("id", "Adress-Zusatz2");
     zusatz.setAttribute("type", "text");
+    zusatz.classList.add("input");
     zusatz.setAttribute("placeholder", "Adress-Zusatz");
     zusatz.required = true;
 
 
     var container = document.getElementById("Rechnungsadresse");
-    container.appendChild(vorname);
-    container.appendChild(document.createElement("br"));
-    container.appendChild(name);
-    container.appendChild(document.createElement("br"));
-    container.appendChild(postleit);
-    container.appendChild(document.createElement("br"));
-    container.appendChild(stadt);
-    container.appendChild(document.createElement("br"));
-    container.appendChild(straße);
-    container.appendChild(document.createElement("br"));
-    container.appendChild(nummer);
-    container.appendChild(document.createElement("br"));
-    container.appendChild(zusatz);
+    
+    element1.appendChild(vorname);
+    element2.appendChild(name);
+    element3.appendChild(postleit);
+    element4.appendChild(stadt);
+    element5.appendChild(straße);
+    element6.appendChild(nummer);
+    element7.appendChild(zusatz);
+    container.appendChild(element1);
+    container.appendChild(element2);
+    container.appendChild(element3);
+    container.appendChild(element4);
+    container.appendChild(element5);
+    container.appendChild(element6);
+    container.appendChild(element7);
   }
 }
 

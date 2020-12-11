@@ -32,8 +32,8 @@
         -->
         <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-        
         <script defer src="../theme.js"></script>
+        
         
  
         
@@ -101,34 +101,71 @@
                 <details id="ZahlungDetails" hidden = true>
                     <summary id="Zahlung" class="expand">Zahlung</summary>
                     <form id="formStyle">
-                        <fieldset>
-                            <legend>Lieferadresse</legend>
-                            <input id ="Vorname" placeholder="Vorname" requiered><br>
-                            <input id ="Nachname" placeholder="Nachname" requiered><br>
-                            <input id ="Email" type="email" placeholder="E-Mail-Adresse" requiered><br>
-                            <input id ="Rufnummer" type="tel" placeholder="Rufnummer"><br>
-                            <input id ="Postleitzahl" type="number" placeholder="Postleitzahl" requiered><br>
-                            <input id ="Stadt" placeholder="Stadt" requiered><br>
-                            <input id ="Straße" placeholder="Straße" requiered><br>
-                            <input id ="Hausnummer" type="number" placeholder="Hausnummer" requiered><br>
-                            <input id ="Zusatz" placeholder="Adress-Zusatz"><br>
-                        </fieldset>
-                        <br>
-                        <fieldset>
-                            <legend>Rechnungsadresse</legend>
-                            <input type="checkbox" id="check" onclick = otherAdr() checked>
-                            <label>Rechnungsadresse identisch mit Lieferadresse</label><br>
-                            <div id="Rechnungsadresse"></div>
-                        </fieldset>
+                        <table>
+                            <tr>
+                                <td style="width: 60%">
+                                    <fieldset>
+                                        <legend>Lieferadresse</legend>
+                                        <div class="fieldContainer">
+                                            <div class="field">
+                                                <input id ="Vorname" class="input" placeholder="Vorname" required>
+                                            </div>
+                                            <div class="field">
+                                                <input id ="Nachname" class="input" placeholder="Nachname" required><br>
+                                            </div>
+                                            <div class="field">
+                                                <input id ="Email" type="email" class="input" placeholder="E-Mail-Adresse" required>
+                                            </div>
+                                            <div class="field">
+                                                <input id ="Rufnummer" type="tel" class="input" placeholder="Rufnummer"><br>
+                                            </div>
+                                            <div class="field" style="width: 25%;">
+                                                <input id ="Postleitzahl" type="number" class="input" placeholder="Postleitzahl" required>
+                                            </div>
+                                            <div class="field" style="width: 70%;">
+                                                <input id ="Stadt" class="input" placeholder="Stadt" required><br>
+                                            </div>
+                                            <div class="field">
+                                                <input id ="Straße" class="input" placeholder="Straße" required>
+                                            </div>
+                                            <div class="field">
+                                                <input id ="Hausnummer" type="number" class="input" placeholder="Hausnummer" required><br>
+                                            </div>
+                                            <div class="field">
+                                                <input id ="Zusatz" class="input" placeholder="Adress-Zusatz"><br>                           
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                                <td style="width: 40%; vertical-align: baseline;">
+                                    <fieldset>
+                                        <legend>Rechnungsadresse</legend>
+                                        <input type="checkbox" id="check" onclick = otherAdr() checked>
+                                        <label>Rechnungsadresse identisch mit Lieferadresse</label><br>
+                                        <div id="Rechnungsadresse"></div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </table>
                         <br>
                         <fieldset>
                             <legend>Zahlungsmittel</legend>
-                            <input id="Kartennummer" type="number" placeholder="Kartennummer" required><br>
-                            <input id="Ablaufdatum" type="month" placeholder="Ablaufdatum" required><br>
-                            <input id="Karteninhaber" placeholder="Karteninhaber" required><br>
-                            <input type="number" placeholder="CVV" max="999" required>
+                            <div class="fieldContainer">
+                                <div class="field">
+                                    <input id="Kartennummer" type="number" class="input" placeholder="Kartennummer" required>
+                                </div>
+                                <div class="field">
+                                    <input id="Ablaufdatum" type="month" class="input" placeholder="Ablaufdatum" required>
+                                </div>
+                                <div class="field">
+                                    <input id="Karteninhaber" class="input" placeholder="Karteninhaber" required>
+                                </div>
+                                <div class="field">
+                                    <input type="number" class="input" placeholder="CVV" max="999" required>
+                                </div>
+                            </div>
                         </fieldset>
-                        <button class="button" type="button" id="weiter" onclick = ausgabe()>Weiter</button>
+                        <button class="button" type="submit" id="weiter" onclick = ausgabe()>Weiter</button>
                     </form>                  
                 </details>
               </div>
@@ -140,6 +177,21 @@
                 <details id="zusammenfassungDetails" hidden = true>
                   <summary class="expand">Zusammenfassung</summary>
                     <form id="formStyle">
+                        <table border="1">
+                            <tr>
+                                <td id="ausVorname" colspan="2">
+                                    <h1>Persönliche Daten</h1>
+                                </td> 
+                            </tr>
+                            <tr>
+                                <td id="ausNachname">
+                                    fefwfwfwefwfhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+                                </td>
+                                <td>
+                                    fdqafdafaf
+                                </td>
+                            </tr>
+                        </table>
                         <label>Form Output: 
                             <output></output>
                         </label>
@@ -169,5 +221,6 @@
                 $("#headerX").load("../snippets/header.html");
             }(jQuery));
         </script>
+        
     </body>
 </html>
