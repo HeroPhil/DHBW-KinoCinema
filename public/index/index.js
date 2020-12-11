@@ -26,7 +26,7 @@ async function loadContent() {
     var param = {amount : amount};
     var topMovies = await functions.httpsCallable('database-getTopMovies')(param);
     topMovies.data.forEach( movie => {
-        console.log(movie);
+        i++;
         content = movie.data;
         var dot = document.createElement("span");
         dot.classList.add("dot");
