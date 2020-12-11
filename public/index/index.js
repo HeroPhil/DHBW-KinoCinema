@@ -10,12 +10,16 @@
 // firebase.analytics(); // call to activate
 // firebase.analytics().logEvent('tutorial_completed');
 // firebase.performance(); // call to activate
+let app;
+let functions;
+document.addEventListener("DOMContentLoaded", event => {
+    app = firebase.app();
+    functions = app.functions("europe-west1");
+});
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
-    app = firebase.app();
-    functions = app.functions("europe-west1");
     var i = 0;
     var storage = firebase.storage();
     var amount = "5";
