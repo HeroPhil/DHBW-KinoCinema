@@ -13,78 +13,104 @@
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-async function loadMovies() {
-    firstMovie = document.getElementById("MovieOne");
-    firstMovieCover = document.getElementById("coverMovieOne");
-    secondMovie = document.getElementById("MovieTwo");
-    secondMovieCover = document.getElementById("coverMovieTwo");
-    thirdMovie = document.getElementById("MovieThree");
-    thirdMovieCover = document.getElementById("coverMovieThree");
-    fourthMovie = document.getElementById("MovieFour");
-    fourthMovieCover = document.getElementById("coverMovieFour");
-    fifthMovie = document.getElementById("MovieFive");
-    fifthMovieCover = document.getElementById("coverMovieFive");
-    sixedMovie = document.getElementById("MovieSix");
-    sixedMovieCover = document.getElementById("coverMovieSix");
-    movies = await firebase.functions().httpsCallable('database-getAllMovies')();
-    console.log(movies);
+async function loadContent() {
+    app = firebase.app();
+    functions = app.functions("europe-west1");
     var i = 0;
     var storage = firebase.storage();
-    movies.data.forEach( movie => {
+    var amount = "5";
+    var param = {amount : amount};
+    var topMovies = await functions.httpsCallable('database-getTopMovies')(param);
+    topMovies.data.forEach( movie => {
         console.log(movie);
-        let content = movie.data;
-        if(i == 0) {
-            storage.refFromURL(content.cover).getDownloadURL().then(url => {
-                firstMovieCover.src = url;
-            });
-            firstMovieCover.style.width = "90%";
-            firstMovie.innerHTML = "<b>" + content.name + "</b><br \\>" + content.description + "<br \\><hr \\>";
-        } else if(i == 1) {
-            storage.refFromURL(content.cover).getDownloadURL().then(url => {
-                secondMovieCover.src = url;
-            });
-            secondMovieCover.style.width = "90%";
-            secondMovie.innerHTML = "<b>" + content.name + "</b><br \\>" + content.description + "<br \\><hr \\>";
-        } else if(i == 2) {
-            storage.refFromURL(content.cover).getDownloadURL().then(url => {
-                thirdMovieCover.src = url;
-            });
-            thirdMovieCover.style.width = "90%";
-            thirdMovie.innerHTML = "<b>" + content.name + "</b><br \\>" + content.description + "<br \\><hr \\>";
-        } else if(i == 3) {
-            storage.refFromURL(content.cover).getDownloadURL().then(url => {
-                fourthMovieCover.src = url;
-            });
-            fourthMovieCover.style.width = "90%";
-            fourthMovie.innerHTML = "<b>" + content.name + "</b><br \\>" + content.description + "<br \\><hr \\>";
-        } else if(i == 4) {
-            storage.refFromURL(content.cover).getDownloadURL().then(url => {
-                fifthMovieCover.src = url;
-            });
-            fifthMovieCover.style.width = "90%";
-            fifthMovie.innerHTML = "<b>" + content.name + "</b><br \\>" + content.description + "<br \\><hr \\>";
-        } else if(i == 5) {
-            storage.refFromURL(content.cover).getDownloadURL().then(url => {
-                sixedMovieCover.src = url;
-            });
-            sixedMovieCover.style.width = "90%";
-            sixedMovie.innerHTML = "<b>" + content.name + "</b><br \\>" + content.description + "<br \\><hr \\>";
-        } else {
+        content = movie.data;
+        var dot = document.createElement("span");
+        dot.classList.add("dot");
+        dot.setAttribute("onclick", "currentSlide("+i+")");
+        document.getElementById("dots").appendChild(dot);
 
-        }
-        i++;
+
+        var slide = document.createElement("div");
+            slide.classList.add("mySlides");
+            slide.classList.add("fade");
+            var slideContent = document.createElement("div");
+                slideContent.classList.add("slideContent");
+                var link = document.createElement("a");
+                    //
+                    link.href = "../movie/movie.html?id="+movie.id;
+                    var box = document.createElement("div");
+                        box.classList.add("box");
+                        var table = document.createElement("table");
+                            table.classList.add("tableSl");
+                            var row1 = document.createElement("tr");
+                                var imageSl = document.createElement("td");
+                                    imageSl.classList.add("imageSl");
+                                    imageSl.rowSpan = "2";
+                                        var image = document.createElement("img");
+                                        url = storage.refFromURL(content.cover).getDownloadURL()
+                                        image.src = url;
+                                imageSl.appendChild(image);
+                                var title = document.createElement("td");
+                                title.classList.add("titleSl");
+                                //
+                                title.textContent = content.name;
+                            row1.appendChild(imageSl);
+                            row1.appendChild(title);
+                            var row2 = document.createElement("tr")
+                                var desc = document.createElement("td");
+                                desc.classList.add("descriptionSl");
+                                //
+                                desc.textContent = content.description;
+                            row2.appendChild(desc);
+                        table.appendChild(row1);
+                        table.appendChild(row2);
+                    box.appendChild(table);
+                link.appendChild(box);
+            slideContent.appendChild(link);
+        slide.appendChild(slideContent);
+
+        document.getElementById("slideshow-container").appendChild(slide);
     });
 
-    slideBarItemOne = document.getElementById("slidebar-item-one");
-    slideBarItemTwo = document.getElementById("slidebar-item-two");
-    slideBarItemThree = document.getElementById("slidebar-item-three");
-    slideBarItemFour = document.getElementById("slidebar-item-four");
-    slideBarItemFive = document.getElementById("slidebar-item-five");
-    slideBarItemSix = document.getElementById("slidebar-item-six");
-    //'2q0KTjjgsK2RNRg65OX6'
-    //'J4ABKzgdB9JpmfULVfkm'
-    //'hP8S6gTaj7VrgEuTYg3u'
-    //'j84TwNaznmd6vowZXVHB'
-    //'jQdquoErNFeLBVh644NA'
-    //'jytDV8mdKIff8kleVEOc'
+    var prevBut = document.createElement("a");
+    prevBut.classList.add("prev");
+    prevBut.setAttribute("onclick", "plusSlides(-1)");
+    prevBut.text = "❮";
+    var nextBut = document.createElement("a");
+    nextBut.classList.add("next");
+    nextBut.setAttribute("onclick", "plusSlides(1)");
+    nextBut.text = "❯";
+    document.getElementById("slideshow-container").appendChild(prevBut);
+    document.getElementById("slideshow-container").appendChild(nextBut);
+
+    showSlides(1);
+}
+
+
+var slideIndex = 1;
+
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
 }
