@@ -13,17 +13,17 @@
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-async function loadMovies() {
-    //movies = await firebase.functions().httpsCallable('database-getAllMovies')();
-    //console.log(movies);
-    //movies.data.forEach( movie => {
-    //    
-    //});
-
+async function loadContent() {
+    app = firebase.app();
+    functions = app.functions("europe-west1");
     var i = 0;
-    for(i = 1; i <= 5; i++){
-        //console.log(movie);
-        //movie.data;
+    var storage = firebase.storage();
+    var amount = "5";
+    var param = {amount : amount};
+    var topMovies = await functions.httpsCallable('database-getTopMovies')(param);
+    topMovies.data.forEach( movie => {
+        console.log(movie);
+        content = movie.data;
         var dot = document.createElement("span");
         dot.classList.add("dot");
         dot.setAttribute("onclick", "currentSlide("+i+")");
@@ -37,7 +37,7 @@ async function loadMovies() {
                 slideContent.classList.add("slideContent");
                 var link = document.createElement("a");
                     //
-                    link.href = "../movie/movie.html?id="+i;
+                    link.href = "../movie/movie.html?id="+movie.id;
                     var box = document.createElement("div");
                         box.classList.add("box");
                         var table = document.createElement("table");
@@ -47,20 +47,20 @@ async function loadMovies() {
                                     imageSl.classList.add("imageSl");
                                     imageSl.rowSpan = "2";
                                         var image = document.createElement("img");
-                                        //
-                                        image.src = "../icons/jpg/JamesBond.jpg";
+                                        url = storage.refFromURL(content.cover).getDownloadURL()
+                                        image.src = url;
                                 imageSl.appendChild(image);
                                 var title = document.createElement("td");
                                 title.classList.add("titleSl");
                                 //
-                                title.textContent = "TITLE"+i;
+                                title.textContent = content.name;
                             row1.appendChild(imageSl);
                             row1.appendChild(title);
                             var row2 = document.createElement("tr")
                                 var desc = document.createElement("td");
                                 desc.classList.add("descriptionSl");
                                 //
-                                desc.textContent = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
+                                desc.textContent = content.description;
                             row2.appendChild(desc);
                         table.appendChild(row1);
                         table.appendChild(row2);
@@ -70,7 +70,7 @@ async function loadMovies() {
         slide.appendChild(slideContent);
 
         document.getElementById("slideshow-container").appendChild(slide);
-    }
+    });
 
     var prevBut = document.createElement("a");
     prevBut.classList.add("prev");
