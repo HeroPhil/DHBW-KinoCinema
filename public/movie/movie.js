@@ -10,16 +10,25 @@
 // firebase.analytics(); // call to activate
 // firebase.analytics().logEvent('tutorial_completed');
 // firebase.performance(); // call to activate
+let app;
+let functions;
+document.addEventListener("DOMContentLoaded", event => {
+    app = firebase.app();
+    functions = app.functions("europe-west1");
+});
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
-    var id = location.search();
+    var id = location.search;
     id = id.replace("?id=", "");
-    movieData = await firebase.functions().httpsCallable('database-getMovieByID')(id);
-    title = document.getElementsByClassName("title");
-    description = document.getElementsByClassName("description");
-    cover = document.getElementsByClassName("movie-poster");
+    var param = {id: id};
+    var movie = await functions.httpsCallable('database-getMovieByID')(param);
+    var movieData = movie.data;
+    console.log(movieData);
+    var title = document.getElementById("movie-title");
+    var description = document.getElementById("movie-description");
+    var cover = document.getElementById("movie-cover");
     var storage = firebase.storage();
     title.innerHTML = movieData.data.name;
     description.innerHTML = movieData.data.description;

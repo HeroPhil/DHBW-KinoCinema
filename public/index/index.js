@@ -47,8 +47,9 @@ async function loadContent() {
                                     imageSl.classList.add("imageSl");
                                     imageSl.rowSpan = "2";
                                         var image = document.createElement("img");
-                                        url = storage.refFromURL(content.cover).getDownloadURL()
-                                        image.src = url;
+                                        storage.refFromURL(content.cover).getDownloadURL().then( url => {
+                                            image.src = url;
+                                        })
                                 imageSl.appendChild(image);
                                 var title = document.createElement("td");
                                 title.classList.add("titleSl");
