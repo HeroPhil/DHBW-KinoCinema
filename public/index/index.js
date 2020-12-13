@@ -16,7 +16,7 @@
 async function loadContent() {
     app = firebase.app();
     functions = app.functions("europe-west1");
-    var i = 0;
+    var i = 1;
     var storage = firebase.storage();
     var amount = "5";
     var param = {amount : amount};
@@ -49,6 +49,7 @@ async function loadContent() {
                                         var image = document.createElement("img");
                                         storage.refFromURL(content.cover).getDownloadURL().then( url => {
                                             image.src = url;
+                                            image.setAttribute("width", "100%");
                                         })
                                 imageSl.appendChild(image);
                                 var title = document.createElement("td");
