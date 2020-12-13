@@ -20,13 +20,8 @@ document.addEventListener("DOMContentLoaded", event => {
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
-<<<<<<< HEAD
-    app = firebase.app();
-    functions = app.functions("europe-west1");
     var i = 1;
-=======
     var i = 0;
->>>>>>> e1dd0cee2a9756d168fe8ed37df3d8acd12b8728
     var storage = firebase.storage();
     var amount = "5";
     var param = {amount : amount};
