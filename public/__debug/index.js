@@ -147,7 +147,7 @@ async function getAllScreenings() {
     let ausgabeP = document.getElementById("ausgabe");
     ausgabeP.innerHTML = "";
 
-    const date = Math.floor(Date.now() / 1000);
+    const date = Math.floor(Date.now());
     const param = {
         sublevel: 4,
         since: date
@@ -164,7 +164,7 @@ async function getScreeningsOfMovie() {
 
     ausgabeP.innerHTML = "";
 
-    const date = Math.floor(Date.now() / 1000);
+    const date = Math.floor(Date.now());
     const param = {
         sublevel: 4,
         since: date,

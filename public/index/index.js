@@ -10,19 +10,29 @@
 // firebase.analytics(); // call to activate
 // firebase.analytics().logEvent('tutorial_completed');
 // firebase.performance(); // call to activate
+let app;
+let functions;
+document.addEventListener("DOMContentLoaded", event => {
+    app = firebase.app();
+    functions = app.functions("europe-west1");
+});
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
+<<<<<<< HEAD
     app = firebase.app();
     functions = app.functions("europe-west1");
     var i = 1;
+=======
+    var i = 0;
+>>>>>>> e1dd0cee2a9756d168fe8ed37df3d8acd12b8728
     var storage = firebase.storage();
     var amount = "5";
     var param = {amount : amount};
     var topMovies = await functions.httpsCallable('database-getTopMovies')(param);
     topMovies.data.forEach( movie => {
-        console.log(movie);
+        i++;
         content = movie.data;
         var dot = document.createElement("span");
         dot.classList.add("dot");
