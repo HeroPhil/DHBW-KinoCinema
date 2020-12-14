@@ -31,23 +31,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '14'
-      - run: npm ci # or yarn install
-      - uses: sibiraj-s/action-eslint@v1
-        with:
-          eslintArgs: '--ignore-path .gitignore --quiet'
-          extensions: 'js, jsx, ts, tsx'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: clean install npm
+        run: npm --prefix public/ ci
+      - name: run ESlint via npm
+        run: npm --prefix public/ run lint
   test_backend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: clean install npm
         run: npm --prefix functions/ ci
-      - name: run ESlint
+      - name: run ESlint via npm
         run: npm --prefix functions/ run lint
 
 
