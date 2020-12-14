@@ -20,13 +20,14 @@ document.addEventListener("DOMContentLoaded", event => {
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
+    var i = 1;
     var i = 0;
     var storage = firebase.storage();
     var amount = "5";
     var param = {amount : amount};
     var topMovies = await functions.httpsCallable('database-getTopMovies')(param);
     topMovies.data.forEach( movie => {
-        console.log(movie);
+        i++;
         content = movie.data;
         var dot = document.createElement("span");
         dot.classList.add("dot");
@@ -53,6 +54,7 @@ async function loadContent() {
                                         var image = document.createElement("img");
                                         storage.refFromURL(content.cover).getDownloadURL().then( url => {
                                             image.src = url;
+                                            image.setAttribute("width", "100%");
                                         })
                                 imageSl.appendChild(image);
                                 var title = document.createElement("td");
