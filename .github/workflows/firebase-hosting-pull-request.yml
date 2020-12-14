@@ -20,7 +20,6 @@ jobs:
       - name: run TSC via npm
         run: npm --prefix functions/ run build
       - uses: w9jds/firebase-action@v2.0.0
-      - name: deploy cloud functons
         with:
           args: deploy --only functions
         env:
@@ -38,7 +37,6 @@ jobs:
     needs: frontend_test
     steps:
       - uses: FirebaseExtended/action-hosting-deploy@v0
-      - name: deploy frontend to preview
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DHBW_KK_KINO }}'
