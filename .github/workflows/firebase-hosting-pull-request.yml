@@ -1,4 +1,4 @@
-name: Test and Deploy to Firebase Hosting and Cloudfucntions on PR
+name: Test and Deploy to Firebase Hosting Preview and Cloudfunctions on PR
 'on': pull_request
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
       - name: Install modules
         run: yarn
       - name: Run ESLint
-        run: eslint ./public --ext .js,.jsx,.ts,.tsx
+        run: eslint public/** --ext .js,.jsx,.ts,.tsx
   deploy_frontend:
     runs-on: ubuntu-latest
     needs: frontend_test
