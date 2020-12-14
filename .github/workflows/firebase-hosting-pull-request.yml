@@ -4,25 +4,42 @@
 name: Deploy to Firebase Hosting on PR
 'on': pull_request
 jobs:
-  test:
+  backend_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm --prefix functions/ ci
-      - run: npm --prefix functions/ run lint
-  build_and_deploy_preview:
+      - name: clean install npm
+        run: npm --prefix functions/ ci
+      - name: run ESlint
+        run: npm --prefix functions/ run lint
+  build_and_deploy_backend:
     runs-on: ubuntu-latest
-    needs: test
+    needs: backend_test
     steps: 
       - uses: actions/checkout@v2
-      - run: npm --prefix functions/ ci
-      - run: npm --prefix functions/ run build
+      - name: clean install npm
+        run: npm --prefix functions/ ci
+      - name: run TSC via npm
+        run: npm --prefix functions/ run build
       - uses: w9jds/firebase-action@v2.0.0
+      - name: deploy cloud functons
         with:
           args: deploy --only functions
         env:
           FIREBASE_TOKEN: '${{ secrets.FIREBASE_TOKEN }}'
+  frontend_test:
+    runs-on: ubuntu-lastest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: eslint ./public --ext .js,.jsx,.ts,.tsx
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    needs: frontend_test
       - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: deploy frontend to preview
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DHBW_KK_KINO }}'
