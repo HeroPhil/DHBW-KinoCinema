@@ -106,29 +106,13 @@ function jumpToZahlung() {
 
 //weiter Button click event
 function ausgabe() {
-  var array = [];
-  array.push(document.getElementById("Vorname").value);
-  array.push(document.getElementById("Nachname").value);
-  array.push(document.getElementById("Email").value);
-  array.push(document.getElementById("Rufnummer").value);
-  array.push(document.getElementById("Postleitzahl").value);
-  array.push(document.getElementById("Stadt").value);
-  array.push(document.getElementById("Straße").value);
-  array.push(document.getElementById("Hausnummer").value);
-  array.push(document.getElementById("Zusatz").value);
-  array.push(document.getElementById("Kartennummer").value);
-  array.push(document.getElementById("Karteninhaber").value);
-
-  document.getElementById("ausVorname").innerHTML = array[0];
-  document.getElementById("ausNachname").innerHTML = array[1];
-  //document.getElementById("ausEmail")
-
-
-
-  document.querySelector("output").textContent = "";
-  for(i = 0; i < array.length; i++) {
-    document.querySelector("output").textContent += array[i] + "\n";
-  }
+  document.getElementById("ausVorname").innerHTML = document.getElementById("Vorname").value;
+  document.getElementById("ausNachname").innerHTML = document.getElementById("Nachname").value;
+  document.getElementById("ausEmail").innerHTML = document.getElementById("Email").value;
+  document.getElementById("ausRufnummer").innerHTML = document.getElementById("Rufnummer").value;
+  document.getElementById("ausPLZ").innerHTML = document.getElementById("Postleitzahl").value + " " + document.getElementById("Stadt").value;
+  document.getElementById("ausStraße").innerHTML = document.getElementById("Straße").value + " " + document.getElementById("Hausnummer").value;
+  document.getElementById("ausKartennummer").innerHTML = document.getElementById("Kartennummer").value;
 
   document.getElementById("zusammenfassungDetails").open = true;
   document.getElementById("ZahlungDetails").open = false;

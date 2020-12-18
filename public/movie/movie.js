@@ -61,7 +61,7 @@ async function loadContent() {
         addScreeningDataToArray(date.getDay(), screening);
     });
     var actualDay = new Date().getDay();
-    screeningTable.createCaption().innerHTML = "Vorstellungen";
+    screeningTable.createCaption().innerHTML = "Vorstellungen der nächsten 7 Tage:";
     var rowheadings;
     var rowScreenings;
     var cell;
@@ -77,7 +77,7 @@ async function loadContent() {
         if(actualDay === 7) {
             actualDay = 0;
         } //end of if
-        cell = document.createElement("td");
+        cell = document.createElement("th");
         cell.textContent = days[actualDay];
         rowheadings.appendChild(cell);
         actualDay++;
@@ -194,7 +194,7 @@ async function addScreeningToList(dataArray, row) {
                 var labelScreening = document.createElement("label");
                 labelScreening.setAttribute("for", information.screeningId)
                 var dateOfScreening = new Date(information.time);
-                var time = dateOfScreening.getHours() + ":" + dateOfScreening.getMinutes() + " Uhr";
+                var time = dateOfScreening.getHours() + ":" + dateOfScreening.getMinutes();
                 labelScreening.innerHTML = time;
                 placeholder.appendChild(inputScreening);
                 placeholder.appendChild(labelScreening);
