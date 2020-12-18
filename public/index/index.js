@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", event => {
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
-    var i = 1;
+    //var i = 1;
     var i = 0;
     var storage = firebase.storage();
     var amount = "5";
@@ -55,7 +55,8 @@ async function loadContent() {
                                         storage.refFromURL(content.cover).getDownloadURL().then( url => {
                                             image.src = url;
                                             image.setAttribute("width", "100%");
-                                        })
+                                            return ;
+                                        }).catch((error) => {console.error(error)});
                                 imageSl.appendChild(image);
                                 var title = document.createElement("td");
                                 title.classList.add("titleSl");

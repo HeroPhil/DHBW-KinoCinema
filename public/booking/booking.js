@@ -24,7 +24,7 @@ const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
 const count = document.getElementById('count');
 const price = document.getElementById('price');
 
-let ticketPrice = +document.getElementById('movie').getAttribute('value');
+let ticketPrice = Number(document.getElementById('movie').getAttribute('value'));
 
 const populateUI = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
@@ -140,7 +140,7 @@ function ausgabe() {
 //Checkbox Rechnungsadresse
 function otherAdr() {
   var adresse = document.getElementById("check");
-  if(adresse.checked == true) {
+  if(adresse.checked === true) {
     document.getElementById("Rechnungsadresse").innerHTML = "";
   }else {
     var element1 = document.createElement("div");

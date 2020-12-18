@@ -41,9 +41,8 @@ async function loadContent() {
     var storage = firebase.storage();
     title.innerHTML = movieData.data.name;
     description.innerHTML = movieData.data.description;
-    storage.refFromURL(movieData.data.cover).getDownloadURL().then(url => {
-       cover.src = url;
-    });
+    var url = await storage.refFromURL(movieData.data.cover).getDownloadURL();
+    cover.src = url;
     var subLevel = 4;
     var date = Math.floor(Date.now());
     var paramScreenings = {
@@ -75,7 +74,7 @@ async function loadContent() {
     console.log(screeningsFriday);
     console.log(screeningsSaturday);
     for(var k = 0; k < days.length; k++) {
-        if(actualDay == 7) {
+        if(actualDay === 7) {
             actualDay = 0;
         } //end of if
         cell = document.createElement("td");
@@ -85,8 +84,8 @@ async function loadContent() {
     } //end of for
     rowScreenings = document.createElement("tr");
     actualDay = new Date().getDay();
-    for(var k = 0; k < days.length; k++) {
-        if(actualDay == 7) {
+    for(k = 0; k < days.length; k++) {
+        if(actualDay === 7) {
             actualDay = 0;
         } //end of if
         addScreeningsToList(actualDay, rowScreenings)
@@ -185,7 +184,7 @@ async function addScreeningToList(dataArray, row) {
     var cell = document.createElement("td");
     var placeholder = document.createElement("div");
     console.log(dataArray.length);
-    if(dataArray.length != 0) {
+    if(dataArray.length !== 0) {
         for(var i = 0; i < dataArray.length; i++) {
                 var information = dataArray[i];
                 var inputScreening = document.createElement("input");
