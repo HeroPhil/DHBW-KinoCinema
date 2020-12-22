@@ -32,11 +32,10 @@
         -->
         <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-        
+        <script src="./QRcode/qrcode.js"></script>
         <script defer src="../theme.js"></script>
-        <script  src="./confirmation.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         
-
         
     </head>
     
@@ -60,6 +59,39 @@
                 Beehren Sie uns bald wieder
                 <button class="button" type="button" onclick = home()>Zurück zum Shop</button>
             </div>
+            <button class="button" type="button" onclick = test()>Load QR</button>
+            <div id="tickets"></div>
+
+            <div id="qrcodes2">
+                <div class="ticket">
+                    <div class="ticketInformation">
+                        <div class="ticketMovieTitle">TITLE</div>
+                        <table>
+                            <tr>
+                                <td>Saal</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>Reihe</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>Sitz</td>
+                                <td>9</td>
+                            </tr>
+                            <tr>
+                                <td>Datum</td>
+                                <td>12.01.2021</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="qr">
+                        <canvas width="128" height="128" style="display: none;"></canvas>
+                        <img alt="Scan me!" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAIPklEQVR4Xu2d23bbOgxEnf//6JyVWl1Hlmhs7oCy23Tyyhs4GAxASnI+brfb5+1Ff5+f80t9fHw8WHUca9urLRq7RvNYW6r1jnNd7ZovlOe90rTGAN0F1QBp7AoBGiQwQIcADaDF0AcFMA6aWYOcODPH7z52LupfKYRNN8d9kPqYFHC1T0KAAQtDABOaRV+KQrOMnYv6RwHu6EcBogD/nwJI+ihiafzKfEYRTrZ2FOA498p9076ovrC2lQqwerEQgGh5u4UAjNE9d8FFEU0TBZioAaIAG0gHslmZNcpHxF7tkz8mBdDGDIgU/SvP7TNrkVP3c1BfwsmSMwQYpBMCccbpxqmmbwhg0Z/oT6B21YeiOgR4QRRWPAgBNnToPEvBROOrdhprZXmlU00Ej04oxnZai/ZFax3Hv7UG2BsTAoxPHBaXEGBDgCLF5HWKypWnClqL9hUChAAPHCAF+WseBlGU0UYpMkyRaNRjNK9Jfd21CLcQgCrbBdfOlROIuCHAEwd1c6UBltaa4NBDlyiARWzQn5xCxVIIsJ063vlWcCcSLAE6dxBWpo1tNPeCWCmneOtr4SHA7RYCTN5CElCd9s7YL/M742lsFOAFBCEnXNlOc19OgE9TDS22xryVQ+dZMq3api0YTY4f2fVGyE/mfIQA59fL6NIoBKBwm2yPAkwCdWG3KMA33kX4ZxTA5sZunt6PpzxJTjC20FoUgBYn6l/hYPeNtlc1ABlKwNH4yjg7t+1vyIYgNt8aNjiEABtaFohOvfGjCbC/CqYoIlntjKfzsG0nW8mpHYUwytfdF+2T5m89DrZRWBlLhtp2AiYEuCMQAkwwoaNsNH2X2ER0mj8EIA8N7vppyI9NAbQxYpuNpAroK22huYkA1L7Hwa5lMaT5lQLQZCEAuf7eHgLM4VT2upKMNHfX/BCgi+AF17d7k/4pAuxvAldvnPJV9UYQVbfHdrMWybCdi/hMqdHcOdijN/V/eBgUApxz9Mi5FqcQ4EmIRAHOwFj16faPAnzjw48owEZcI23HvPvrGnL3FI2YTHmWcl1VU9h9kC2mPunYPbKD9nJq7xSBtBgBEQL4Xzsj9SGfhAAbKyvyEchRgKQAxYEqvb09BVSfhlFeXmm8lq7mD0VeefFjcKO+immDzuSj8tMwMo4mN5c5IUDX1ePx5KMQYOJa2brGBA71tWtT0J0CLSmAPwyxTiCnrjz9kG1LFYCqY5Lx6liIhsKbt3Tk7NwDGIeO7jsqJ9G+ycE24k/9jQKEAN/LsyHAEwSq5+JWTaIAdwSsoqgiMArwAxWgcxVM+akbxfv5aa5OnrbEprxLakTrVfsmzEkBju0vfRpoNm5BDAHmUkAIsDGrqj+IfFEA0qEByKMCZXKaX92SAubQ0ilg5beBcybO9epI+mgFAmY/hlIVkdEqiFmb5ta2hwBnumgQ5efhVQjQ2iHAhoCJaHs+Jif8KAXo/EiUBarDfJsSKNGsfEZvi8LO8dYSn2xr/UZQCDCmGeESAgxwI9CiAHPnfFK+8h6ABpOcUIGSFHBGgOoJ204+PBGg82vhZBwRonouTopg5p65R6hk+ZXEX4npaN+nvYQAHJUhwBNdWclWO1cU4I4A4Ya1UxTgH1cAcw9AZ9BOe2csFT7UbusNqz60ftVOEUxz097UPUDXSdX47twEROcEQnOTDNP4EGDiVSYiSAdkihKaOwTYECInRQGISr4eoRmJ3OqfR1M+osVo/H4zdq53ks/aWu3Tqgn1J8xDgAXpJwR4kgKoWu4UZpb5V6afECAEKFNx59GzJRelwtOtpvkyyBYclH9MLuyubRSAlIucQuNpL6bd2hICbAh03gq2oJtAMM7/6mttCQFCgAcOqE/DiJ02/yQFEKLc3laAV/7TKFMMUR4lstn2/Xok2QQ6jTenH3vaIcocbS+fBXQ3Sk5418UP5U5yYBeXEGCAgAWVyGXbowALnHKqMMUveYUAd/QscUmtyCdLvw4mYyonX53ryDbKnZ32lfu2gUJ2hwCE0IL2EGADcSUQ5BeSUhq/sn3lvqMAk54JAeaAUv81jKYkdlbjuzWAXdtcBdOdxJW40Nxt2zqfh1OFaYwPAQxaz/vaYjcK8I0HKhpk+SOXHSpo28xr4R3DRmP3st1VALKtUxNQerG2V/u2+2ingBCAIOdHriEAYzjsEQU4f9pFUFo1wvmiAATRD1eAzreBDN1jj0oqdfEinjN8WWEuY+h0Q7ZSlO7n76SPr3ns+NPeQgCWYVtAhgBPpCEKcAbGRjCRkdqjAANyWkm3/VfegJKDqb0kAG3M5nxrjJ1/39/ILp2dyW671iuVj2wPASYUgEAMASZDlYCcnGaqm3XKykqcDIwCbAitTjFJAYuPgVSRdpg+OrNW81n1oP7U3iETEbujTl3Msd6pHgdbw4lABFTlBBpLDqb2EGDiVqnLRnJiCEAI+3uEKMCGQBTgDsRJpd+ZAszTQIqNK9MPRpF8LkF7eWW7+okYMsw6IQQgRK9vDwEGGFPxa4l+vRu/v0IIEALcPn9jQMwmntH4zo0YRaW1zZw4qIC07fu1LWbHfdLahMsfqwC0UdoYFW4hwB2BEGDBF7kUhZV6RQG2UKRLoqSAseYR+Ugpl34YQrJdObm9EfnPG1dGJZGTorxykg0M2z8EGKBPDqN2qj+IMFWR2AmyXzn/ECghQAjw/BhI+YPajaybvqN1KapM1FJfav9rFYAc2m1fWQNYh1e227ksWW3/zhGVyHdKIe/8LsBslHKf3Xi1Ns1lHWr7G1wseUOAgRRYEK1Dbf8QYPDcOgpwR6Bbfxxx/A8ckGP1ucqFCwAAAABJRU5ErkJggg==" style="display: block;">    
+                    </div>
+                    
+                </div>
+            </div>
             
 
 
@@ -72,7 +104,7 @@
         <footer id="footer"></footer>
 
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        
         <script type="text/javascript" charset="utf-8"> 
             (function($) {
                 $(".navbar").load("../snippets/navbar.html", function() {
@@ -87,5 +119,6 @@
                 $("#headerX").load("../snippets/header.html");
             }(jQuery));
         </script>
+        <script  src="./confirmation.js"></script>
     </body>
 </html>
