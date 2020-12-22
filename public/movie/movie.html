@@ -43,7 +43,7 @@
 
 
 
-    <body class="dark">
+    <body class="dark" onload="loadContent()">
 
         <div class="navbar"></div>
 
@@ -52,43 +52,30 @@
 
             <div class="row">
                 <div class="col-4">
-                    <div class="movie-poster"><img src="/public/icons/jpg/JamesBond.jpg"/></div>
+                    <div class="movie-poster"><img id="movie-cover" src="/public/icons/jpg/JamesBond.jpg"/></div>
                 </div>
                  
                 <div class="col-11">
                     <div class="movie-content">
-                        <div class="title">Title</div>
-                        <div class="description">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. <br> 
+
+                        <div class="title" id="movie-title">Title</div>
+                        <div class="description" id="movie-description">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. <br> 
+
                             <br>
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
                         </div>
-                        <div class="times">
-                            <input type="radio" name="time-slot" id="10">
-                            <label for="10">10:00</label><br>
-                            <input type="radio" name="time-slot" id="15">
-                            <label for="15">15:00</label><br>
-                            <input type="radio" name="time-slot" id="20">
-                            <label for="20">20:00</label><br>
+                        <div class="times" id="movie-screening-list">
+                            
                         </div>
-                        <button onclick="window.location.href='../booking/booking.html'">Book</button>
+                        <button id= "book-button" onclick="window.location.href='../booking/booking.html'">Buchen</button>
                     </div>
                 </div>
             </div>
-
-            
-            
-            
-            
-            
-            
-            
-        
-        
-        
         </main>
 
         <footer id="footer"></footer>
 
+        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script type="text/javascript" charset="utf-8"> 
             (function($) {

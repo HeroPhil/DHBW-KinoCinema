@@ -27,7 +27,8 @@ function getNumber() {
     .then(result => {
         console.log(result.data);
         ausgabeP.innerHTML = result.data;
-    });
+        return;
+    }).catch((error) => {console.error(error)});
 }
 
 function getName() {
@@ -44,7 +45,8 @@ function getName() {
     .then(result => {
         console.log(result.data);
         eingabeData.value = result.data.name;
-    });
+        return;
+    }).catch((error) => {console.error(error)});
 }
 
 async function addName() {
@@ -115,7 +117,8 @@ async function getOneMovie() {
     functions.httpsCallable('database-getMovieByID')(param)
         .then(result => {
             console.log(result.data);
-        });
+            return ;
+        }).catch((error) => {console.error(error)});
 }
 
 async function getTopMovies() {
@@ -147,7 +150,7 @@ async function getAllScreenings() {
     let ausgabeP = document.getElementById("ausgabe");
     ausgabeP.innerHTML = "";
 
-    const date = Math.floor(Date.now() / 1000);
+    const date = Math.floor(Date.now());
     const param = {
         sublevel: 4,
         since: date
@@ -164,7 +167,7 @@ async function getScreeningsOfMovie() {
 
     ausgabeP.innerHTML = "";
 
-    const date = Math.floor(Date.now() / 1000);
+    const date = Math.floor(Date.now());
     const param = {
         sublevel: 4,
         since: date,
@@ -182,7 +185,8 @@ function getImage() {
 
     firebase.storage().refFromURL(eingabeID.value).getDownloadURL().then(url => {
         image.src = url;
-    });
+        return ;
+    }).catch((error) => {console.error(error)});
 }
 
 
@@ -200,6 +204,7 @@ function signIn() {
         email.innerHTML = "";
         pass.innerHTML = "";
         ausgabeP.innerHTML = "Signed in as user with uid: "+ user.user.uid;
+        return;
     })
     .catch((error) => {
         var errorCode = error.code;
@@ -211,10 +216,11 @@ function signIn() {
 function signOut(){
     let ausgabeP = document.getElementById("ausgabe");
 
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(() => {
         // Sign-out successful.
         ausgabeP.innerHTML = "Signed out";
-      }).catch(function(error) {
+        return;
+      }).catch((error) => {
         // An error happened.
       });
 }
@@ -248,5 +254,23 @@ async function googleLogin() {
         const user = result.user;
         ausgabeP.innerHTML = user.displayName;
         console.log(user);
-    }).catch(console.log)
+        return;
+    }).catch((error) => {console.error(error)});
+}
+
+async function getBookedSeatsByScreeningID() {
+    let eingabeID = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = eingabeID.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {id: id};
+
+    await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param)
+        .then(result => {
+            console.log(result.data);
+            return;
+        }).catch((error) => {console.error(error)});
 }

@@ -3,6 +3,7 @@ import { Movie, moviesCollectionPath } from './movies';
 import { Hall } from './hall';
 
 const screeningsCollectionPath = 'live/events/screenings'
+const ticketsCollectionPath = 'live/events/tickets';
 
 class Screening {
     id: string;
@@ -70,7 +71,7 @@ export async function getAllScreenings(since = 0, sublevel = 0) {
     return screenings;
 }
 
-export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel = 0) {
+export async function getScreeningsOfMovieByID(id: string, since = 0, until=999999999999, sublevel = 0) {
     var screenings: Screening[] = [];
 
     var movieDocRef = basics.getDocumentRefByID(moviesCollectionPath + '/' + id);
@@ -78,6 +79,7 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel =
 
     const query = basics.getCollectionRefByID(screeningsCollectionPath)
         .where("startTime", ">=", since)
+        .where("startTime", "<=", until)
         .where("movie", "==", movieDocRef);
     const collection = await basics.getCollectionByRef(query);
     
@@ -94,4 +96,34 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, sublevel =
     await Promise.all(promises);
 
     return screenings;
+}
+
+export async function getBookedSeatsByScreeningID(id: string) {
+    const sreeningRef = basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
+    const query = basics.getCollectionRefByID(ticketsCollectionPath)
+        .where("screening", "==", sreeningRef);
+    const collection = await basics.getCollectionByRef(query);
+    
+    const screening = await getScreeningByID(id, 1);
+    const width = screening.data.hall.data.width;
+    let rows = 0;
+
+    screening.data.hall.data.rows.forEach((element: { count: number; }) => {
+        rows += element.count;
+    });
+        
+    let seats: (boolean[])[] = [];
+    for(var r = 0; r < rows; r++) {
+        var row: boolean[] = [];
+        for(var s = 0; s < width; s++) {
+            row.push(false);
+        }
+        seats.push(row);
+    }
+
+    collection.docs.forEach((ticket: { data: () => any; }) => {
+        seats[ticket.data().row - 1][ticket.data().seat - 1] = true;
+    });
+    
+    return seats; 
 }

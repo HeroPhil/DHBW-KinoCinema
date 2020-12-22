@@ -34,9 +34,13 @@ export const getAllScreenings = httpsOnCall((data, context) => {
 });
 
 export const getScreeningsOfMovieByID = httpsOnCall((data, context) => {
-    return screenings.getScreeningsOfMovieByID(data.id, data.since || 0, data.sublevel || 0);
+    return screenings.getScreeningsOfMovieByID(data.id, data.since || 0, data.until || 0, data.sublevel || 0);
 });
 
 export const createNewUserInDatabase = auth().user().onCreate((user) => {
     return users.createNewUserInDatabase(user);
+});
+
+export const getBookedSeatsByScreeningID = httpsOnCall((data, context) => {
+    return screenings.getBookedSeatsByScreeningID(data.id);
 });
