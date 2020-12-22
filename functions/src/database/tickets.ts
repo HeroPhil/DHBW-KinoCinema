@@ -1,3 +1,4 @@
+import {admin} from './admin';
 import * as basics from './basics';
 import { Screening, screeningsCollectionPath } from './screenings';
 
@@ -104,6 +105,15 @@ export async function createTicket(screening: string, row: number, seat: number,
   let ticketRef = await basics.addDocToCollectionByID(ticketsCollectionPath, data);
   let ticket = await basics.getDocumentByRef(ticketRef);
   promises.push(ticket);
+ 
+  //need to add TicketRef to users ticket array under /live/users/customers/$uid.tickets
+  //something like:
+  /*
+  let arrUnion = userRef.update({
+    tickets: admin.firestore.FieldValue.arrayUnion(ticket)
+  });
+  promises.push(arrUnion);
+  */
   await Promise.all(promises);
 
   return new Ticket(ticket.id, ticket.data()).resolveRefs(sublevel); 
