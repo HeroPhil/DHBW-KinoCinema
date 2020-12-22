@@ -3,8 +3,8 @@
   "scripts": {
     "lint": "eslint \"src/**/*\"",
     "build": "tsc",
-    "serve": "npm run build && firebase emulators:start --only functions",
-    "local-serve": "npm run build && firebase serve",
+    "serve-local": "npm run build && firebase emulators:start",
+    "serve": "npm run build && firebase serve",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
