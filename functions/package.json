@@ -3,7 +3,10 @@
   "scripts": {
     "lint": "eslint \"src/**/*\"",
     "build": "tsc",
-    "serve-local": "npm run build && firebase emulators:start",
+    "exportFirestore" : "gcloud firestore export gs://dhbw-kk-kino.appspot.com/firestore-export",
+    "serve-local-init" : "npm run downloadFirestore && npm run serve-local",
+    "downloadFirestore" : "mkdir -p .local && cd .local && gsutil -m cp -r gs://dhbw-kk-kino.appspot.com/firestore-export .",
+    "serve-local" : "npm run build && firebase emulators:start --import .local/firestore-export",
     "serve": "npm run build && firebase serve",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
