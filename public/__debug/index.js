@@ -241,7 +241,7 @@ async function getSecuredData() {
         
     };
 
-    let result = await functions.httpsCallable('database-getSecuredData')(param);
+    let result = await functions.httpsCallable('temp-getSecuredData')(param);
 
     console.log(result);
     
@@ -282,6 +282,7 @@ async function getBookedSeatsByScreeningID() {
 }
 
 async function createTicket() {
+    let ausgabeP = document.getElementById("ausgabe");
     let row = document.getElementById("rowData");
     let seat = document.getElementById("seatData");
     let screeningId = document.getElementById("screeningId");
@@ -289,9 +290,9 @@ async function createTicket() {
     ausgabeP.innerHTML = "";
 
     const param = {
-        row: row,
-        seat: seat,
-        screening: screeningId
+        row: row.value,
+        seat: seat.value,
+        screening: screeningId.value
     };
 
     await functions.httpsCallable('database-createTicket')(param)

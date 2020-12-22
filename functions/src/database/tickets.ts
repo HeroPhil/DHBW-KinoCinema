@@ -1,20 +1,24 @@
 import * as basics from './basics';
 
-const {nanoid} = require('nanoid');
+import {nanoid} from 'nanoid';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
 
-const locksCollectionPath = "sync";
+const screeningsSyncCollectionPath = "live/sync/screenings";
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
 const ticketsCollectionPath = 'live/events/tickets';
 
-export async function createTicket(screening: String, row: number, seat: number, context: any) {
-  const eventId: String = context.eventId;
-  const timestamp: String = context.timestamp;
-  const userId: String = context.auth.uid;
-  const userPath: String = customersCollectionPath  + "/" + userId;
+export async function createTicket(screening: string, row: number, seat: number, context: CallableContext) {
+  const timestamp: number = Date.now();  
+  const userId: string = context.auth.uid;
+  const userPath: string = customersCollectionPath  + "/" + userId;
+  const eventSyncPath: string = screeningsSyncCollectionPath  + "/" + screening + "/" + row + "/" + seat;
 
   const executionId = nanoid();
-  const lockRef = basics.getDocumentRefByID(locksCollectionPath + "/" + eventId);
+  const lockRef = basics.getDocumentRefByID(eventSyncPath);
+
+  // check if screening exists
+  // check if there are any seats in this screening available
 
   const locked = await basics.startTransaction(async (transaction: any) => {
     const lockSnapshot = await transaction.get(lockRef);
@@ -37,7 +41,8 @@ export async function createTicket(screening: String, row: number, seat: number,
   });
   
   if (locked !== true) {
-    throw new Error("Already locked. This ticket was already booked.");
+    console.log("Ticket was already booked!")
+    return false;
   }
   
   console.log("Locked for you.");
@@ -51,6 +56,7 @@ export async function createTicket(screening: String, row: number, seat: number,
     user: userPath
   };
   
-  let ticket = await basics.setDocumentByID(ticketsCollectionPath, data)
+  let ticketRef = await basics.addDocToCollectionByID(ticketsCollectionPath, data);
+  let ticket = await basics.getDocumentByRef(ticketRef);
   return ticket; 
 }

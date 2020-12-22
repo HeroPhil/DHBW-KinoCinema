@@ -43,6 +43,10 @@ export function getCollectionByIDLimitAmount(collectionPath: string, amount: num
     return admin.firestore().collection(collectionPath).orderBy(orderedByAttribute, order).limit(amount).get();
 }
 
+export function addDocToCollectionByID(collectionPath: string, data: FirebaseFirestore.DocumentData) {
+    return admin.firestore().collection(collectionPath).add(data);
+}
+
 //Transactions
 export function startTransaction(transaction: any) {
     return admin.firestore().runTransaction(transaction);
