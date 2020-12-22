@@ -1,4 +1,3 @@
-import {admin} from './admin';
 import * as basics from './basics';
 import { Screening, screeningsCollectionPath } from './screenings';
 
