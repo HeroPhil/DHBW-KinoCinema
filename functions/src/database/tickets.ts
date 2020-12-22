@@ -1,4 +1,5 @@
 import * as basics from './basics';
+import { Screening, screeningsCollectionPath } from './screenings';
 
 import {nanoid} from 'nanoid';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -8,7 +9,46 @@ const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
 const ticketsCollectionPath = 'live/events/tickets';
 
-export async function createTicket(screening: string, row: number, seat: number, context: CallableContext) {
+class Ticket {
+  id: string;
+  data: any;
+  constructor (id: string, data: any) {
+      this.id = id;
+      this.data = data;
+  }
+  
+  async resolveRefs(sl = 0) {
+      var sublevel = sl || 0;
+      if (sublevel < 1) {
+          return this;
+      }
+
+      var promises: Promise<any>[] = [];
+  
+      promises.push(
+          basics.getDocumentByRef(this.data.screening)
+          .then(async (screeningDoc: { id: string; data: () => any; }) => {
+              this.data.screening = await new Screening(screeningDoc.id, screeningDoc.data()).resolveRefs(sublevel - 1);
+              return;
+          })
+      );
+
+      promises.push(
+        basics.getDocumentByRef(this.data.user)
+        .then( (userDoc: { id: string}) => {
+            this.data.user = userDoc.id;
+            return;
+        })
+      );
+
+      await Promise.all(promises);
+
+      return this;
+  }
+
+}
+
+export async function createTicket(screening: string, row: number, seat: number, context: CallableContext, sublevel = 2) {
   const timestamp: number = Date.now();  
   const userId: string = context.auth.uid;
   const userPath: string = customersCollectionPath  + "/" + userId;
@@ -33,7 +73,7 @@ export async function createTicket(screening: string, row: number, seat: number,
       executionId,
       // The timestamp and lockedAt date are just for debugging, why not?
       timestamp,
-      lockedAt: new Date(),
+      lockedAt: Date.now(),
     });
   
     // If the write succeeds, we own the lock
@@ -48,14 +88,23 @@ export async function createTicket(screening: string, row: number, seat: number,
   console.log("Locked for you.");
 
   // Proceed with ticket creation
+  var screeningRef = await basics.getDocumentRefByID(screeningsCollectionPath + "/" + screening);
+  var userRef = await basics.getDocumentRefByID(userPath);
+
   var data = {
     buyTime: timestamp,
     row: row,
     seat: seat,
-    screening: screening,
-    user: userPath};
+    screening: screeningRef,
+    user: userRef};
   
+  let promises: Promise<any>[] = [];
+  
+
   let ticketRef = await basics.addDocToCollectionByID(ticketsCollectionPath, data);
   let ticket = await basics.getDocumentByRef(ticketRef);
-  return ticket; 
+  promises.push(ticket);
+  await Promise.all(promises);
+
+  return new Ticket(ticket.id, ticket.data()).resolveRefs(sublevel); 
 }

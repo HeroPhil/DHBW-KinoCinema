@@ -2,10 +2,10 @@ import * as basics from './basics';
 import { Movie, moviesCollectionPath } from './movies';
 import { Hall } from './hall';
 
-const screeningsCollectionPath = 'live/events/screenings'
+export const screeningsCollectionPath = 'live/events/screenings'
 const ticketsCollectionPath = 'live/events/tickets';
 
-class Screening {
+export class Screening {
     id: string;
     data: any;
     constructor (id: string, data: any) {
