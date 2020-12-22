@@ -5,7 +5,8 @@ import * as sinon from 'sinon';
 
 import * as firebaseFunctionsTest from 'firebase-functions-test';
 
-import * as firebaseAdmin from 'firebase-admin';
+//import * as firebaseAdmin from 'firebase-admin';
+import * as firebaseAdmin from '../src/database/admin';
  
 import * as index from '../src/index';
 import { FeaturesList } from 'firebase-functions-test/lib/features';
@@ -39,7 +40,7 @@ describe('Cloud Functions', () => {
       //firebaseAdmin.firestore = oldDatabase;
     });
 
-    it('get Movie Object by given ID', (done) => {
+    it('gets a Movie Object by a given ID', (done) => {
 
       const databaseStub = sinon.stub();
       const docStub = sinon.stub();
