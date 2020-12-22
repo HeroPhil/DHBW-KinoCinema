@@ -53,8 +53,7 @@ export async function createTicket(screening: string, row: number, seat: number,
     row: row,
     seat: seat,
     screening: screening,
-    user: userPath
-  };
+    user: userPath};
   
   let ticketRef = await basics.addDocToCollectionByID(ticketsCollectionPath, data);
   let ticket = await basics.getDocumentByRef(ticketRef);
