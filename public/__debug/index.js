@@ -274,3 +274,23 @@ async function getBookedSeatsByScreeningID() {
             return;
         }).catch((error) => {console.error(error)});
 }
+
+async function createTicket() {
+    let row = document.getElementById("rowData");
+    let seat = document.getElementById("seatData");
+    let screeningId = document.getElementById("screeningId");
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        row: row,
+        seat: seat,
+        screening: screeningId
+    };
+
+    await functions.httpsCallable('database-createTicket')(param)
+        .then(result => {
+            console.log(result.data);
+            return;
+        }).catch((error) => {console.error(error)});
+}

@@ -42,3 +42,8 @@ export function getCollectionByRef(collectionRef: { get: () => any; }) {
 export function getCollectionByIDLimitAmount(collectionPath: string, amount: number, orderedByAttribute: string | FirebaseFirestore.FieldPath, order: "desc" | "asc") {
     return admin.firestore().collection(collectionPath).orderBy(orderedByAttribute, order).limit(amount).get();
 }
+
+//Transactions
+export function startTransaction(transaction: any) {
+    return admin.firestore().runTransaction(transaction);
+}

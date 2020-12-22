@@ -4,6 +4,7 @@ import { httpsOnCall, auth} from '../functions';
 import * as movies from './movies';
 import * as screenings from './screenings';
 import * as users from './users';
+import * as tickets from './tickets';
 
 // export const getDocumentByID = httpsOnCall((data, context) => {
 //     return databaseBasics.getDocumentByID(data.id);
@@ -43,4 +44,8 @@ export const createNewUserInDatabase = auth().user().onCreate((user) => {
 
 export const getBookedSeatsByScreeningID = httpsOnCall((data, context) => {
     return screenings.getBookedSeatsByScreeningID(data.id);
+});
+
+export const createTicket = httpsOnCall((data, context) => {
+    return tickets.createTicket(data.screening, data.row, data.seat, context);
 });
