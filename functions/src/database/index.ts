@@ -55,5 +55,5 @@ export const createTicket = httpsOnCall((data, context) => {
 });
 
 export const getTicketByID = httpsOnCall((data, context) => {
-    return tickets.getTicketByID(data.id, context, data.sublevel || 0);
+    return tickets.getTicketByID(data.id, context, data.sublevel || 3);
 });

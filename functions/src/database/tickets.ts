@@ -136,16 +136,21 @@ export async function createTicket(screening: string, row: number, seat: number,
   return new Ticket(ticket.id, ticket.data()).resolveRefs(sublevel); 
 }
 
-export async function getTicketByID(id: string, context: CallableContext, sublevel = 0) {
+export async function getTicketByID(id: string, context: CallableContext, sublevel = 3) {
   const document = await basics.getDocumentByID(ticketsCollectionPath + '/' + id);
+  if(sublevel < 1) {sublevel = 1};
   if(!context.auth) {
     return "Error: You are not logged in!";
+  }
+  if(!document.exists) {
+    return "Error: This ticket does not exist!";
   }
   let ticket = new Ticket(document.id, document.data()).resolveRefs(sublevel);
   if((await ticket).data.user == context.auth.uid) {
     return ticket;
   } else {
     console.log("Error: Access denied!");
+    console.log((await ticket).data.user +", "+ context.auth.uid)
     return "Error: Access denied!";
   }
 }

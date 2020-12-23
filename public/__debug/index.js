@@ -324,3 +324,23 @@ async function createTicket() {
             return;
         }).catch((error) => {console.error(error)});
 }
+
+async function getTicketByID() {
+    let eingabeID = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = eingabeID.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        id: id
+    };
+
+    await functions.httpsCallable('database-getTicketByID')(param)
+        .then(result => {
+            console.log(result.data);
+            ausgabeP.innerHTML = "Look into the console!"
+            return;
+        }).catch((error) => {console.error(error)});
+}
