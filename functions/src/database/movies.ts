@@ -30,10 +30,10 @@ export async function getMovieByID(id: string) {
     return new Movie(document.id, document.data());
 }
 
-export async function getTopMovies(amount: number) {
+export async function getTopMovies(amount: string) {
     let movies: Movie[] = [];
 
-    const collection = await basics.getCollectionByIDLimitAmount(moviesCollectionPath, amount, topPriority, order);
+    const collection = await basics.getCollectionByIDLimitAmount(moviesCollectionPath, parseInt(amount), topPriority, order);
     collection.forEach(movie => {
         movies.push(new Movie(movie.id, movie.data()));
     });
@@ -41,12 +41,12 @@ export async function getTopMovies(amount: number) {
     return movies;
 }
 
-export async function getMoviesByCategory(category: string, amount: number) {
+export async function getMoviesByCategory(category: string, amount: string) {
     let movies: Movie[] = [];
 
     const query = await basics.getCollectionRefByID(moviesCollectionPath)
         .where("category", "==", category)
-        .limit(amount);
+        .limit(parseInt(amount));
     console.log(amount);
     const collection = await basics.getCollectionByRef(query);
 
