@@ -138,6 +138,7 @@ export async function createTicket(screening: string, row: number, seat: number,
 
 export async function getTicketByID(id: string, context: CallableContext, sublevel = 3) {
   const document = await basics.getDocumentByID(ticketsCollectionPath + '/' + id);
+  // tslint:disable-next-line
   if(sublevel < 1) {sublevel = 1};
   if(!context.auth) {
     return "Error: You are not logged in!";
