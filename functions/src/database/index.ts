@@ -26,6 +26,10 @@ export const getMovieByID = httpsOnCall((data, context) => {
     return movies.getMovieByID(data.id);
 });
 
+export const getMoviesByCategory = httpsOnCall((data, context) => {
+    return movies.getMoviesByCategory(data.category, data.amount || 5);
+});
+
 export const getTopMovies = httpsOnCall((data, context) => {
     return movies.getTopMovies(data.amount);
 });

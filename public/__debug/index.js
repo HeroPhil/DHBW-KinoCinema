@@ -281,6 +281,29 @@ async function getBookedSeatsByScreeningID() {
         }).catch((error) => {console.error(error)});
 }
 
+async function getMoviesByCategory() {
+    let eingabeCategory = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+    let eingabeData = document.getElementById("eingabeData");
+
+    const category = eingabeCategory.value;
+    const amount = eingabeData.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        category: category,
+        amount: amount
+    };
+
+    await functions.httpsCallable('database-getMoviesByCategory')(param)
+        .then(result => {
+            console.log(result.data);
+            ausgabeP.innerHTML = "Look into the console!"
+            return;
+        }).catch((error) => {console.error(error)});
+}
+
 async function createTicket() {
     let ausgabeP = document.getElementById("ausgabe");
     let row = document.getElementById("rowData");
