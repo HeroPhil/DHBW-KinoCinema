@@ -53,3 +53,7 @@ export const getBookedSeatsByScreeningID = httpsOnCall((data, context) => {
 export const createTicket = httpsOnCall((data, context) => {
     return tickets.createTicket(data.screening, data.row, data.seat, context);
 });
+
+export const getTicketByID = httpsOnCall((data, context) => {
+    return tickets.getTicketByID(data.id, context, data.sublevel || 0);
+});
