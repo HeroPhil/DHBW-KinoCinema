@@ -14,7 +14,7 @@ export class Movie {
 }
 
 export async function getAllMovies() {
-    var movies: Movie[] = [];
+    const movies: Movie[] = [];
 
     const collection = await basics.getCollectionByID(moviesCollectionPath);
     collection.forEach(movie => {
@@ -31,7 +31,7 @@ export async function getMovieByID(id: string) {
 }
 
 export async function getTopMovies(amount: string) {
-    let movies: Movie[] = [];
+    const movies: Movie[] = [];
 
     const collection = await basics.getCollectionByIDLimitAmount(moviesCollectionPath, parseInt(amount), topPriority, order);
     collection.forEach(movie => {
@@ -42,7 +42,7 @@ export async function getTopMovies(amount: string) {
 }
 
 export async function getMoviesByCategory(category: string, amount: string) {
-    let movies: Movie[] = [];
+    const movies: Movie[] = [];
 
     const query = await basics.getCollectionRefByID(moviesCollectionPath)
         .where("category", "==", category)

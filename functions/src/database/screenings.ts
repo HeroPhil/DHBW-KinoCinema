@@ -14,12 +14,12 @@ export class Screening {
     }
     
     async resolveRefs(sl = 0) {
-        var sublevel = sl || 0;
+        const sublevel = sl || 0;
         if (sublevel < 1) {
             return this;
         }
 
-        var promises: Promise<any>[] = [];
+        const promises: Promise<any>[] = [];
     
         promises.push(
             basics.getDocumentByRef(this.data.movie)
@@ -50,13 +50,13 @@ export async function getScreeningByID(id: string, sublevel = 0) {
 }
 
 export async function getAllScreenings(since = 0, sublevel = 0) {
-    var screenings: Screening[] = [];
+    const screenings: Screening[] = [];
 
     const query = basics.getCollectionRefByID(screeningsCollectionPath)
         .where("startTime", ">=", since);
     const collection = await basics.getCollectionByRef(query);
     
-    var promises = [];
+    const promises = [];
     for (const screening of collection.docs) {
         promises.push(new Screening(screening.id, screening.data()).resolveRefs(sublevel)
             .then((screeningObj => {
@@ -72,9 +72,9 @@ export async function getAllScreenings(since = 0, sublevel = 0) {
 }
 
 export async function getScreeningsOfMovieByID(id: string, since = 0, until=99999999999999, sublevel = 0) {
-    var screenings: Screening[] = [];
+    const screenings: Screening[] = [];
 
-    var movieDocRef = basics.getDocumentRefByID(moviesCollectionPath + '/' + id);
+    const movieDocRef = basics.getDocumentRefByID(moviesCollectionPath + '/' + id);
 
     const query = await basics.getCollectionRefByID(screeningsCollectionPath)
         .where("movie", "==", movieDocRef)
@@ -83,7 +83,7 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, until=9999
         
     const collection = await basics.getCollectionByRef(query);
     
-    var promises: Promise<any>[] = [];
+    const promises: Promise<any>[] = [];
     for (const screening of collection.docs) {
         promises.push(new Screening(screening.id, screening.data()).resolveRefs(sublevel)
             .then((screeningObj => {
@@ -112,10 +112,10 @@ export async function getBookedSeatsByScreeningID(id: string) {
         rows += element.count;
     });
         
-    let seats: (boolean[])[] = [];
-    for(var r = 0; r < rows; r++) {
-        var row: boolean[] = [];
-        for(var s = 0; s < width; s++) {
+    const seats: (boolean[])[] = [];
+    for(let r = 0; r < rows; r++) {
+        const row: boolean[] = [];
+        for(let s = 0; s < width; s++) {
             row.push(false);
         }
         seats.push(row);

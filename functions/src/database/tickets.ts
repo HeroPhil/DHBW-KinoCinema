@@ -18,12 +18,12 @@ class Ticket {
   }
   
   async resolveRefs(sl = 0) {
-      var sublevel = sl || 0;
+      const sublevel = sl || 0;
       if (sublevel < 1) {
           return this;
       }
 
-      var promises: Promise<any>[] = [];
+      const promises: Promise<any>[] = [];
   
       promises.push(
           basics.getDocumentByRef(this.data.screening)
@@ -58,13 +58,13 @@ export async function createTicket(screening: string, row: number, seat: number,
   const eventSyncPath: string = screeningsSyncCollectionPath  + "/" + screening + "/" + row + "/" + seat;
   const screeningRef = await basics.getDocumentRefByID(screeningsCollectionPath + "/" + screening);
 
-  let screeningCheck = await basics.getDocumentByRef(screeningRef);
+  const screeningCheck = await basics.getDocumentByRef(screeningRef);
   if(!screeningCheck.exists) {
     return "Error: This screening does not exist!"
   }
 
-  let screeningCheckObj = new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
-  let width = (await screeningCheckObj).data.hall.data.width;
+  const screeningCheckObj = new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
+  const width = (await screeningCheckObj).data.hall.data.width;
   let rowCount = 0;
   (await screeningCheckObj).data.hall.data.rows.forEach((element: { count: number; }) => {
     rowCount += element.count;
@@ -107,20 +107,20 @@ export async function createTicket(screening: string, row: number, seat: number,
   console.log("Locked for you.");
 
   // Proceed with ticket creation
-  var userRef = await basics.getDocumentRefByID(userPath);
+  const userRef = await basics.getDocumentRefByID(userPath);
 
-  var data = {
+  const data = {
     buyTime: timestamp,
     row: row,
     seat: seat,
     screening: screeningRef,
     user: userRef};
   
-  let promises: Promise<any>[] = [];
+  const promises: Promise<any>[] = [];
   
 
-  let ticketRef = await basics.addDocToCollectionByID(ticketsCollectionPath, data);
-  let ticket = await basics.getDocumentByRef(ticketRef);
+  const ticketRef = await basics.addDocToCollectionByID(ticketsCollectionPath, data);
+  const ticket = await basics.getDocumentByRef(ticketRef);
   promises.push(ticket);
  
   //need to add TicketRef to users ticket array under /live/users/customers/$uid.tickets
@@ -144,8 +144,8 @@ export async function getTicketByID(id: string, context: CallableContext, sublev
   if(!document.exists) {
     return "Error: This ticket does not exist!";
   }
-  let ticket = new Ticket(document.id, document.data()).resolveRefs(sublevel);
-  if((await ticket).data.user == context.auth.uid) {
+  const ticket = new Ticket(document.id, document.data()).resolveRefs(sublevel);
+  if((await ticket).data.user === context.auth.uid) {
     return ticket;
   } else {
     console.log("Error: Access denied!");
