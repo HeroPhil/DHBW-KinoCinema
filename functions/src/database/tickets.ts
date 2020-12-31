@@ -144,8 +144,8 @@ export async function getTicketByID(id: string, context: CallableContext, sublev
   if(!document.exists) {
     return "Error: This ticket does not exist!";
   }
-  const ticket = new Ticket(document.id, document.data()).resolveRefs(sublevel);
-  if((await ticket).data.user === context.auth.uid) {
+  const ticket = await new Ticket(document.id, document.data()).resolveRefs(sublevel);
+  if(( ticket).data.user === context.auth.uid) {
     return ticket;
   } else {
     console.log("Error: Access denied!");
