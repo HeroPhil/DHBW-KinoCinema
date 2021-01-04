@@ -25,5 +25,4 @@ export function stubDoc(admin: { admin: any; }, path:string, data:any) {
     dataStub.returns(data);
 
     return;
-
 }
