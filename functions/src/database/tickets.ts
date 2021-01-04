@@ -114,7 +114,8 @@ export async function createTicket(screening: string, row: number, seat: number,
     row: row,
     seat: seat,
     screening: screeningRef,
-    user: userRef};
+    user: userRef
+  };
   
   const promises: Promise<any>[] = [];
   
@@ -145,7 +146,7 @@ export async function getTicketByID(id: string, context: CallableContext, sublev
     return "Error: This ticket does not exist!";
   }
   const ticket = await new Ticket(document.id, document.data()).resolveRefs(sublevel);
-  if(( ticket).data.user === context.auth.uid) {
+  if(ticket.data.user === context.auth.uid) {
     return ticket;
   } else {
     console.log("Error: Access denied!");
