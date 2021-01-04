@@ -90,7 +90,7 @@ function createQrCode(element, textValue) {
   var qrContainer = element.appendChild(document.createElement("div"));
   qrContainer.classList.add("qr");
   var qrcode = new QRCode(qrContainer, {
-    text: "http://jindo.dev.naver.com/collie",
+    text: "https://www.google.de",
     width: 128,
     height: 128,
     colorDark : "#000000",

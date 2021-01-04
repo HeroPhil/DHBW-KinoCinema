@@ -42,7 +42,7 @@ async function loadContent() {
                 slideContent.classList.add("slideContent");
                 var link = document.createElement("a");
                     //
-                    link.href = "../movie/movie.html?id="+movie.id;
+                    link.href = "../movie/index.html?id="+movie.id;
                     var box = document.createElement("div");
                         box.classList.add("box");
                         var table = document.createElement("table");
