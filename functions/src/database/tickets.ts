@@ -1,6 +1,5 @@
 import * as basics from './basics';
 import { Screening, screeningsCollectionPath } from './screenings';
-
 import {nanoid} from 'nanoid';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
@@ -50,12 +49,12 @@ class Ticket {
 
 export async function createTicket(screening: string, row: number, seat: number, context: CallableContext, sublevel = 3) {
   const timestamp: number = Date.now();  
+  // include anonymous users
   if(!context.auth) {
     return "Error: You are not logged in!";
   }
   const userId: string = context.auth.uid;
   const userPath: string = customersCollectionPath  + "/" + userId;
-  const eventSyncPath: string = screeningsSyncCollectionPath  + "/" + screening + "/" + row + "/" + seat;
   const screeningRef = await basics.getDocumentRefByID(screeningsCollectionPath + "/" + screening);
 
   const screeningCheck = await basics.getDocumentByRef(screeningRef);
@@ -63,26 +62,27 @@ export async function createTicket(screening: string, row: number, seat: number,
     return "Error: This screening does not exist!"
   }
 
-  const screeningCheckObj = new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
-  const width = (await screeningCheckObj).data.hall.data.width;
+  const screeningCheckObj = await new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
+  const width = screeningCheckObj.data.hall.data.width;
   let rowCount = 0;
-  (await screeningCheckObj).data.hall.data.rows.forEach((element: { count: number; }) => {
+  screeningCheckObj.data.hall.data.rows.forEach((element: { count: number; }) => {
     rowCount += element.count;
   });
 
-  if(seat > width || row > rowCount) {
+  if(!(0 <= seat && seat < width) || !(0 <= row && row < rowCount)) {
     return "Error: This seat does not exist!"
   }
 
   // check if there are any seats in this screening available
 
   const executionId = nanoid();
+  const eventSyncPath: string = screeningsSyncCollectionPath  + "/" + screening + "/" + row + "/" + seat;
   const lockRef = basics.getDocumentRefByID(eventSyncPath);
 
   const locked = await basics.startTransaction(async (transaction: any) => {
     const lockSnapshot = await transaction.get(lockRef);
 
-    if (lockSnapshot.exists) {
+    if(lockSnapshot.exists) {
       // If the lock exists, check if we locked it
       return lockSnapshot.data().executionId === executionId;
     }
@@ -99,7 +99,7 @@ export async function createTicket(screening: string, row: number, seat: number,
     return true;
   });
   
-  if (locked !== true) {
+  if(locked !== true) {
     console.log("Error: Ticket was already booked!")
     return "Error: Ticket was already booked!";
   }
@@ -115,23 +115,10 @@ export async function createTicket(screening: string, row: number, seat: number,
     seat: seat,
     screening: screeningRef,
     user: userRef};
-  
-  const promises: Promise<any>[] = [];
-  
+   
 
   const ticketRef = await basics.addDocToCollectionByID(ticketsCollectionPath, data);
   const ticket = await basics.getDocumentByRef(ticketRef);
-  promises.push(ticket);
- 
-  //need to add TicketRef to users ticket array under /live/users/customers/$uid.tickets
-  //something like:
-  /*
-  let arrUnion = userRef.update({
-    tickets: admin.firestore.FieldValue.arrayUnion(ticket)
-  });
-  promises.push(arrUnion);
-  */
-  await Promise.all(promises);
 
   return new Ticket(ticket.id, ticket.data()).resolveRefs(sublevel); 
 }
