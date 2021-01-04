@@ -9,7 +9,7 @@
     "strictNullChecks": false,
     "target": "es2017",
     "watch": false,
-    "types": []
+    "types": ["jest", "mocha"]
   },
   "compileOnSave": true,
   "include": [
