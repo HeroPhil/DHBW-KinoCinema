@@ -2,19 +2,19 @@ import * as chai from 'chai';
 const assert = chai.assert;
 
 import * as sinon from 'sinon';
-import { stubDoc } from './stub';
+import { stubDoc } from '../stub';
 
 import * as firebaseFunctionsTest from 'firebase-functions-test';
 
-import  * as admin from '../src/database/admin';
+import  * as admin from '../../src/database/admin';
  
-import * as index from '../src/index';
+import * as index from '../../src/index';
 import { FeaturesList } from 'firebase-functions-test/lib/features';
 
 
 describe('Cloud Functions', () => {
   let adminInitStub: sinon.SinonStub<any[], any>;
-  let myFunctions: { database: any; temp?: typeof import("../src/temp"); };
+  let myFunctions: { database: any; temp?: typeof import("../../src/temp"); };
   let test: FeaturesList;
 
   before(() => {
