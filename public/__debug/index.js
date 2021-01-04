@@ -14,7 +14,13 @@ let app;
 let functions;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
-    functions = app.functions("europe-west1");
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
@@ -27,7 +33,8 @@ function getNumber() {
     .then(result => {
         console.log(result.data);
         ausgabeP.innerHTML = result.data;
-    });
+        return;
+    }).catch((error) => {console.error(error)});
 }
 
 function getName() {
@@ -44,7 +51,8 @@ function getName() {
     .then(result => {
         console.log(result.data);
         eingabeData.value = result.data.name;
-    });
+        return;
+    }).catch((error) => {console.error(error)});
 }
 
 async function addName() {
@@ -115,7 +123,8 @@ async function getOneMovie() {
     functions.httpsCallable('database-getMovieByID')(param)
         .then(result => {
             console.log(result.data);
-        });
+            return ;
+        }).catch((error) => {console.error(error)});
 }
 
 async function getTopMovies() {
@@ -182,7 +191,8 @@ function getImage() {
 
     firebase.storage().refFromURL(eingabeID.value).getDownloadURL().then(url => {
         image.src = url;
-    });
+        return ;
+    }).catch((error) => {console.error(error)});
 }
 
 
@@ -200,6 +210,7 @@ function signIn() {
         email.innerHTML = "";
         pass.innerHTML = "";
         ausgabeP.innerHTML = "Signed in as user with uid: "+ user.user.uid;
+        return;
     })
     .catch((error) => {
         var errorCode = error.code;
@@ -211,10 +222,11 @@ function signIn() {
 function signOut(){
     let ausgabeP = document.getElementById("ausgabe");
 
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(() => {
         // Sign-out successful.
         ausgabeP.innerHTML = "Signed out";
-      }).catch(function(error) {
+        return;
+      }).catch((error) => {
         // An error happened.
       });
 }
@@ -229,7 +241,7 @@ async function getSecuredData() {
         
     };
 
-    let result = await functions.httpsCallable('database-getSecuredData')(param);
+    let result = await functions.httpsCallable('temp-getSecuredData')(param);
 
     console.log(result);
     
@@ -248,7 +260,8 @@ async function googleLogin() {
         const user = result.user;
         ausgabeP.innerHTML = user.displayName;
         console.log(user);
-    }).catch(console.log)
+        return;
+    }).catch((error) => {console.error(error)});
 }
 
 async function getBookedSeatsByScreeningID() {
@@ -264,5 +277,70 @@ async function getBookedSeatsByScreeningID() {
     await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param)
         .then(result => {
             console.log(result.data);
-        });
+            return;
+        }).catch((error) => {console.error(error)});
+}
+
+async function getMoviesByCategory() {
+    let eingabeCategory = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+    let eingabeData = document.getElementById("eingabeData");
+
+    const category = eingabeCategory.value;
+    const amount = eingabeData.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        category: category,
+        amount: amount
+    };
+
+    await functions.httpsCallable('database-getMoviesByCategory')(param)
+        .then(result => {
+            console.log(result.data);
+            ausgabeP.innerHTML = "Look into the console!"
+            return;
+        }).catch((error) => {console.error(error)});
+}
+
+async function createTicket() {
+    let ausgabeP = document.getElementById("ausgabe");
+    let row = document.getElementById("rowData");
+    let seat = document.getElementById("seatData");
+    let screeningId = document.getElementById("screeningId");
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        row: row.value,
+        seat: seat.value,
+        screening: screeningId.value
+    };
+
+    await functions.httpsCallable('database-createTicket')(param)
+        .then(result => {
+            console.log(result.data);
+            return;
+        }).catch((error) => {console.error(error)});
+}
+
+async function getTicketByID() {
+    let eingabeID = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = eingabeID.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        id: id
+    };
+
+    await functions.httpsCallable('database-getTicketByID')(param)
+        .then(result => {
+            console.log(result.data);
+            ausgabeP.innerHTML = "Look into the console!"
+            return;
+        }).catch((error) => {console.error(error)});
 }

@@ -10,7 +10,7 @@
 
         <title> KinoCinema </title>
 
-        <link rel="stylesheet" href="info.css">
+        <link rel="stylesheet" href="index.css">
         <link rel="stylesheet" href="../global.css">
 
 
@@ -32,9 +32,7 @@
         -->
         <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-        <script src="./info.js"></script>
-
-        <script defer src="../theme.js"></script>
+        <script src="./index.js"></script>
 
         
     </head>
@@ -43,7 +41,7 @@
 
 
 
-    <body class="dark">
+    <body class="dark" onload="loadContent()">
 
         <div class="navbar"></div>
 
@@ -51,51 +49,33 @@
             <div id="headerX"></div>
 
             <div class="row">
-                <div class="col-1">&nbsp;</div>
-                <div class="col-14">
-                    <div id="infoHeader">Informationen</div> 
+                <div class="col-4">
+                    <div class="movie-poster"><img id="movie-cover" src="/public/icons/jpg/JamesBond.jpg"/></div>
                 </div>
-            </div>
+                 
+                <div class="col-11">
+                    <div class="movie-content">
 
-            <div class="row">
-                <div class="col-1">&nbsp;</div>
-                <div class="col-14">
-                  <details id="zusammenfassungDetails">
-                    <summary class="expand">Anreise</summary>
-                    <div class="infoContent">content</div>
-                  </details>
-                  <details id="zusammenfassungDetails">
-                    <summary class="expand">Preise</summary>
-                    <div class="infoContent">content</div>
-                  </details>
-                  <details id="zusammenfassungDetails">
-                    <summary class="expand">Eingeschränkte</summary>
-                    <div class="infoContent">content</div>
-                  </details>
-                  <details id="zusammenfassungDetails">
-                    <summary class="expand">Datenschutz</summary>
-                    <div class="infoContent">content</div>
-                  </details>
-                  <details id="zusammenfassungDetails">
-                    <summary class="expand">Kontakt</summary>
-                    <div class="infoContent">content</div>
-                  </details>
-                  <details id="zusammenfassungDetails">
-                    <summary class="expand">Impressum</summary>
-                    <div class="infoContent">content</div>
-                  </details>
+                        <div class="title" id="movie-title">Loading ...</div>
+                        <div class="description" id="movie-description">
+                            <!-- Loading Animation-->
+                                <div class="loadingio-spinner-pulse-ja9hjn9r8bd">
+                                    <div class="ldio-p46e4nihbm"></div>
+                                </div>
+                                Loading...<br> 
+                        </div>
+                        <div class="times" id="movie-screening-list">
+                            
+                        </div>
+                        <button id= "book-button" onclick="window.location.href='../booking/index.html'">Buchen</button>
+                    </div>
                 </div>
             </div>
-            
-            
-            
-        
-        
-        
         </main>
 
         <footer id="footer"></footer>
 
+        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script type="text/javascript" charset="utf-8"> 
             (function($) {
@@ -103,9 +83,8 @@
                     $("#logo").load("../snippets/navLogo.html");
                     $("#Program").load("../snippets/navProgram.html");
                     $("#Account").load("../snippets/navAccount.html");
-                    $("#Info").load("../snippets/navInfo.html");
                     $("#Search").load("../snippets/navSearch.html");
-                    $("#themeButton").load("../snippets/navThemeButton.html");
+                    $("#Info").load("../snippets/navInfo.html");
                 }); 
                 $("#footer").load("../snippets/footer.html");
                 $("#headerX").load("../snippets/header.html");

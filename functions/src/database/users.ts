@@ -5,7 +5,7 @@ const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
 
 export async function createNewUserInDatabase(user: auth.UserRecord){
-    var data = {
+    const data = {
         email: user.email,
         displayName: user.displayName,
     };

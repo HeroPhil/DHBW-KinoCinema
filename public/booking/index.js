@@ -24,7 +24,7 @@ const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
 const count = document.getElementById('count');
 const price = document.getElementById('price');
 
-let ticketPrice = +document.getElementById('movie').getAttribute('value');
+let ticketPrice = Number(document.getElementById('movie').getAttribute('value'));
 
 const populateUI = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
@@ -106,41 +106,26 @@ function jumpToZahlung() {
 
 //weiter Button click event
 function ausgabe() {
-  var array = [];
-  array.push(document.getElementById("Vorname").value);
-  array.push(document.getElementById("Nachname").value);
-  array.push(document.getElementById("Email").value);
-  array.push(document.getElementById("Rufnummer").value);
-  array.push(document.getElementById("Postleitzahl").value);
-  array.push(document.getElementById("Stadt").value);
-  array.push(document.getElementById("Straße").value);
-  array.push(document.getElementById("Hausnummer").value);
-  array.push(document.getElementById("Zusatz").value);
-  array.push(document.getElementById("Kartennummer").value);
-  array.push(document.getElementById("Karteninhaber").value);
-
-  document.getElementById("ausVorname").innerHTML = array[0];
-  document.getElementById("ausNachname").innerHTML = array[1];
-  //document.getElementById("ausEmail")
-
-
-
-  document.querySelector("output").textContent = "";
-  for(i = 0; i < array.length; i++) {
-    document.querySelector("output").textContent += array[i] + "\n";
-  }
+  document.getElementById("ausVorname").innerHTML = document.getElementById("Vorname").value;
+  document.getElementById("ausNachname").innerHTML = document.getElementById("Nachname").value;
+  document.getElementById("ausEmail").innerHTML = document.getElementById("Email").value;
+  document.getElementById("ausRufnummer").innerHTML = document.getElementById("Rufnummer").value;
+  document.getElementById("ausPLZ").innerHTML = document.getElementById("Postleitzahl").value + " " + document.getElementById("Stadt").value;
+  document.getElementById("ausStraße").innerHTML = document.getElementById("Straße").value + " " + document.getElementById("Hausnummer").value;
+  document.getElementById("ausKartennummer").innerHTML = document.getElementById("Kartennummer").value;
 
   document.getElementById("zusammenfassungDetails").open = true;
   document.getElementById("ZahlungDetails").open = false;
   document.getElementById("zusammenfassungDetails").hidden = false;
   location.href = '#Zusammenfassung';
+  test();
 }
 
 
 //Checkbox Rechnungsadresse
 function otherAdr() {
   var adresse = document.getElementById("check");
-  if(adresse.checked == true) {
+  if(adresse.checked === true) {
     document.getElementById("Rechnungsadresse").innerHTML = "";
   }else {
     var element1 = document.createElement("div");
@@ -223,5 +208,82 @@ function otherAdr() {
 }
 
 function book() {
-    window.location.href = "../confirmation/confirmation.html";
+    window.location.href = "../confirmation/index.html";
+}
+
+/*__________________________________Ticket-Preview_____________________________________________________*/
+
+function loadQRCodes() {
+  //var arr = ['test1', 'http://jindo.dev.naver.com/collie', 'placeholderText111223445356365'];
+  var arr = ['placeholderText111223445356365'];
+  arr.forEach(value => {
+    createQrCode(value);
+  });
+}
+
+function test() {
+  createTicket("Geiler Film", "7", "4", "8", "22.10.2021", "www.google.de")
+}
+
+function createTicket(title, hall, row, seat, date, value) {
+    var tickets = document.getElementById("tickets");
+    var ticket = document.createElement("div");
+    ticket.classList.add("ticket");
+      var ticketInformation = document.createElement("div");
+      ticketInformation.classList.add("ticketInformation");
+        var movieTitle = document.createElement("div");
+        movieTitle.classList.add("ticketMovieTitle");
+        movieTitle.innerHTML = title;
+      ticketInformation.appendChild(movieTitle);
+        var detailsTable = document.createElement("table");
+          var rowHall = document.createElement("tr");
+          var tHall = document.createElement("td");
+          tHall.innerHTML = "Saal";
+          var tHallValue = document.createElement("td");
+          tHallValue.innerHTML = hall;
+          rowHall.appendChild(tHall);
+          rowHall.appendChild(tHallValue);
+        detailsTable.appendChild(rowHall);
+        var rowRow = document.createElement("tr");
+          var tRow = document.createElement("td");
+          tRow.innerHTML = "Reihe";
+          var tRowValue = document.createElement("td");
+          tRowValue.innerHTML = row;
+          rowRow.appendChild(tRow);
+          rowRow.appendChild(tRowValue);
+        detailsTable.appendChild(rowRow);
+        var rowSeat = document.createElement("tr");
+          var tSeat = document.createElement("td");
+          tSeat.innerHTML = "Sitz";
+          var tSeatValue = document.createElement("td");
+          tSeatValue.innerHTML = seat;
+          rowSeat.appendChild(tSeat);
+          rowSeat.appendChild(tSeatValue);
+        detailsTable.appendChild(rowSeat);
+        var rowDate = document.createElement("tr");
+          var tDate = document.createElement("td");
+          tDate.innerHTML = "Datum";
+          var tDateValue = document.createElement("td");
+          tDateValue.innerHTML = date;
+          rowDate.appendChild(tDate);
+          rowDate.appendChild(tDateValue);
+        detailsTable.appendChild(rowDate);
+      ticketInformation.appendChild(detailsTable);
+    ticket.appendChild(ticketInformation);
+    tickets.appendChild(ticket);
+    createQrCode(ticket, value);
+}
+
+function createQrCode(element, textValue) {
+  var qrContainer = element.appendChild(document.createElement("div"));
+  qrContainer.classList.add("qr");
+  var qrcode = new QRCode(qrContainer, {
+    text: "https://www.google.de",
+    width: 128,
+    height: 128,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+  });
+  qrcode.makeCode(textValue);
 }
