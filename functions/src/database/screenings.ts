@@ -99,9 +99,9 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, until=9999
 }
 
 export async function getBookedSeatsByScreeningID(id: string) {
-    const sreeningRef = basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
+    const screeningRef = basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
     const query = basics.getCollectionRefByID(ticketsCollectionPath)
-        .where("screening", "==", sreeningRef);
+        .where("screening", "==", screeningRef);
     const collection = await basics.getCollectionByRef(query);
     
     const screening = await getScreeningByID(id, 1);

@@ -48,10 +48,11 @@ class Ticket {
 }
 
 export async function createTicket(screening: string, row: number, seat: number, context: CallableContext, sublevel = 3) {
+  const error: {message: string} = { message: "" };
   const timestamp: number = Date.now();  
   // include anonymous users
   if(!context.auth) {
-    return "Error: You are not logged in!";
+    return error.message = "You are not logged in!";
   }
   const userId: string = context.auth.uid;
   const userPath: string = customersCollectionPath  + "/" + userId;
@@ -59,7 +60,7 @@ export async function createTicket(screening: string, row: number, seat: number,
 
   const screeningCheck = await basics.getDocumentByRef(screeningRef);
   if(!screeningCheck.exists) {
-    return "Error: This screening does not exist!"
+    return error.message = "This screening does not exist!";
   }
 
   const screeningCheckObj = await new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
@@ -70,7 +71,17 @@ export async function createTicket(screening: string, row: number, seat: number,
   });
 
   if(!(0 <= seat && seat < width) || !(0 <= row && row < rowCount)) {
-    return "Error: This seat does not exist!"
+    return error.message = "This seat does not exist!";
+  }
+
+  const query = basics.getCollectionRefByID(ticketsCollectionPath)
+    .where("screening", "==", screeningRef)
+    .where("row", "==", row)
+    .where("seat", "==", seat);
+  const collection = await basics.getCollectionByRef(query);  
+
+  if(collection.length < 1 || collection === undefined) {
+    return error.message = "Ticket is already taken!";
   }
 
   // check if there are any seats in this screening available
@@ -100,8 +111,7 @@ export async function createTicket(screening: string, row: number, seat: number,
   });
   
   if(locked !== true) {
-    console.log("Error: Ticket was already booked!")
-    return "Error: Ticket was already booked!";
+    return error.message = "Ticket was already booked!";
   }
   
   console.log("Locked for you.");
@@ -125,19 +135,19 @@ export async function createTicket(screening: string, row: number, seat: number,
 }
 
 export async function getTicketByID(id: string, context: CallableContext, sublevel = 3) {
+  const error: {message: string} = { message: "" };
   const document = await basics.getDocumentByID(ticketsCollectionPath + '/' + id);
   if(!context.auth) {
-    return "Error: You are not logged in!";
+    return error.message = "You are not logged in!";
   }
   if(!document.exists) {
-    return "Error: This ticket does not exist!";
+    return error.message = "This ticket does not exist!";
   }
   const ticket = await new Ticket(document.id, document.data()).resolveRefs(sublevel);
   if(ticket.data.user === context.auth.uid) {
     return ticket;
   } else {
-    console.log("Error: Access denied!");
-    console.log((await ticket).data.user +", "+ context.auth.uid)
-    return "Error: Access denied!";
+    console.log("Error: Access denied! "+ (await ticket).data.user +", "+ context.auth.uid);
+    return error.message = "Access denied, you don't own this ticket!";
   }
 }
