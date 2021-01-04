@@ -1,6 +1,5 @@
 import * as basics from './basics';
 import { Screening, screeningsCollectionPath } from './screenings';
-
 import {nanoid} from 'nanoid';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
@@ -49,40 +48,52 @@ class Ticket {
 }
 
 export async function createTicket(screening: string, row: number, seat: number, context: CallableContext, sublevel = 3) {
+  const error: {message: string} = { message: "" };
   const timestamp: number = Date.now();  
+  // include anonymous users
   if(!context.auth) {
-    return "Error: You are not logged in!";
+    return error.message = "You are not logged in!";
   }
   const userId: string = context.auth.uid;
   const userPath: string = customersCollectionPath  + "/" + userId;
-  const eventSyncPath: string = screeningsSyncCollectionPath  + "/" + screening + "/" + row + "/" + seat;
   const screeningRef = await basics.getDocumentRefByID(screeningsCollectionPath + "/" + screening);
 
   const screeningCheck = await basics.getDocumentByRef(screeningRef);
   if(!screeningCheck.exists) {
-    return "Error: This screening does not exist!"
+    return error.message = "This screening does not exist!";
   }
 
-  const screeningCheckObj = new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
-  const width = (await screeningCheckObj).data.hall.data.width;
+  const screeningCheckObj = await new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
+  const width = screeningCheckObj.data.hall.data.width;
   let rowCount = 0;
-  (await screeningCheckObj).data.hall.data.rows.forEach((element: { count: number; }) => {
+  screeningCheckObj.data.hall.data.rows.forEach((element: { count: number; }) => {
     rowCount += element.count;
   });
 
-  if(seat > width || row > rowCount) {
-    return "Error: This seat does not exist!"
+  if(!(0 <= seat && seat < width) || !(0 <= row && row < rowCount)) {
+    return error.message = "This seat does not exist!";
+  }
+
+  const query = basics.getCollectionRefByID(ticketsCollectionPath)
+    .where("screening", "==", screeningRef)
+    .where("row", "==", row)
+    .where("seat", "==", seat);
+  const collection = await basics.getCollectionByRef(query);  
+
+  if(collection.length < 1 || collection === undefined) {
+    return error.message = "Ticket is already taken!";
   }
 
   // check if there are any seats in this screening available
 
   const executionId = nanoid();
+  const eventSyncPath: string = screeningsSyncCollectionPath  + "/" + screening + "/" + row + "/" + seat;
   const lockRef = basics.getDocumentRefByID(eventSyncPath);
 
   const locked = await basics.startTransaction(async (transaction: any) => {
     const lockSnapshot = await transaction.get(lockRef);
 
-    if (lockSnapshot.exists) {
+    if(lockSnapshot.exists) {
       // If the lock exists, check if we locked it
       return lockSnapshot.data().executionId === executionId;
     }
@@ -99,9 +110,8 @@ export async function createTicket(screening: string, row: number, seat: number,
     return true;
   });
   
-  if (locked !== true) {
-    console.log("Error: Ticket was already booked!")
-    return "Error: Ticket was already booked!";
+  if(locked !== true) {
+    return error.message = "Ticket was already booked!";
   }
   
   console.log("Locked for you.");
@@ -114,42 +124,30 @@ export async function createTicket(screening: string, row: number, seat: number,
     row: row,
     seat: seat,
     screening: screeningRef,
-    user: userRef};
-  
-  const promises: Promise<any>[] = [];
-  
+    user: userRef
+  };
+   
 
   const ticketRef = await basics.addDocToCollectionByID(ticketsCollectionPath, data);
   const ticket = await basics.getDocumentByRef(ticketRef);
-  promises.push(ticket);
- 
-  //need to add TicketRef to users ticket array under /live/users/customers/$uid.tickets
-  //something like:
-  /*
-  let arrUnion = userRef.update({
-    tickets: admin.firestore.FieldValue.arrayUnion(ticket)
-  });
-  promises.push(arrUnion);
-  */
-  await Promise.all(promises);
 
   return new Ticket(ticket.id, ticket.data()).resolveRefs(sublevel); 
 }
 
 export async function getTicketByID(id: string, context: CallableContext, sublevel = 3) {
+  const error: {message: string} = { message: "" };
   const document = await basics.getDocumentByID(ticketsCollectionPath + '/' + id);
   if(!context.auth) {
-    return "Error: You are not logged in!";
+    return error.message = "You are not logged in!";
   }
   if(!document.exists) {
-    return "Error: This ticket does not exist!";
+    return error.message = "This ticket does not exist!";
   }
   const ticket = await new Ticket(document.id, document.data()).resolveRefs(sublevel);
-  if(( ticket).data.user === context.auth.uid) {
+  if(ticket.data.user === context.auth.uid) {
     return ticket;
   } else {
-    console.log("Error: Access denied!");
-    console.log((await ticket).data.user +", "+ context.auth.uid)
-    return "Error: Access denied!";
+    console.log("Error: Access denied! "+ (await ticket).data.user +", "+ context.auth.uid);
+    return error.message = "Access denied, you don't own this ticket!";
   }
 }
