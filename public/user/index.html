@@ -105,7 +105,24 @@
                                 </div>
                             </div>
                         </fieldset>
-                        <button class="button" id="updateAdr" onclick = updateAdr()>Update</button>
+                        <fieldset>
+                            <legend>Zahlungsmittel</legend>
+                            <div class="fieldContainer">
+                                <div class="field">
+                                    <input id="Kartennummer" type="number" class="input" placeholder="Kartennummer" required>
+                                </div>
+                                <div class="field">
+                                    <input id="Ablaufdatum" type="month" class="input" placeholder="Ablaufdatum" required>
+                                </div>
+                                <div class="field">
+                                    <input id="Karteninhaber" class="input" placeholder="Karteninhaber" required>
+                                </div>
+                                <div class="field">
+                                    <input type="number" class="input" placeholder="CVV" max="999" required>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <button class="button" id="updateAdr" onclick = updateDetails()>Update</button>
                     </details>
                     <details>
                         <summary id="history" class="expand">Bestellungen</summary>

@@ -165,6 +165,17 @@ summary:focus {
     margin: 1rem;
 }
 
+#SignUp{
+    margin-top: 2rem;
+    padding: 10px 30px;
+    font-weight: bold;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 100px;
+    background: transparent;
+    transition: all 1000ms;
+}
+
 
 .field{
     width: 100%;
@@ -315,4 +326,23 @@ summary:focus {
     background-color: var(--layer3);
     color: var(--accent);
     font-size: 1.5rem;
+}
+
+.pic{
+    width: 30%;
+    display: inherit;
+    align-items: center;
+}
+
+.image {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: 90%;
+    display: flex;
+}
+
+.image img{
+    height: 100%;
+    width: auto;
+    padding-bottom: 5rem;
 }
