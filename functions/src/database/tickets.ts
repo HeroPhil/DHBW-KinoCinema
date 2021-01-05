@@ -74,7 +74,7 @@ export async function createTicket(screening: string, row: number, seat: number,
     rowCount += element.count;
   });
 
-  if(!(0 <= seat && seat < width) || !(0 <= row && row < rowCount)) {
+  if(!(1 <= seat && seat <= width) || !(1 <= row && row <= rowCount)) {
     console.log("This seat does not exist!");
     error.message = "This seat does not exist!";
     return error;
@@ -86,7 +86,7 @@ export async function createTicket(screening: string, row: number, seat: number,
     .where("seat", "==", seat);
   const collection = await basics.getCollectionByRef(query);  
 
-  if(collection.length < 1 || collection === undefined) {
+  if(!collection.empty) {
     console.log("Ticket is already taken!");
     error.message = "Ticket is already taken!";
     return error;
