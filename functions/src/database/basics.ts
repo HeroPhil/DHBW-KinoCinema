@@ -31,6 +31,10 @@ export function getCollectionRefByID(collectionPath: string) {
     return admin.firestore().collection(collectionPath);
 }
 
+export function getCollectionRefByIDLimitAmount(collectionPath: string, amount: number, orderedByAttribute: string | FirebaseFirestore.FieldPath, order: "desc" | "asc") {
+    return admin.firestore().collection(collectionPath).orderBy(orderedByAttribute, order).limit(amount);
+}
+
 export function getCollectionByIDWhere(collectionPath: string, field: string | FirebaseFirestore.FieldPath, operator: FirebaseFirestore.WhereFilterOp, value: any) {
     return admin.firestore().collection(collectionPath).where(field, operator, value).get();
 }
