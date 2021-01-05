@@ -166,3 +166,36 @@ export async function getTicketByID(id: string, context: CallableContext, sublev
     return error;
   }
 }
+
+export async function getTicketsOfCurrentUser(context: CallableContext, orderByAttribute: string, order: FirebaseFirestore.OrderByDirection, amount: string, sublevel = 3) {
+  const error: {message: string} = { message: "" };
+  const tickets: Ticket[] = [];
+
+  if(!context.auth) {
+    console.log("You are not logged in!");
+    error.message = "You are not logged in!";
+    return error;
+  }
+  const userRef = await basics.getDocumentRefByID(customersCollectionPath + '/' + context.auth.uid);
+
+  const ticketRef = await basics.getCollectionRefByID(ticketsCollectionPath)
+    .where("user", "==", userRef)
+    .orderBy(orderByAttribute, order)
+    .limit(parseInt(amount));
+
+  const ticketsCollection = await basics.getCollectionByRef(ticketRef);
+
+  const promises = [];
+  
+    for (const ticket of ticketsCollection.docs) {
+        promises.push(new Ticket(ticket.id, ticket.data()).resolveRefs(sublevel)
+            .then((ticketObj => {
+                tickets.push(ticketObj);
+                return;
+            }))
+        );
+    }
+  await Promise.all(promises);
+
+  return tickets;
+}
