@@ -10,12 +10,12 @@ export class Hall {
     }
 
     async resolveRefs(sl: number): Promise<this>{
-        var sublevel = sl || 0;
+        const sublevel = sl || 0;
         if (sublevel < 1) {
             return this;
         }
 
-        var promises: Promise<any>[] = [];
+        const promises: Promise<any>[] = [];
     
         this.data.rows.forEach((row) => {
             promises.push(

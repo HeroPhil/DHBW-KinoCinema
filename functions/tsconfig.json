@@ -6,8 +6,10 @@
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
+    "strictNullChecks": false,
     "target": "es2017",
-    "watch": false
+    "watch": false,
+    "types": []
   },
   "compileOnSave": true,
   "include": [

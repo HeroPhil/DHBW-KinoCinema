@@ -43,9 +43,8 @@ async function loadContent() {
     title.innerHTML = movieData.data.name;
     sessionStorage.setItem('movieTitle', movieData.data.name);
     description.innerHTML = movieData.data.description;
-    storage.refFromURL(movieData.data.cover).getDownloadURL().then(url => {
-       cover.src = url;
-    });
+    var url = await storage.refFromURL(movieData.data.cover).getDownloadURL();
+    cover.src = url;
     var subLevel = 4;
     var date = Math.floor(Date.now());
     var paramScreenings = {
@@ -64,24 +63,24 @@ async function loadContent() {
         addScreeningDataToArray(date.getDay(), screening);
     });
     var actualDay = new Date().getDay();
-    screeningTable.createCaption().innerHTML = "Vorstellungen";
+    screeningTable.createCaption().innerHTML = "Vorstellungen der nächsten 7 Tage:";
     var rowheadings;
     var rowScreenings;
     var cell;
     rowheadings = document.createElement("tr");
     for(var k = 0; k < days.length; k++) {
-        if(actualDay == 7) {
+        if(actualDay === 7) {
             actualDay = 0;
         } //end of if
-        cell = document.createElement("td");
+        cell = document.createElement("th");
         cell.textContent = days[actualDay];
         rowheadings.appendChild(cell);
         actualDay++;
     } //end of for
     rowScreenings = document.createElement("tr");
     actualDay = new Date().getDay();
-    for(var k = 0; k < days.length; k++) {
-        if(actualDay == 7) {
+    for(k = 0; k < days.length; k++) {
+        if(actualDay === 7) {
             actualDay = 0;
         } //end of if
         addScreeningsToList(actualDay, rowScreenings)
@@ -186,7 +185,12 @@ async function addScreeningsToList(day, row) {
 async function addScreeningToList(dataArray, row) {
     var cell = document.createElement("td");
     var placeholder = document.createElement("div");
+<<<<<<< HEAD:public/movie/movie.js
     if(dataArray.length != 0) {
+=======
+    console.log(dataArray.length);
+    if(dataArray.length !== 0) {
+>>>>>>> 6b86ee24c6fd5f2bcb9f432700a9d18f90a46b49:public/movie/index.js
         for(var i = 0; i < dataArray.length; i++) {
                 var information = dataArray[i];
                 var inputScreening = document.createElement("input");
@@ -199,7 +203,7 @@ async function addScreeningToList(dataArray, row) {
                 var labelScreening = document.createElement("label");
                 labelScreening.setAttribute("for", information.screeningId)
                 var dateOfScreening = new Date(information.time);
-                var time = dateOfScreening.getHours() + ":" + dateOfScreening.getMinutes() + " Uhr";
+                var time = dateOfScreening.getHours() + ":" + dateOfScreening.getMinutes();
                 labelScreening.innerHTML = time;
                 placeholder.appendChild(inputScreening);
                 placeholder.appendChild(labelScreening);

@@ -10,7 +10,7 @@
 
         <title> KinoCinema </title>
 
-        <link rel="stylesheet" href="account.css">
+        <link rel="stylesheet" href="index.css">
         <link rel="stylesheet" href="../global.css">
 
 
@@ -32,10 +32,10 @@
         -->
         <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-        <script src="./account.js"></script>
+        <script src="./QRcode/qrcode.js"></script>
 
-        <script defer src="../theme.js"></script>
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        
         
     </head>
     
@@ -44,50 +44,51 @@
 
 
     <body class="dark">
+
         <div class="navbar"></div>
 
         <main>
-
             <div id="headerX"></div>
-            
-            <div class="row">
-                <div class="col-3"><p></p></div>
-                <div class="col-13">
-                    <form>
-                        <div class="field">
-                            <label for="username" class="label">Username</label>
-                            <input type="text" name="username" class="input" placeholder=" " autocomplete="off"/>
-                            
-                        </div>
-                        <div class="field">
-                            <label for="password" class="label">Password</label>
-                            <input type="password" name="password" class="input" placeholder=" " autocomplete="off"/>
-                        </div>
-                        <button >Sign Up</button>
-                    </form>
-                </div>
+
+            <div id="danke">♫ Vielen Dank für die Blumen, vielen Dank, wie lieb von dir ♫<br>
+                ♫ Manchmal spielt das Leben mit dir gern Katz und Maus ♫<br>
+                ♫ Immer wird's das geben, einer der trickst dich aus ♫<br>
+                ♫ Vielen Dank für die Blumen, vielen Dank, wie lieb von dir ♫
+                <br>
+                <br>
+                Beehren Sie uns bald wieder
+                <button class="button" type="button" onclick = home()>Zurück zum Shop</button>
             </div>
+            <button class="button" type="button" onclick = test()>Load QR</button>
+            <div id="tickets"></div>
+            <button class="button" type="button">Print/Save</button>
             
-        
-        
+            
+
+
+            
+            
+            
+
         </main>
+
         <footer id="footer"></footer>
 
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        
         <script type="text/javascript" charset="utf-8"> 
             (function($) {
                 $(".navbar").load("../snippets/navbar.html", function() {
                     $("#logo").load("../snippets/navLogo.html");
                     $("#Program").load("../snippets/navProgram.html");
                     $("#Account").load("../snippets/navAccount.html");
-                    $("#Info").load("../snippets/navInfo.html");
                     $("#Search").load("../snippets/navSearch.html");
-                    $("#themeButton").load("../snippets/navThemeButton.html");
+                    $("#Info").load("../snippets/navInfo.html");
                 }); 
                 $("#footer").load("../snippets/footer.html");
                 $("#headerX").load("../snippets/header.html");
             }(jQuery));
         </script>
+        <script  src="./index.js"></script>
     </body>
 </html>

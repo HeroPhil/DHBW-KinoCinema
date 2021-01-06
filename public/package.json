@@ -1,0 +1,17 @@
+{
+  "name": "public",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index/index.js",
+  "scripts": {
+    "lint": "eslint **/*.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^7.15.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-promise": "^4.2.1"
+  }
+}

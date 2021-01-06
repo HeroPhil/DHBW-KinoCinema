@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", event => {
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
-    var i = 1;
+    //var i = 1;
     var i = 0;
     var storage = firebase.storage();
     var amount = "5";
@@ -42,7 +42,7 @@ async function loadContent() {
                 slideContent.classList.add("slideContent");
                 var link = document.createElement("a");
                     //
-                    link.href = "../movie/movie.html?id="+movie.id;
+                    link.href = "../movie/?id="+movie.id;
                     var box = document.createElement("div");
                         box.classList.add("box");
                         var table = document.createElement("table");
@@ -55,7 +55,8 @@ async function loadContent() {
                                         storage.refFromURL(content.cover).getDownloadURL().then( url => {
                                             image.src = url;
                                             image.setAttribute("width", "100%");
-                                        })
+                                            return ;
+                                        }).catch((error) => {console.error(error)});
                                 imageSl.appendChild(image);
                                 var title = document.createElement("td");
                                 title.classList.add("titleSl");

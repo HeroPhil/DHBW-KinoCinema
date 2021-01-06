@@ -49,7 +49,15 @@
     <button onclick="getTopMovies()">get Top movies</button>
 
     <br \>
+
+    <button onclick="getMoviesByCategory()">get movies by category</button>
     
+    <br \>
+    
+    <button onclick="getTicketByID()">get Ticket by id</button>
+    
+    <br \>
+
     <button onclick="googleLogin()">Login with Google</button>
 
     <hr>
@@ -75,5 +83,12 @@
     <button onclick="signOut()">Sign Out</button>
     <button onclick="getSecuredData()">get data if logged in</button>
     <button onclick="getBookedSeatsByScreeningID()">get booked seats by screeningID</button>
+
+    <br \>
+    screeningID: <input type="text" id="screeningId"> <br \>
+    row: <input type="text" id="rowData"> <br \>
+    seat: <input type="text" id="seatData"> <br \>
+    <button onclick="createTicket()">create Ticket</button>
+    <button onclick="stressTestCreateTicket()">stress test createTicket()</button>
   </body>
 </html>
