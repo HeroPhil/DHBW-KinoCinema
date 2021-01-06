@@ -165,6 +165,17 @@ summary:focus {
     margin: 1rem;
 }
 
+#SignUp{
+    margin-top: 2rem;
+    padding: 10px 30px;
+    font-weight: bold;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 100px;
+    background: transparent;
+    transition: all 1000ms;
+}
+
 
 .field{
     width: 100%;
@@ -218,4 +229,120 @@ summary:focus {
 .field:focus-within::after{
     transform: scaleX(1);
     opacity: 1;
+}
+
+/*----------------Ticket-Preview--------------------------*/
+
+.tickets {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.ticket {
+    color: var(--textPrimary);
+    font-size: 1.2rem;
+    width: 50rem;
+    height: 15rem;
+    background-color: var(--layer3);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    border: 0.2rem solid var(--layer1);
+    border-radius: 2rem;
+    margin: 3rem;
+}
+
+.ticketInformation {
+    margin: 2.5%;
+    width: 40%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+
+}
+
+.ticketMovieTitle {
+    font-weight: bold;
+    letter-spacing: 0.3ch;
+    font-size: 2rem;
+    padding: 0.25rem 1rem;
+    width: 100%;
+    border-bottom: 0.2rem solid var(--accent);
+}
+
+.ticketInformation table {
+    border-collapse: collapse;
+    width: 50%;
+    margin-left: 1rem;
+}
+
+.ticketInformation table tr td {
+    padding-top: 5%;
+    border-bottom: 1px solid var(--layer3);
+}
+
+.ticketInformation table tr td:last-child {
+    text-align: right;
+}
+
+.qr {
+    width: 30%;
+    display: inherit;
+    align-items: center;
+}
+
+.qr img {
+    margin: auto;
+}
+
+/*----------------------Tabelle in Zusammenfassung---------------------*/
+
+#Angaben{
+    margin-right: 2rem;
+}
+
+#Angaben table{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#Angaben table td{
+    border: 1px solid var(--layer8);
+    width: 14.25%;
+    text-align: left;
+    vertical-align: middle;
+    padding-left:  0.7rem;
+    font-size: 1.2rem;
+}
+
+#Angaben table th{
+    border: 1px solid var(--layer8);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.25rem;
+    text-align: center;
+    background-color: var(--layer3);
+    color: var(--accent);
+    font-size: 1.5rem;
+}
+
+.pic{
+    width: 30%;
+    display: inherit;
+    align-items: center;
+}
+
+.image {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: 90%;
+    display: flex;
+}
+
+.image img{
+    height: 100%;
+    width: auto;
+    padding-bottom: 5rem;
 }

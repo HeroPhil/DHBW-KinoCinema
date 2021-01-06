@@ -14,7 +14,13 @@ let app;
 let functions;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
-    functions = app.functions("europe-west1");
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
@@ -235,7 +241,7 @@ async function getSecuredData() {
         
     };
 
-    let result = await functions.httpsCallable('database-getSecuredData')(param);
+    let result = await functions.httpsCallable('temp-getSecuredData')(param);
 
     console.log(result);
     
@@ -274,3 +280,87 @@ async function getBookedSeatsByScreeningID() {
             return;
         }).catch((error) => {console.error(error)});
 }
+
+async function getMoviesByCategory() {
+    let eingabeCategory = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+    let eingabeData = document.getElementById("eingabeData");
+
+    const category = eingabeCategory.value;
+    const amount = eingabeData.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        category: category,
+        amount: amount
+    };
+
+    await functions.httpsCallable('database-getMoviesByCategory')(param)
+        .then(result => {
+            console.log(result.data);
+            ausgabeP.innerHTML = "Look into the console!"
+            return;
+        }).catch((error) => {console.error(error)});
+}
+
+async function createTicket() {
+    let ausgabeP = document.getElementById("ausgabe");
+    let row = document.getElementById("rowData");
+    let seat = document.getElementById("seatData");
+    let screeningId = document.getElementById("screeningId");
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        row: row.value,
+        seat: seat.value,
+        screening: screeningId.value
+    };
+
+    await functions.httpsCallable('database-createTicket')(param)
+        .then(result => {
+            console.log(result.data);
+            return;
+        }).catch((error) => {console.error(error)});
+}
+
+async function getTicketByID() {
+    let eingabeID = document.getElementById("eingabeID");
+    let ausgabeP = document.getElementById("ausgabe");
+
+    const id = eingabeID.value;
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        id: id
+    };
+
+    await functions.httpsCallable('database-getTicketByID')(param)
+        .then(result => {
+            console.log(result.data);
+            ausgabeP.innerHTML = "Look into the console!"
+            return;
+        }).catch((error) => {console.error(error)});
+}
+
+async function stressTestCreateTicket() {
+    let ausgabeP = document.getElementById("ausgabe");
+    let row = document.getElementById("rowData");
+    let seat = document.getElementById("seatData");
+    let screeningId = document.getElementById("screeningId");
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        row: row.value,
+        seat: seat.value,
+        screening: screeningId.value
+    };
+
+    for(i = 0; i < 10; i++){
+        functions.httpsCallable('database-createTicket')(param)
+        .catch((error) => {console.error(error)});
+    }
+} 
