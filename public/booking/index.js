@@ -12,16 +12,17 @@
 // firebase.performance(); // call to activate
 let app;
 let functions;
-let seatCounter = 0;
-let seatsMap = [];
-let selectedSeats = [];
-let blockedSeats = [];
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
     functions = app.functions("europe-west1");
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+let seatCounter = 0;
+let seatsMap = [];
+let selectedSeats = [];
+let blockedSeats = [];
 
 const container = document.querySelector('.container');
 const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
@@ -48,7 +49,6 @@ populateUI();
 
 const updateSelectedSeatsCount = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
-  console.log(selectedSeats);
   var sum = 0;
   var countedSelectedSeats = 0;
   for(var i = 0; i < selectedSeats.length; i++) {
@@ -86,9 +86,8 @@ async function loadContent() {
   var hallInfo = information.hall.data;
   seatGeneration(hallInfo);
   var param = {id: information.screeningId};
-  var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param).then(result => {
-    console.log(result.data);
-  });
+  var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
+  blockAlreadyBookedSeats(blockedSeats);
 } //end of loadContent
 
 // dynamic seats
@@ -121,7 +120,6 @@ function seatGeneration(hallInfo) {
         seatCounter++;
         seat.setAttribute("value", seatPrice);
         seat.classList.add("seat");
-        console.log(identifySeatType(seatType));
         var type = identifySeatType(seatType);
         seat.classList.add(type.value);
         row.appendChild(seat);
@@ -133,16 +131,28 @@ function seatGeneration(hallInfo) {
 
 async function identifySeatType(seat) {
   if(seat.includes("special")) {
-    console.log(seat);
     var type = "special";
-    console.log(type);
     return type;
   } else {
-    console.log(seat);
     return seat;
   }
 }
 
+async function blockAlreadyBookedSeats(seatInfo) {
+  console.log(seatInfo);
+  var blockedSeatsInfo = seatInfo.data;
+  var rowInfo;
+  var counter = 0;
+  for(var i = 0; i < blockedSeatsInfo.length; i++) {
+    rowInfo = blockedSeatsInfo[i];
+    for(var j = 0; j < rowInfo.length; j++) {
+      if(rowInfo[j].includes("true")) {
+        var seat = document.getElementById(counter);
+        seat.classList.add('occupied');
+      } //end of if
+    }
+  }
+}
 
 /*
  * --------------------------------------------------------------------------
