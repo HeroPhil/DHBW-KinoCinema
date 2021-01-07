@@ -185,12 +185,8 @@ async function addScreeningsToList(day, row) {
 async function addScreeningToList(dataArray, row) {
     var cell = document.createElement("td");
     var placeholder = document.createElement("div");
-<<<<<<< HEAD:public/movie/movie.js
-    if(dataArray.length != 0) {
-=======
     console.log(dataArray.length);
     if(dataArray.length !== 0) {
->>>>>>> 6b86ee24c6fd5f2bcb9f432700a9d18f90a46b49:public/movie/index.js
         for(var i = 0; i < dataArray.length; i++) {
                 var information = dataArray[i];
                 var inputScreening = document.createElement("input");
