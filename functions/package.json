@@ -1,7 +1,7 @@
 {
   "name": "functions",
   "scripts": {
-    "lint": "eslint \"src/**/*\"",
+    "lint": "eslint \"src/**/*.ts\" && eslint \"test/**/*.ts\"",
     "build": "tsc",
     "exportFirestore" : "gcloud firestore export gs://dhbw-kk-kino.appspot.com/firestore-export",
     "serve-local-init" : "npm run downloadFirestore && npm run serve-local",

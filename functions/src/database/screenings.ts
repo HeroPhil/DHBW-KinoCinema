@@ -107,7 +107,7 @@ export async function getBookedSeatsByScreeningID(id: string) {
     const query = basics.getCollectionRefByID(ticketsCollectionPath)
         .where("screening", "==", screeningRef);
     const tickets = basics.getCollectionByRef(query).then((collection: { docs: any; }) => {
-        let result = [];
+        const result = [];
         for (const doc of collection.docs) {
             result.push(new Ticket(doc.id, doc.data()));
         }
