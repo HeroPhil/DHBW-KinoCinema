@@ -57,3 +57,7 @@ export const createTicket = httpsOnCall((data, context) => {
 export const getTicketByID = httpsOnCall((data, context) => {
     return tickets.getTicketByID(data.id, context, data.sublevel || 3);
 });
+
+export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
+    return tickets.getTicketsOfCurrentUser(context, data.orderByAttribute || "buyTime", data.order || "desc", data.amount || 99999, data.sublevel || 3);
+});

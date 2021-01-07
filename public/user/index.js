@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", event => {
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
+function updateDetails() {
+    //
+}
+
 function loadLastTickets(count) {
     document.getElementById("tickets").innerHTML = "";
     //getTickets

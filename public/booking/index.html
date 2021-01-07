@@ -103,70 +103,88 @@
                 <details id="ZahlungDetails" hidden = true>
                     <summary id="Zahlung" class="expand">Zahlung</summary>
                     <form id="formStyle">
-                        <table>
-                            <tr>
-                                <td style="width: 60%">
-                                    <fieldset>
-                                        <legend>Rechnungsadresse</legend>
-                                        <div class="fieldContainer">
-                                            <div class="field">
-                                                <input id ="Vorname" class="input" placeholder="Vorname" required>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Nachname" class="input" placeholder="Nachname" required><br>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Email" type="email" class="input" placeholder="E-Mail-Adresse" required>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Rufnummer" type="tel" class="input" placeholder="Rufnummer" required><br>
-                                            </div>
-                                            <div class="field" style="width: 25%;">
-                                                <input id ="Postleitzahl" type="number" class="input" placeholder="Postleitzahl" required>
-                                            </div>
-                                            <div class="field" style="width: 70%;">
-                                                <input id ="Stadt" class="input" placeholder="Stadt" required><br>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Straße" class="input" placeholder="Straße" required>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Hausnummer" type="number" class="input" placeholder="Hausnummer" required><br>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Zusatz" class="input" placeholder="Adress-Zusatz"><br>                           
-                                            </div>
+                        <div class="row">
+                            <div class="col-10">
+                                <fieldset>
+                                    <legend>Rechnungsadresse</legend>
+                                    <div class="fieldContainer">
+                                        <div class="field">
+                                            <input id ="Vorname" class="input" placeholder="Vorname" required>
                                         </div>
-                                    </fieldset>
-                                </td>
-                                <td style="width: 40%; vertical-align: baseline;">
-                                    <fieldset>
-                                        <legend>Lieferadresse</legend>
-                                        <input type="checkbox" id="check" onclick = otherAdr() checked>
-                                        <label>Lieferadresse identisch mit Rechnungsadresse</label><br>
-                                        <div id="Rechnungsadresse"></div>
-                                    </fieldset>
-                                </td>
-                            </tr>
-                        </table>
-                        <br>
-                        <fieldset>
-                            <legend>Zahlungsmittel</legend>
-                            <div class="fieldContainer">
-                                <div class="field">
-                                    <input id="Kartennummer" type="number" class="input" placeholder="Kartennummer" required>
-                                </div>
-                                <div class="field">
-                                    <input id="Ablaufdatum" type="month" class="input" placeholder="Ablaufdatum" required>
-                                </div>
-                                <div class="field">
-                                    <input id="Karteninhaber" class="input" placeholder="Karteninhaber" required>
-                                </div>
-                                <div class="field">
-                                    <input type="number" class="input" placeholder="CVV" max="999" required>
-                                </div>
+                                        <div class="field">
+                                            <input id ="Nachname" class="input" placeholder="Nachname" required><br>
+                                        </div>
+                                        <div class="field">
+                                            <input id ="Email" type="email" class="input" placeholder="E-Mail-Adresse" required>
+                                        </div>
+                                        <div class="field">
+                                            <input id ="Rufnummer" type="tel" class="input" placeholder="Rufnummer" required><br>
+                                        </div>
+                                        <div class="field" style="width: 25%;">
+                                            <input id ="Postleitzahl" type="number" class="input" placeholder="Postleitzahl" required>
+                                        </div>
+                                        <div class="field" style="width: 70%;">
+                                            <input id ="Stadt" class="input" placeholder="Stadt" required><br>
+                                        </div>
+                                        <div class="field">
+                                            <input id ="Straße" class="input" placeholder="Straße" required>
+                                        </div>
+                                        <div class="field">
+                                            <input id ="Hausnummer" type="number" class="input" placeholder="Hausnummer" required><br>
+                                        </div>
+                                        <div class="field">
+                                            <input id ="Zusatz" class="input" placeholder="Adress-Zusatz"><br>                           
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
+                            <div class="col-6">
+                                <fieldset>
+                                    <legend>Lieferadresse</legend>
+                                    <input type="checkbox" id="check" onclick = otherAdr() checked>
+                                    <label>Lieferadresse identisch mit Rechnungsadresse</label><br>
+                                    <div id="Rechnungsadresse"></div>
+                                </fieldset>
+                                <br>
+                                <br>
+                                <fieldset>
+                                    <legend>Anmeldung</legend>
+                                    <div class="fieldContainer">
+                                        <div class="field">
+                                            <label for="username" class="label">Username</label>
+                                            <input type="text" name="username" class="input" placeholder=" " autocomplete="off"/>
+                                            
+                                        </div>
+                                        <div class="field">
+                                            <label for="password" class="label">Password</label>
+                                            <input type="password" name="password" class="input" placeholder=" " autocomplete="off"/>
+                                        </div>
+                                        <button id="SignUp">Sign Up</button>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-16">
+                                <fieldset>
+                                    <legend>Zahlungsmittel</legend>
+                                    <input type="radio" name="paymethod" value="vorOrt" id="Zahlungsmethode" onclick = pay() checked>
+                                    <label>Vor Ort bezahlen</label>
+                                    <input type="radio" name="paymethod" value="Kreditkarte" onclick = pay()>
+                                    <label>Kreditkarte</label>
+                                    <input type="radio" name="paymethod" value="GooglePay" onclick = pay()>
+                                    <label>Google Pay</label>
+                                    <input type="radio" name="paymethod" value="ApplePay" onclick = pay()>
+                                    <label>Apple Pay</label>
+                                    <input type="radio" name="paymethod" value="PayPal" onclick = pay()>
+                                    <label>PayPal</label>
+                                    <br>
+                                    <div id="radioAus"></div>
+                                </fieldset>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-14">&nbsp;</div>
                             <div class="col-2">
@@ -231,9 +249,7 @@
                                             <tr>
                                                 <th colspan="2">Zahlungsmethode</th>
                                             </tr>
-                                            <tr>
-                                                <td>Kartennummer:</td>
-                                                <td id="ausKartennummer"></td>
+                                            <tr id="ausKartennummer">
                                             </tr>
                                         </table>
                                     </div>

@@ -344,3 +344,23 @@ async function getTicketByID() {
             return;
         }).catch((error) => {console.error(error)});
 }
+
+async function stressTestCreateTicket() {
+    let ausgabeP = document.getElementById("ausgabe");
+    let row = document.getElementById("rowData");
+    let seat = document.getElementById("seatData");
+    let screeningId = document.getElementById("screeningId");
+
+    ausgabeP.innerHTML = "";
+
+    const param = {
+        row: row.value,
+        seat: seat.value,
+        screening: screeningId.value
+    };
+
+    for(i = 0; i < 10; i++){
+        functions.httpsCallable('database-createTicket')(param)
+        .catch((error) => {console.error(error)});
+    }
+} 

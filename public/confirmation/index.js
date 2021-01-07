@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", event => {
 //loadQRCodes();
 
 function home() {
-  window.location.href = "../index/index.html";
+  window.location.href = "../index/";
 }
 
 function loadQRCodes() {

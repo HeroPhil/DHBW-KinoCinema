@@ -48,10 +48,13 @@ class Ticket {
 }
 
 export async function createTicket(screening: string, row: number, seat: number, context: CallableContext, sublevel = 3) {
+  const error: {message: string} = { message: "" };
   const timestamp: number = Date.now();  
   // include anonymous users
   if(!context.auth) {
-    return "Error: You are not logged in!";
+    console.log("You are not logged in!");
+    error.message = "You are not logged in!";
+    return error;
   }
   const userId: string = context.auth.uid;
   const userPath: string = customersCollectionPath  + "/" + userId;
@@ -59,7 +62,9 @@ export async function createTicket(screening: string, row: number, seat: number,
 
   const screeningCheck = await basics.getDocumentByRef(screeningRef);
   if(!screeningCheck.exists) {
-    return "Error: This screening does not exist!"
+    console.log("This screening does not exist!");
+    error.message = "This screening does not exist!";
+    return error;
   }
 
   const screeningCheckObj = await new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
@@ -69,8 +74,22 @@ export async function createTicket(screening: string, row: number, seat: number,
     rowCount += element.count;
   });
 
-  if(!(0 <= seat && seat < width) || !(0 <= row && row < rowCount)) {
-    return "Error: This seat does not exist!"
+  if(!(1 <= seat && seat <= width) || !(1 <= row && row <= rowCount)) {
+    console.log("This seat does not exist!");
+    error.message = "This seat does not exist!";
+    return error;
+  }
+
+  const query = basics.getCollectionRefByID(ticketsCollectionPath)
+    .where("screening", "==", screeningRef)
+    .where("row", "==", row)
+    .where("seat", "==", seat);
+  const collection = await basics.getCollectionByRef(query);  
+
+  if(!collection.empty) {
+    console.log("Ticket is already taken!");
+    error.message = "Ticket is already taken!";
+    return error;
   }
 
   // check if there are any seats in this screening available
@@ -100,8 +119,9 @@ export async function createTicket(screening: string, row: number, seat: number,
   });
   
   if(locked !== true) {
-    console.log("Error: Ticket was already booked!")
-    return "Error: Ticket was already booked!";
+    console.log("Ticket was already booked!");
+    error.message = "Ticket was already booked!";
+    return error;
   }
   
   console.log("Locked for you.");
@@ -125,19 +145,57 @@ export async function createTicket(screening: string, row: number, seat: number,
 }
 
 export async function getTicketByID(id: string, context: CallableContext, sublevel = 3) {
+  const error: {message: string} = { message: "" };
   const document = await basics.getDocumentByID(ticketsCollectionPath + '/' + id);
   if(!context.auth) {
-    return "Error: You are not logged in!";
+    console.log("You are not logged in!");
+    error.message = "You are not logged in!";
+    return error;
   }
   if(!document.exists) {
-    return "Error: This ticket does not exist!";
+    console.log("This ticket does not exist!");
+    error.message = "This ticket does not exist!";
+    return error;
   }
   const ticket = await new Ticket(document.id, document.data()).resolveRefs(sublevel);
   if(ticket.data.user === context.auth.uid) {
     return ticket;
   } else {
-    console.log("Error: Access denied!");
-    console.log((await ticket).data.user +", "+ context.auth.uid)
-    return "Error: Access denied!";
+    console.log("Error: Access denied! "+ (await ticket).data.user +", "+ context.auth.uid);
+    error.message = "Access denied, you don't own this ticket!";
+    return error;
   }
+}
+
+export async function getTicketsOfCurrentUser(context: CallableContext, orderByAttribute: string, order: FirebaseFirestore.OrderByDirection, amount: string, sublevel = 3) {
+  const error: {message: string} = { message: "" };
+  const tickets: Ticket[] = [];
+
+  if(!context.auth) {
+    console.log("You are not logged in!");
+    error.message = "You are not logged in!";
+    return error;
+  }
+  const userRef = await basics.getDocumentRefByID(customersCollectionPath + '/' + context.auth.uid);
+
+  const ticketRef = await basics.getCollectionRefByID(ticketsCollectionPath)
+    .where("user", "==", userRef)
+    .orderBy(orderByAttribute, order)
+    .limit(parseInt(amount));
+
+  const ticketsCollection = await basics.getCollectionByRef(ticketRef);
+
+  const promises = [];
+  
+    for (const ticket of ticketsCollection.docs) {
+        promises.push(new Ticket(ticket.id, ticket.data()).resolveRefs(sublevel)
+            .then((ticketObj => {
+                tickets.push(ticketObj);
+                return;
+            }))
+        );
+    }
+  await Promise.all(promises);
+
+  return tickets;
 }
