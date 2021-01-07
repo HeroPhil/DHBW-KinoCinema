@@ -95,30 +95,51 @@ async function loadContent() {
 function seatGeneration(hallInfo) {
   var seatContainer = document.getElementById("seatContainer");
   var rowScreen = document.createElement("div");
+  var numberOfSeats = parseInt(hallInfo.width);
   rowScreen.classList.add("seat-row");
   var screen = document.createElement("div");
   screen.classList.add("screen");
   rowScreen.appendChild(screen);
   seatContainer.appendChild(rowScreen);
-  for(i = 0; i < hallInfo.rows.length; i++) {
-    var numberOfSeats = hallInfo.rows[i].count;
+  for(var i = 0; i < hallInfo.rows.length; i++) {
+    var rowAmount = hallInfo.rows[i].count;
     var seatPrice = hallInfo.rows[i].type.data.price;
-    var row = document.createElement("div");
-    row.classList.add("seat-row")
-    for(j = 0; j < numberOfSeats; j++) {
-      var seat = document.createElement("div");
-      var seatIdentificationObject = {
-        row : i,
-        seat : j
-      } //end of seatObject
-      seatsMap[seatCounter] = seatIdentificationObject;
-      seat.setAttribute("id", seatCounter);
-      seatCounter++;
-      seat.setAttribute("value", seatPrice)
-      seat.classList.add("seat");
-      row.appendChild(seat);
-    }
-    seatContainer.appendChild(row);
+    var seatType = hallInfo.rows[i].type.data.name;
+    seatType = seatType.replace("\"", "");
+    seatType = seatType.trim();
+    for(var k = 0; k < rowAmount; k++) {
+      var row = document.createElement("div");
+      row.classList.add("seat-row");
+      for(var j = 0; j < numberOfSeats; j++) {
+        var seat = document.createElement("div");
+        var seatIdentificationObject = {
+          row : i,
+          seat : j
+        } //end of seatObject
+        seatsMap[seatCounter] = seatIdentificationObject;
+        seat.setAttribute("id", seatCounter);
+        seatCounter++;
+        seat.setAttribute("value", seatPrice);
+        seat.classList.add("seat");
+        console.log(identifySeatType(seatType));
+        var type = identifySeatType(seatType);
+        seat.classList.add(type.value);
+        row.appendChild(seat);
+      } //end of for
+      seatContainer.appendChild(row);
+    } //end of for
+  } //end of for
+}
+
+async function identifySeatType(seat) {
+  if(seat.includes("special")) {
+    console.log(seat);
+    var type = "special";
+    console.log(type);
+    return type;
+  } else {
+    console.log(seat);
+    return seat;
   }
 }
 
