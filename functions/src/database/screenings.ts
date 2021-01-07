@@ -1,6 +1,9 @@
 import * as basics from './basics';
 import { Movie, moviesCollectionPath } from './movies';
 import { Hall } from './hall';
+import { createEmptyHallSeatArray, markSeatsAsOccupied } from '../logic/screenings';
+import { countRowsOfScreening } from '../logic/row';
+import { Ticket } from './tickets';
 
 export const screeningsCollectionPath = 'live/events/screenings'
 const ticketsCollectionPath = 'live/events/tickets';
@@ -100,30 +103,25 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, until=9999
 
 export async function getBookedSeatsByScreeningID(id: string) {
     const screeningRef = basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
+
     const query = basics.getCollectionRefByID(ticketsCollectionPath)
         .where("screening", "==", screeningRef);
-    const collection = await basics.getCollectionByRef(query);
-    
-    const screening = await getScreeningByID(id, 1);
-    const width = screening.data.hall.data.width;
-    let rows = 0;
-
-    screening.data.hall.data.rows.forEach((element: { count: number; }) => {
-        rows += element.count;
-    });
-        
-    const seats: (boolean[])[] = [];
-    for(let r = 0; r < rows; r++) {
-        const row: boolean[] = [];
-        for(let s = 0; s < width; s++) {
-            row.push(false);
+    const tickets = basics.getCollectionByRef(query).then((collection: { docs: any; }) => {
+        const result = [];
+        for (const doc of collection.docs) {
+            result.push(new Ticket(doc.id, doc.data()));
         }
-        seats.push(row);
-    }
-
-    collection.docs.forEach((ticket: { data: () => any; }) => {
-        seats[ticket.data().row - 1][ticket.data().seat - 1] = true;
+        return result;
     });
+
+    const screening = await getScreeningByID(id, 1);
+
+    const rows = countRowsOfScreening(screening);
+    
+    const width = screening.data.hall.data.width;
+    let seats = createEmptyHallSeatArray(width, rows);
+
+    seats = markSeatsAsOccupied(seats, await tickets);
     
     return seats; 
 }

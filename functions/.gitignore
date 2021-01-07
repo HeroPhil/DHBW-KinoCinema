@@ -11,5 +11,8 @@ typings/
 # Node.js dependency directory
 node_modules/
 
+# debug log files
+./*.log
+
 # .local
 .local/
