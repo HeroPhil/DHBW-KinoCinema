@@ -12,6 +12,7 @@
 // firebase.performance(); // call to activate
 let app;
 let functions;
+let screenings = 0;
 const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 const days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 let screeningsMonday = [];
@@ -40,6 +41,7 @@ async function loadContent() {
     var cover = document.getElementById("movie-cover");
     var storage = firebase.storage();
     title.innerHTML = movieData.data.name;
+    sessionStorage.setItem('movieTitle', movieData.data.name);
     description.innerHTML = movieData.data.description;
     var url = await storage.refFromURL(movieData.data.cover).getDownloadURL();
     cover.src = url;
@@ -66,13 +68,6 @@ async function loadContent() {
     var rowScreenings;
     var cell;
     rowheadings = document.createElement("tr");
-    console.log(screeningsSunday);
-    console.log(screeningsMonday);
-    console.log(screeningsTuesday);
-    console.log(screeningsWednesday);
-    console.log(screeningsThursday);
-    console.log(screeningsFriday);
-    console.log(screeningsSaturday);
     for(var k = 0; k < days.length; k++) {
         if(actualDay === 7) {
             actualDay = 0;
@@ -102,6 +97,7 @@ async function addScreeningDataToArray(day, data) {
             screeningsSunday.push({
                 time : data.data.startTime,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
@@ -109,6 +105,7 @@ async function addScreeningDataToArray(day, data) {
             screeningsMonday.push({
                 time : data.data.startTime,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
@@ -116,6 +113,7 @@ async function addScreeningDataToArray(day, data) {
             screeningsTuesday.push({
                 time : data.data.startTime,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
@@ -123,6 +121,7 @@ async function addScreeningDataToArray(day, data) {
             screeningsWednesday.push({
                 time : data.data.startTime,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
@@ -130,6 +129,7 @@ async function addScreeningDataToArray(day, data) {
             screeningsThursday.push({
                 time : data.data.startTime,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
@@ -137,6 +137,7 @@ async function addScreeningDataToArray(day, data) {
             screeningsFriday.push({
                 time : data.data.startTime,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
@@ -144,6 +145,7 @@ async function addScreeningDataToArray(day, data) {
             screeningsSaturday.push({
                 time : data.data.startTime,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
@@ -190,6 +192,9 @@ async function addScreeningToList(dataArray, row) {
                 var inputScreening = document.createElement("input");
                 inputScreening.setAttribute("type", "radio");
                 inputScreening.setAttribute("id", information.screeningId);
+                inputScreening.setAttribute("value", screenings);
+                sessionStorage.setItem(screenings, JSON.stringify(information));
+                screenings++;
                 inputScreening.setAttribute("name", "time-slot");
                 var labelScreening = document.createElement("label");
                 labelScreening.setAttribute("for", information.screeningId)
@@ -208,3 +213,11 @@ async function addScreeningToList(dataArray, row) {
         row.appendChild(cell);
     }
 } //end of addScreeningToList
+
+async function analyzeRadioInput() {
+    var screening = document.querySelector('input[name="time-slot"]:checked');
+    var information = sessionStorage.getItem(screening.value);
+    sessionStorage.setItem('informationOfBooking', information);
+    var reference = "../booking/booking.html";
+    window.location = reference;
+} //end of analyzeRadioInput
