@@ -167,8 +167,8 @@ export async function getTicketByID(id: string, context: CallableContext, sublev
   }
 }
 
-export async function getTicketsOfCurrentUser(context: CallableContext, orderByAttribute: string, order: FirebaseFirestore.OrderByDirection, amount: string, sublevel = 3) {
-  const error: {message: string} = { message: "" };
+export async function getTicketsOfCurrentUser(context: CallableContext, orderByAttribute: string, order: FirebaseFirestore.OrderByDirection, amount: number, sublevel = 3) {
+  let error: {message: string} = { message: "" };
   const tickets: Ticket[] = [];
 
   if(!context.auth) {
@@ -181,7 +181,7 @@ export async function getTicketsOfCurrentUser(context: CallableContext, orderByA
   const ticketRef = await basics.getCollectionRefByID(ticketsCollectionPath)
     .where("user", "==", userRef)
     .orderBy(orderByAttribute, order)
-    .limit(parseInt(amount));
+    .limit(amount);
 
   const ticketsCollection = await basics.getCollectionByRef(ticketRef);
 
