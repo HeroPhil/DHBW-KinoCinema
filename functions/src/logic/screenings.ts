@@ -1,13 +1,6 @@
 import { Screening } from "../database/screenings";
 
 
-export const countRows = (screening: Screening) => {
-    let rows = 0;
-    screening.data.hall.data.rows.forEach((element: { count: number; }) => {
-        rows += element.count;
-    });
-    return rows;
-}
 
 
 export const createEmptyHallSeatArray = (seatCount: number, rowCount: number) => {

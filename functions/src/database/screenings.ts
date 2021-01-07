@@ -1,7 +1,8 @@
 import * as basics from './basics';
 import { Movie, moviesCollectionPath } from './movies';
 import { Hall } from './hall';
-import { countRows, createEmptyHallSeatArray, markSeatsAsOccupied } from '../logic/screenings';
+import { createEmptyHallSeatArray, markSeatsAsOccupied } from '../logic/screenings';
+import { countRowsOfScreening } from '../logic/row';
 
 export const screeningsCollectionPath = 'live/events/screenings'
 const ticketsCollectionPath = 'live/events/tickets';
@@ -108,7 +109,7 @@ export async function getBookedSeatsByScreeningID(id: string) {
 
     const screening = await getScreeningByID(id, 1);
 
-    const rows = countRows(screening);
+    const rows = countRowsOfScreening(screening);
     
     const width = screening.data.hall.data.width;
     let seats = createEmptyHallSeatArray(width, rows);
