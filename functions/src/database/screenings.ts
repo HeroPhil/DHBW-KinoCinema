@@ -3,6 +3,7 @@ import { Movie, moviesCollectionPath } from './movies';
 import { Hall } from './hall';
 import { createEmptyHallSeatArray, markSeatsAsOccupied } from '../logic/screenings';
 import { countRowsOfScreening } from '../logic/row';
+import { Ticket } from './tickets';
 
 export const screeningsCollectionPath = 'live/events/screenings'
 const ticketsCollectionPath = 'live/events/tickets';
@@ -105,7 +106,13 @@ export async function getBookedSeatsByScreeningID(id: string) {
 
     const query = basics.getCollectionRefByID(ticketsCollectionPath)
         .where("screening", "==", screeningRef);
-    const collection = basics.getCollectionByRef(query);
+    const tickets = basics.getCollectionByRef(query).then((collection: { docs: any; }) => {
+        let result = [];
+        for (const doc of collection.docs) {
+            result.push(new Ticket(doc.id, doc.data()));
+        }
+        return result;
+    });
 
     const screening = await getScreeningByID(id, 1);
 
@@ -114,7 +121,7 @@ export async function getBookedSeatsByScreeningID(id: string) {
     const width = screening.data.hall.data.width;
     let seats = createEmptyHallSeatArray(width, rows);
 
-    seats = markSeatsAsOccupied(seats, await collection);
+    seats = markSeatsAsOccupied(seats, await tickets);
     
     return seats; 
 }

@@ -10,7 +10,7 @@ const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
 const ticketsCollectionPath = 'live/events/tickets';
 
-class Ticket {
+export class Ticket {
   id: string;
   data: any;
   constructor (id: string, data: any) {

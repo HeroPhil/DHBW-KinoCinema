@@ -1,3 +1,4 @@
+import { Ticket } from "../database/tickets";
 
 export const createEmptyHallSeatArray = (seatCount: number, rowCount: number) => {
     const seats: (boolean[])[] = [];
@@ -14,13 +15,12 @@ export const createEmptyHallSeatArray = (seatCount: number, rowCount: number) =>
 }
 
 
-export const markSeatsAsOccupied = (seats: boolean[][], tickets: { docs: { data: () => any; }[]; } ) => {
-    tickets.docs.forEach((ticket: { data: () => any; }) => {
-        seats[ticket.data().row - 1][ticket.data().seat - 1] = true;
-    });
+export const markSeatsAsOccupied = (seats: boolean[][], tickets: Ticket[] ) => {
+    for (const ticket of tickets) {
+        seats[ticket.data.row - 1][ticket.data.seat - 1] = true;
+    };
     
     return seats;
-
 }
 
 
