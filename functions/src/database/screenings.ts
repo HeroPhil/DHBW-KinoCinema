@@ -1,6 +1,7 @@
 import * as basics from './basics';
 import { Movie, moviesCollectionPath } from './movies';
 import { Hall } from './hall';
+import { countRows, createEmptyHallSeatArray, markSeatsAsOccupied } from '../logic/screenings';
 
 export const screeningsCollectionPath = 'live/events/screenings'
 const ticketsCollectionPath = 'live/events/tickets';
@@ -100,30 +101,19 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, until=9999
 
 export async function getBookedSeatsByScreeningID(id: string) {
     const screeningRef = basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
+
     const query = basics.getCollectionRefByID(ticketsCollectionPath)
         .where("screening", "==", screeningRef);
-    const collection = await basics.getCollectionByRef(query);
-    
+    const collection = basics.getCollectionByRef(query);
+
     const screening = await getScreeningByID(id, 1);
+
+    const rows = countRows(screening);
+    
     const width = screening.data.hall.data.width;
-    let rows = 0;
+    let seats = createEmptyHallSeatArray(width, rows);
 
-    screening.data.hall.data.rows.forEach((element: { count: number; }) => {
-        rows += element.count;
-    });
-        
-    const seats: (boolean[])[] = [];
-    for(let r = 0; r < rows; r++) {
-        const row: boolean[] = [];
-        for(let s = 0; s < width; s++) {
-            row.push(false);
-        }
-        seats.push(row);
-    }
-
-    collection.docs.forEach((ticket: { data: () => any; }) => {
-        seats[ticket.data().row - 1][ticket.data().seat - 1] = true;
-    });
+    seats = markSeatsAsOccupied(seats, await collection);
     
     return seats; 
 }
