@@ -12,6 +12,10 @@
 // firebase.performance(); // call to activate
 let app;
 let functions;
+let seatCounter = 0;
+let seatsMap = [];
+let selectedSeats = [];
+let blockedSeats = [];
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
     functions = app.functions("europe-west1");
@@ -24,7 +28,7 @@ const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
 const count = document.getElementById('count');
 const price = document.getElementById('price');
 
-let ticketPrice = Number(document.getElementById('movie').getAttribute('value'));
+let ticketPrice = +document.getElementById('movie').getAttribute('value');
 
 const populateUI = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
@@ -44,13 +48,15 @@ populateUI();
 
 const updateSelectedSeatsCount = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
-
-  const seatsIndex = [...selectedSeats].map(seat => [...seats].indexOf(seat));
-
-  const selectedSeatsCount = selectedSeats.length;
-
-  count.innerText = selectedSeatsCount;
-  price.innerText = selectedSeatsCount * ticketPrice;
+  console.log(selectedSeats);
+  var sum = 0;
+  var countedSelectedSeats = 0;
+  for(var i = 0; i < selectedSeats.length; i++) {
+    sum = sum + parseFloat(selectedSeats[i].getAttribute("value"));
+    countedSelectedSeats++;
+  }
+  count.innerText = countedSelectedSeats;
+  price.innerText = sum;
 };
 
 // Seat select event
@@ -60,35 +66,61 @@ container.addEventListener('click', e => {
     !e.target.classList.contains('occupied')
   ) {
     e.target.classList.toggle('selected');
-
+    var seat = e.target.getAttribute("id");
+    if(e.target.classList.contains('selected')) {
+      selectedSeats[seat] = seatsMap[seat];
+    } else {
+      selectedSeats[seat] = null;
+    } //end of if-else
     updateSelectedSeatsCount();
   }
 });
 
+async function loadContent() {
+  var information = sessionStorage.getItem('informationOfBooking');
+  information = JSON.parse(information);
+  console.log(information);
+  var movieTitle = sessionStorage.getItem('movieTitle');
+  var titlePlaceHolder = document.getElementById("movie-title");
+  titlePlaceHolder.innerHTML = movieTitle;
+  var hallInfo = information.hall.data;
+  seatGeneration(hallInfo);
+  var param = {id: information.screeningId};
+  var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param).then(result => {
+    console.log(result.data);
+  });
+} //end of loadContent
 
 // dynamic seats
-function seatGeneration() {
+function seatGeneration(hallInfo) {
   var seatContainer = document.getElementById("seatContainer");
   var rowScreen = document.createElement("div");
-    rowScreen.classList.add("seat-row");
-    var screen = document.createElement("div");
-      screen.classList.add("screen");
-    rowScreen.appendChild(screen);
-    seatContainer.appendChild(rowScreen);
-  
-  for(i = 1; i <= 14; i++) {
+  rowScreen.classList.add("seat-row");
+  var screen = document.createElement("div");
+  screen.classList.add("screen");
+  rowScreen.appendChild(screen);
+  seatContainer.appendChild(rowScreen);
+  for(i = 0; i < hallInfo.rows.length; i++) {
+    var numberOfSeats = hallInfo.rows[i].count;
+    var seatPrice = hallInfo.rows[i].type.data.price;
     var row = document.createElement("div");
-      row.classList.add("seat-row")
-      for(j = 1; j <= 14; j++) {
-        var seat = document.createElement("div");
-        seat.classList.add("seat");
-        row.appendChild(seat);
-      }
-      seatContainer.appendChild(row);
-    
+    row.classList.add("seat-row")
+    for(j = 0; j < numberOfSeats; j++) {
+      var seat = document.createElement("div");
+      var seatIdentificationObject = {
+        row : i,
+        seat : j
+      } //end of seatObject
+      seatsMap[seatCounter] = seatIdentificationObject;
+      seat.setAttribute("id", seatCounter);
+      seatCounter++;
+      seat.setAttribute("value", seatPrice)
+      seat.classList.add("seat");
+      row.appendChild(seat);
+    }
+    seatContainer.appendChild(row);
   }
 }
-
 
 
 /*
