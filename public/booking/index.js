@@ -88,6 +88,7 @@ async function loadContent() {
   var param = {id: information.screeningId};
   var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param).then(result => {
     console.log(result.data);
+    return;
   });
 } //end of loadContent
 
