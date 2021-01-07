@@ -1,7 +1,3 @@
-import { Screening } from "../database/screenings";
-
-
-
 
 export const createEmptyHallSeatArray = (seatCount: number, rowCount: number) => {
     const seats: (boolean[])[] = [];

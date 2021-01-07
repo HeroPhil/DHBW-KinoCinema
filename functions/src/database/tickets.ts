@@ -3,7 +3,6 @@ import { Screening, screeningsCollectionPath } from './screenings';
 import {nanoid} from 'nanoid';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { checkIfAnyLogin } from '../logic/auth';
-import { countRowsOfScreening } from '../logic/row';
 import { checkIfSeatIsValidInScreening } from '../logic/tickets';
 
 const screeningsSyncCollectionPath = "live/sync/screenings";
