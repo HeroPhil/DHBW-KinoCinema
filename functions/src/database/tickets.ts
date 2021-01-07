@@ -2,13 +2,15 @@ import * as basics from './basics';
 import { Screening, screeningsCollectionPath } from './screenings';
 import {nanoid} from 'nanoid';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { checkIfAnyLogin } from '../logic/auth';
+import { checkIfSeatIsValidInScreening } from '../logic/tickets';
 
 const screeningsSyncCollectionPath = "live/sync/screenings";
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
 const ticketsCollectionPath = 'live/events/tickets';
 
-class Ticket {
+export class Ticket {
   id: string;
   data: any;
   constructor (id: string, data: any) {
@@ -48,12 +50,12 @@ class Ticket {
 }
 
 export async function createTicket(screening: string, row: number, seat: number, context: CallableContext, sublevel = 3) {
-  const error: {message: string} = { message: "" };
+  let error: {message: string} = { message: "" };
   const timestamp: number = Date.now();  
   // include anonymous users
-  if(!context.auth) {
-    console.log("You are not logged in!");
-    error.message = "You are not logged in!";
+  const checkLogin = checkIfAnyLogin(context);
+  if (checkLogin.error) {
+    error = checkLogin.error;
     return error;
   }
   const userId: string = context.auth.uid;
@@ -68,18 +70,13 @@ export async function createTicket(screening: string, row: number, seat: number,
   }
 
   const screeningCheckObj = await new Screening(screeningCheck.id, screeningCheck.data()).resolveRefs(2);
-  const width = screeningCheckObj.data.hall.data.width;
-  let rowCount = 0;
-  screeningCheckObj.data.hall.data.rows.forEach((element: { count: number; }) => {
-    rowCount += element.count;
-  });
 
-  if(!(1 <= seat && seat <= width) || !(1 <= row && row <= rowCount)) {
-    console.log("This seat does not exist!");
-    error.message = "This seat does not exist!";
+  const checkSeatCord = checkIfSeatIsValidInScreening({"seat": seat, "row": row}, screeningCheckObj);
+  if (checkSeatCord.error) {
+    error = checkSeatCord.error;
     return error;
   }
-
+  
   const query = basics.getCollectionRefByID(ticketsCollectionPath)
     .where("screening", "==", screeningRef)
     .where("row", "==", row)
@@ -171,11 +168,12 @@ export async function getTicketsOfCurrentUser(context: CallableContext, orderByA
   let error: {message: string} = { message: "" };
   const tickets: Ticket[] = [];
 
-  if(!context.auth) {
-    console.log("You are not logged in!");
-    error.message = "You are not logged in!";
+  const check = checkIfAnyLogin(context);
+  if (check.error) {
+    error = check.error;
     return error;
   }
+
   const userRef = await basics.getDocumentRefByID(customersCollectionPath + '/' + context.auth.uid);
 
   const ticketRef = await basics.getCollectionRefByID(ticketsCollectionPath)
