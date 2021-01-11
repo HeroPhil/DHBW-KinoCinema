@@ -33,16 +33,14 @@ let ticketPrice = +document.getElementById('movie').getAttribute('value');
 
 const populateUI = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
-
   if (selectedSeats !== null && selectedSeats.length > 0) {
     seats.forEach((seat, index) => {
       if (selectedSeats.indexOf(index) > -1) {
         seat.classList.add('selected');
       }
     });
-  }
-
-};
+  } //end of if
+}; //end of lambda expression
 
 populateUI();
 
@@ -54,10 +52,10 @@ const updateSelectedSeatsCount = () => {
   for(var i = 0; i < selectedSeats.length; i++) {
     sum = sum + parseFloat(selectedSeats[i].getAttribute("value"));
     countedSelectedSeats++;
-  }
+  } //end of for
   count.innerText = countedSelectedSeats;
   price.innerText = sum;
-};
+}; //end of lambda expression
 
 // Seat select event
 container.addEventListener('click', e => {
@@ -73,8 +71,8 @@ container.addEventListener('click', e => {
       selectedSeats[seat] = null;
     } //end of if-else
     updateSelectedSeatsCount();
-  }
-});
+  } //end of if-else
+}); //end of eventhandler
 
 async function loadContent() {
   var information = sessionStorage.getItem('informationOfBooking');
@@ -127,7 +125,7 @@ function seatGeneration(hallInfo) {
       seatContainer.appendChild(row);
     } //end of for
   } //end of for
-}
+} //end of seatGeneration
 
 async function identifySeatType(seat) {
   if(seat.includes("special")) {
@@ -135,8 +133,8 @@ async function identifySeatType(seat) {
     return type;
   } else {
     return seat;
-  }
-}
+  } //end of if-else
+} //end of identifySeatType
 
 async function blockAlreadyBookedSeats(seatInfo) {
   var blockedSeatsInfo = seatInfo.data;
@@ -150,6 +148,7 @@ async function blockAlreadyBookedSeats(seatInfo) {
       blocked = blocked.toString();
       if(blocked.localeCompare("true") == 0) {
         var seat = document.getElementById(blockedSeatId);
+        blockedSeats.push(seatsMap[blockedSeatId]);
         seat.classList.add('occupied');
       } //end of if
       blockedSeatId++;

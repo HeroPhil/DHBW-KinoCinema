@@ -221,10 +221,12 @@ async function addScreeningToList(dataArray, row) {
 
 async function analyzeRadioInput() {
     var screening = document.querySelector('input[name="time-slot"]:checked');
-    console.log(screening.value);
-    var information = sessionStorage.getItem(screening.value);
-    console.log(information);
-    sessionStorage.setItem('informationOfBooking', information);
-    var reference = "../booking/";
-    window.location = reference;
+    if(screening != null) {
+        console.log(screening.value);
+        var information = sessionStorage.getItem(screening.value);
+        console.log(information);
+        sessionStorage.setItem('informationOfBooking', information);
+        var reference = "../booking/";
+        window.location = reference;
+    } //end of if
 } //end of analyzeRadioInput
