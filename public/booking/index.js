@@ -29,7 +29,7 @@ const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
 const count = document.getElementById('count');
 const price = document.getElementById('price');
 
-let ticketPrice = +document.getElementById('movie').getAttribute('value');
+let ticketPrice = Number(document.getElementById('movie').getAttribute('value'));
 
 const populateUI = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
@@ -146,7 +146,7 @@ async function blockAlreadyBookedSeats(seatInfo) {
     for(var j = 0; j < parseInt(rowInfo.length); j++) {
       blocked = rowInfo[j];
       blocked = blocked.toString();
-      if(blocked.localeCompare("true") == 0) {
+      if(blocked.localeCompare("true") === 0) {
         var seat = document.getElementById(blockedSeatId);
         blockedSeats.push(seatsMap[blockedSeatId]);
         seat.classList.add('occupied');

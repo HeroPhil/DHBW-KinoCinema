@@ -221,7 +221,7 @@ async function addScreeningToList(dataArray, row) {
 
 async function analyzeRadioInput() {
     var screening = document.querySelector('input[name="time-slot"]:checked');
-    if(screening != null) {
+    if(screening !== null) {
         console.log(screening.value);
         var information = sessionStorage.getItem(screening.value);
         console.log(information);
