@@ -116,7 +116,7 @@ function seatGeneration(hallInfo) {
           seat : j
         } //end of seatObject
         seatsMap[seatCounter] = seatIdentificationObject;
-        seat.setAttribute("id", seatCounter);
+        seat.id = seatCounter;
         seatCounter++;
         seat.setAttribute("value", seatPrice);
         seat.classList.add("seat");
@@ -139,20 +139,23 @@ async function identifySeatType(seat) {
 }
 
 async function blockAlreadyBookedSeats(seatInfo) {
-  console.log(seatInfo);
   var blockedSeatsInfo = seatInfo.data;
   var rowInfo;
-  var counter = 0;
-  for(var i = 0; i < blockedSeatsInfo.length; i++) {
+  var blocked;
+  var blockedSeatId = 0;
+  for(var i = 0; i < parseInt(blockedSeatsInfo.length); i++) {
     rowInfo = blockedSeatsInfo[i];
-    for(var j = 0; j < rowInfo.length; j++) {
-      if(rowInfo[j].includes("true")) {
-        var seat = document.getElementById(counter);
+    for(var j = 0; j < parseInt(rowInfo.length); j++) {
+      blocked = rowInfo[j];
+      blocked = blocked.toString();
+      if(blocked.localeCompare("true") == 0) {
+        var seat = document.getElementById(blockedSeatId);
         seat.classList.add('occupied');
       } //end of if
-    }
-  }
-}
+      blockedSeatId++;
+    } //end of for
+  } //end of for
+} //end of blockAlreadyBookedSeats
 
 /*
  * --------------------------------------------------------------------------
