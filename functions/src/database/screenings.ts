@@ -151,9 +151,9 @@ export async function addScreening(movie:  string, hall: string, price: number, 
     }
     
     if(repetitions !== undefined && increments !== undefined) {
-        for(var i = 0; i < repetitions; i++){
-            let modifiedStartTime = startTime + (i * increments);
-            var data = {
+        for(let i = 0; i < repetitions; i++){
+            const modifiedStartTime = startTime + (i * increments);
+            const data = {
                 movie:  movieRef,
                 hall: hallRef,
                 price: price,
@@ -162,13 +162,13 @@ export async function addScreening(movie:  string, hall: string, price: number, 
 
             promises.push();
 
-            let screeningRef = await basics.addDocToCollectionByID(screeningsCollectionPath, data);
-            let screening = await basics.getDocumentByRef(screeningRef);
+            const screeningRef = await basics.addDocToCollectionByID(screeningsCollectionPath, data);
+            const screening = await basics.getDocumentByRef(screeningRef);
 
             screenings.push(await new Screening(screening.id, screening.data()).resolveRefs(3));
         } 
     } else {
-        var data = {
+        const dataOnce = {
             movie:  movieRef,
             hall: hallRef,
             price: price,
@@ -177,8 +177,8 @@ export async function addScreening(movie:  string, hall: string, price: number, 
 
         promises.push();
 
-        let screeningRef = await basics.addDocToCollectionByID(screeningsCollectionPath, data);
-        let screening = await basics.getDocumentByRef(screeningRef);
+        const screeningRef = await basics.addDocToCollectionByID(screeningsCollectionPath, dataOnce);
+        const screening = await basics.getDocumentByRef(screeningRef);
 
         screenings.push(await new Screening(screening.id, screening.data()).resolveRefs(3));
     }
