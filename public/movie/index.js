@@ -12,6 +12,13 @@
 // firebase.performance(); // call to activate
 let app;
 let functions;
+document.addEventListener("DOMContentLoaded", event => {
+    app = firebase.app();
+    functions = app.functions("europe-west1");
+});
+//
+// // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
 let screenings = 0;
 const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 const days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
@@ -22,12 +29,6 @@ let screeningsThursday = [];
 let screeningsFriday = [];
 let screeningsSaturday = [];
 let screeningsSunday = [];
-document.addEventListener("DOMContentLoaded", event => {
-    app = firebase.app();
-    functions = app.functions("europe-west1");
-});
-//
-// // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
     var id = location.search;
@@ -46,16 +47,20 @@ async function loadContent() {
     var url = await storage.refFromURL(movieData.data.cover).getDownloadURL();
     cover.src = url;
     var subLevel = 4;
-    var date = Math.floor(Date.now());
+    var sinceDate = Math.floor(Date.now());
+    var untilDate = Math.floor(Date.now() + (1000 * 60 *60 *24 *7));
     var paramScreenings = {
+        id : movieData.id,
         sublevel : subLevel,
-        since : date
+        since : sinceDate,
+        until : untilDate
     };
     var singleScreeningData
     var screeningList = document.getElementById("movie-screening-list");
     var screeningTable = document.createElement("table");
     screeningTable.setAttribute("border", "1");
-    var screeningsForMovie = await functions.httpsCallable("database-getAllScreenings")(paramScreenings);
+    var screeningsForMovie = await functions.httpsCallable("database-getScreeningsOfMovieByID")(paramScreenings);
+    console.log(screeningsForMovie);
     screeningData = screeningsForMovie.data;
     screeningData.forEach(screening => {
         singleScreeningData = screening.data;
@@ -217,8 +222,12 @@ async function addScreeningToList(dataArray, row) {
 
 async function analyzeRadioInput() {
     var screening = document.querySelector('input[name="time-slot"]:checked');
-    var information = sessionStorage.getItem(screening.value);
-    sessionStorage.setItem('informationOfBooking', information);
-    var reference = "../booking/booking.html";
-    window.location = reference;
+    if(screening !== null) {
+        console.log(screening.value);
+        var information = sessionStorage.getItem(screening.value);
+        console.log(information);
+        sessionStorage.setItem('informationOfBooking', information);
+        var reference = "../booking/";
+        window.location = reference;
+    } //end of if
 } //end of analyzeRadioInput

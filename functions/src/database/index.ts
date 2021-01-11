@@ -61,3 +61,11 @@ export const getTicketByID = httpsOnCall((data, context) => {
 export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
     return tickets.getTicketsOfCurrentUser(context, data.orderByAttribute || "buyTime", data.order || "desc", parseInt(data.amount) || 99999, parseInt(data.sublevel) || 3);
 });
+
+export const addMovie = httpsOnCall((data, context) => {
+    return movies.addMovie(data.category, data.cover, data.description, parseInt(data.duration), data.name, parseInt(data.priority));
+});
+
+export const updateMovie = httpsOnCall((data, context) => {
+    return movies.updateMovie(data.id, data.newData);
+});

@@ -57,3 +57,27 @@ export async function getMoviesByCategory(category: string, amount: number) {
 
     return movies;
 }
+
+export async function addMovie(category: string, cover: string, description: string, duration: number, name: string, priority: number) {
+    const data = {
+        category: category,
+        cover: cover,
+        description: description,
+        duration: duration,
+        name: name,
+        priority: priority
+    };
+
+    const movieRef = await basics.addDocToCollectionByID(moviesCollectionPath, data);
+    const movie = await basics.getDocumentByRef(movieRef);
+
+    return new Movie(movie.id, movie.data()); 
+}
+
+export async function updateMovie(id: string, newData: {}) {
+    const promises = [];
+    const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, newData);
+    promises.push(movie);
+    await Promise.all(promises);
+    return new Movie(id, newData); 
+}
