@@ -69,3 +69,11 @@ export const addMovie = httpsOnCall((data, context) => {
 export const updateMovie = httpsOnCall((data, context) => {
     return movies.updateMovie(data.id, data.newData);
 });
+
+export const addScreening = httpsOnCall((data, context) => {
+    return screenings.addScreening(data.movie, data.hall, parseInt(data.price), parseInt(data.startTime), parseInt(data.repetitions) || undefined, parseInt(data.increments) || undefined);
+});
+
+export const updateScreening = httpsOnCall((data, context) => {
+    return screenings.updateScreening(data.id, data.newData);
+});
