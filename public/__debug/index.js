@@ -359,8 +359,15 @@ async function stressTestCreateTicket() {
         screening: screeningId.value
     };
 
-    for(i = 0; i < 10; i++){
-        functions.httpsCallable('database-createTicket')(param)
-        .catch((error) => {console.error(error)});
+    const results = [];
+    for(i = 0; i < 10; i++) {
+        results.push(functions.httpsCallable('database-createTicket')(param));
+    }
+    await Promise.all(results);
+
+    for(result in results) {
+        if(result.error) {
+            console.error(result.error);
+        }
     }
 } 
