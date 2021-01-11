@@ -92,6 +92,7 @@ async function loadContent() {
     document.getElementById("slideshow-container").appendChild(nextBut);
 
     showSlides(1);
+    endLoading();
 }
 
 

@@ -33,6 +33,7 @@
         <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
         <script src="./index.js"></script>
+        <script src="../global.js"></script>
 
         
     </head>
@@ -43,31 +44,40 @@
 
     <body class="dark" onload="loadContent()">
 
-        <div class="navbar"></div>
+        <div class="navbar">&nbsp;</div>
+        
 
         <main>
             <div id="headerX"></div>
 
-            <div class="row">
-                <div class="col-4">
-                    <div class="movie-poster"><img id="movie-cover" src="/public/icons/jpg/JamesBond.jpg"/></div>
-                </div>
-                 
-                <div class="col-11">
-                    <div class="movie-content">
+            <div id="loading">
+                <div class="loadingio-spinner-pulse-utrg899k0nk" >
+                    <div class="ldio-t32oece7z3">
+                        <div></div><div></div><div></div>
+                    </div>
+                </div> 
+            </div>
 
-                        <div class="title" id="movie-title">Loading ...</div>
-                        <div class="description" id="movie-description">
-                            <!-- Loading Animation-->
-                                <div class="loadingio-spinner-pulse-ja9hjn9r8bd">
-                                    <div class="ldio-p46e4nihbm"></div>
-                                </div>
-                                Loading...<br> 
+            <div id="main" hidden>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="movie-poster">
+                            <img id="movie-cover">
                         </div>
-                        <div class="times" id="movie-screening-list">
-                            
+                    </div>
+                    
+                    <div class="col-11">
+                        <div class="movie-content">
+
+                            <div class="title" id="movie-title">Loading ...</div>
+                            <div class="description" id="movie-description">
+                                    Loading...<br> 
+                            </div>
+                            <div class="times" id="movie-screening-list">
+                                
+                            </div>
+                            <button id= "book-button" onclick="window.location.href='../booking/'">Buchen</button>
                         </div>
-                        <button id= "book-button" onclick="window.location.href='../booking/'">Buchen</button>
                     </div>
                 </div>
             </div>

@@ -88,6 +88,7 @@ async function loadContent() {
   var param = {id: information.screeningId};
   var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
   blockAlreadyBookedSeats(blockedSeats);
+  endLoading();
 } //end of loadContent
 
 // dynamic seats
@@ -159,6 +160,13 @@ async function blockAlreadyBookedSeats(seatInfo) {
  */
 
 function jumpToZahlung() {
+  var radioButtons = document.getElementsByName("paymethod");
+    for(var i = 0; i < radioButtons.length; i++){
+        if(radioButtons[i].checked == true){
+            pay(i);
+        }
+    }
+
    document.getElementById("ZahlungDetails").open = true;
    document.getElementById("selectionDetails").open = false;
    document.getElementById("ZahlungDetails").hidden = false;
@@ -251,24 +259,14 @@ function otherAdr() {
 }
 
 //Checkbox Zahlungsmethode
-function pay() {
-  /*var guidesValue = document.querySelector('input[name=paymethod]:checked').value;
-  var guidesValue = document.getElementsByName("input").values;
-  var farben = ["rot", "blau", "grün"];
-  
+function pay(id) {
   var ausgabe = document.getElementById("radioAus");
-  for(i = 0; i<100;i++) {
-    ausgabe.innerHTML = guidesValue[i];
-  }
-  
-  var vorOrt = document.getElementById("vorOrt");
-  var kreditkarte = document.getElementById("Kreditkarte");
-
-  switch (Number(guidesValue)) {
-    case 1:
+  switch(id) {
+    case 0:
       ausgabe.innerHTML = "";
       break;
-    case 2:
+    case 1:
+      ausgabe.innerHTML = "";
       var field1 = document.createElement("div");
       field1.classList.add("field");
       var field2 = document.createElement("div");
@@ -302,68 +300,39 @@ function pay() {
       num.setAttribute("max", "999");
       num.required = true;
   
-      var secContainer = document.getElementById("radioAus");
-  
       field1.appendChild(kartennummer);
       field2.appendChild(datum);
       field3.appendChild(inhaber);
       field4.appendChild(num);
-      secContainer.appendChild(field1);
-      secContainer.appendChild(field2);
-      secContainer.appendChild(field3);
-      secContainer.appendChild(field4);
+      ausgabe.appendChild(field1);
+      ausgabe.appendChild(field2);
+      ausgabe.appendChild(field3);
+      ausgabe.appendChild(field4);
       break;
-
-  }*/
-
-  var zahlungsmethode = document.getElementById("Zahlungsmethode");
-
-  if(zahlungsmethode.checked === true) {
-    document.getElementById("radioAus").innerHTML = "";
-  }else {
-    var field1 = document.createElement("div");
-    field1.classList.add("field");
-    var field2 = document.createElement("div");
-    field2.classList.add("field");
-    var field3 = document.createElement("div");
-    field3.classList.add("field");
-    var field4 = document.createElement("div");
-    field4.classList.add("field");
-
-    var kartennummer = document.createElement("input");
-    kartennummer.setAttribute("id", "Kartennummer");
-    kartennummer.setAttribute("type", "number");
-    kartennummer.classList.add("input");
-    kartennummer.setAttribute("placeholder", "Kartennummer");
-    kartennummer.required = true;
-    var datum = document.createElement("input");
-    datum.setAttribute("id", "Ablaufdatum");
-    datum.setAttribute("type", "month");
-    datum.classList.add("input");
-    datum.setAttribute("placeholder", "Ablaufdatum");
-    datum.required = true;
-    var inhaber = document.createElement("input");
-    inhaber.setAttribute("id", "Karteninhaber");
-    inhaber.classList.add("input");
-    inhaber.setAttribute("placeholder", "Karteninhaber");
-    inhaber.required = true;
-    var num = document.createElement("input");
-    num.setAttribute("id", "number");
-    num.classList.add("input");
-    num.setAttribute("placeholder", "CVV");
-    num.setAttribute("max", "999");
-    num.required = true;
-
-    var secContainer = document.getElementById("radioAus");
-
-    field1.appendChild(kartennummer);
-    field2.appendChild(datum);
-    field3.appendChild(inhaber);
-    field4.appendChild(num);
-    secContainer.appendChild(field1);
-    secContainer.appendChild(field2);
-    secContainer.appendChild(field3);
-    secContainer.appendChild(field4);
+    case 2:
+      ausgabe.innerHTML = "";
+      var button = document.createElement("button");
+      button.classList.add("button");
+      button.setAttribute("id","GooglePay");
+      button.innerHTML = "Google Pay";
+      ausgabe.appendChild(button);
+      break;
+    case 3:
+      ausgabe.innerHTML = "";
+      var button = document.createElement("button");
+      button.classList.add("button");
+      button.setAttribute("id","ApplePay");
+      button.innerHTML = "Apple Pay";
+      ausgabe.appendChild(button);
+      break;
+    case 4:
+      ausgabe.innerHTML = "";
+      var button = document.createElement("button");
+      button.classList.add("button");
+      button.setAttribute("id","PayPal");
+      button.innerHTML = "PayPal";
+      ausgabe.appendChild(button);
+      break;
   }
 }
  

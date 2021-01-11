@@ -89,6 +89,7 @@ async function loadContent() {
     screeningTable.appendChild(rowheadings);
     screeningTable.appendChild(rowScreenings);
     screeningList.appendChild(screeningTable);
+    endLoading();
 }
 
 async function addScreeningDataToArray(day, data) {
