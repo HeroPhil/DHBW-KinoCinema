@@ -162,13 +162,6 @@ async function blockAlreadyBookedSeats(seatInfo) {
  */
 
 function jumpToZahlung() {
-  var radioButtons = document.getElementsByName("paymethod");
-    for(var i = 0; i < radioButtons.length; i++){
-        if(radioButtons[i].checked == true){
-            pay(i);
-        }
-    }
-
    document.getElementById("ZahlungDetails").open = true;
    document.getElementById("selectionDetails").open = false;
    document.getElementById("ZahlungDetails").hidden = false;
@@ -313,27 +306,27 @@ function pay(id) {
       break;
     case 2:
       ausgabe.innerHTML = "";
-      var button = document.createElement("button");
-      button.classList.add("button");
-      button.setAttribute("id","GooglePay");
-      button.innerHTML = "Google Pay";
-      ausgabe.appendChild(button);
+      var button1 = document.createElement("button");
+      button1.classList.add("button");
+      button1.setAttribute("id","GooglePay");
+      button1.innerHTML = "Google Pay";
+      ausgabe.appendChild(button1);
       break;
     case 3:
       ausgabe.innerHTML = "";
-      var button = document.createElement("button");
-      button.classList.add("button");
-      button.setAttribute("id","ApplePay");
-      button.innerHTML = "Apple Pay";
-      ausgabe.appendChild(button);
+      var button2 = document.createElement("button");
+      button2.classList.add("button");
+      button2.setAttribute("id","ApplePay");
+      button2.innerHTML = "Apple Pay";
+      ausgabe.appendChild(button2);
       break;
     case 4:
       ausgabe.innerHTML = "";
-      var button = document.createElement("button");
-      button.classList.add("button");
-      button.setAttribute("id","PayPal");
-      button.innerHTML = "PayPal";
-      ausgabe.appendChild(button);
+      var button3 = document.createElement("button");
+      button3.classList.add("button");
+      button3.setAttribute("id","PayPal");
+      button3.innerHTML = "PayPal";
+      ausgabe.appendChild(button3);
       break;
   }
 }
