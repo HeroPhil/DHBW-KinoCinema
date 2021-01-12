@@ -23,6 +23,8 @@ let seatCounter = 0;
 let seatsMap = [];
 let selectedSeats = [];
 let blockedSeats = [];
+let screeningReference = "";
+let bookedTickets = [];
 
 const container = document.querySelector('.container');
 const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
@@ -78,6 +80,7 @@ async function loadContent() {
   var information = sessionStorage.getItem('informationOfBooking');
   information = JSON.parse(information);
   console.log(information);
+  screeningReference = information.screeningId;
   var movieTitle = sessionStorage.getItem('movieTitle');
   var titlePlaceHolder = document.getElementById("movie-title");
   titlePlaceHolder.innerHTML = movieTitle;
@@ -111,6 +114,7 @@ function seatGeneration(hallInfo) {
       for(var j = 0; j < numberOfSeats; j++) {
         var seat = document.createElement("div");
         var seatIdentificationObject = {
+          id : seatCounter,
           row : i,
           seat : j
         } //end of seatObject
@@ -439,6 +443,63 @@ function createQrCode(element, textValue) {
 
 /*______________________________________________________________________________________________*/
 
+async function compareToSelectedSeats(blockedSeatId) {
+  var selectedSeatInfo;
+  var seatWasBlocked = false;
+  for(var i = 0; i < selectedSeats.length; i++) {
+    selectedSeatInfo = selectedSeats[i].data;
+    if(selectedSeatInfo.id === blockedSeatId) {
+      seatWasBlocked = true;
+    } //end of if
+  } //end of for
+  return seatWasBlocked;
+} //end of compareToSelectedSeats
+
+async function checkSeatsAreNotAlreadyBooked(hallInfo) {
+  var blockedSeatsInfo = hallInfo.data;
+  var rowInfo;
+  var blocked;
+  var seatsWithBookingConflict = [];
+  var blockedSeatId = 0;
+  for(var i = 0; i < parseInt(blockedSeatsInfo.length); i++) {
+    rowInfo = blockedSeatsInfo[i];
+    for(var j = 0; j < parseInt(rowInfo.length); j++) {
+      blocked = rowInfo[j];
+      blocked = blocked.toString();
+      if(blocked.localeCompare("true") === 0) {
+        var seatWasBlocked = compareToSelectedSeats(blockedSeatId);
+        if(seatWasBlocked) {
+          seatsWithBookingConflict.push(blockedSeatId);
+        } //end of if
+      } //end of if
+      blockedSeatId++;
+    } //end of for
+  } //end of for
+  return seatsWithBookingConflict;
+} //end of checkSeatAreNotAlreadyBooked
+
 function book() {
-  window.location.href = "../confirmation/";
-}
+  var bookingConflict = false;
+  if(seatCounter > 0) {
+    var paramBlockedSeats = {id: screeningReference};
+    var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(paramBlockedSeats);
+    var corruptedSeats = checkSeatsAreNotAlreadyBooked(blockedSeats);
+    if(corruptedSeats !== null) {
+      bookingConflict = true;
+    } else {
+      for(var i = 0; i < selectedSeats.length; i++) {
+        var seatInfo = selectedSeats[i];
+        seatInfo = seatInfo.data;
+        console.log(seatInfo);
+        var ticketParam = {
+          screening : screeningReference,
+          row : (parseInt(seatInfo.row) + 1),
+          seat : (parseInt(seatInfo.seat) + 1)
+        } //end of ticketParam
+        var ticket = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(ticketParam);
+        bookedTickets.push(ticket);
+      } //end of for
+    } //end of if-else
+    window.location.href = "../confirmation/";
+  } //end of if
+} //end of book
