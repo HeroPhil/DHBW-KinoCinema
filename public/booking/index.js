@@ -74,7 +74,7 @@ container.addEventListener('click', e => {
     } else {
       for(var i = 0; i < selectedSeats.length; i++) {
         if((selectedSeats[i] !== null)) {
-          if((parseInt(seat) == parseInt(selectedSeats[i].id))) {
+          if((parseInt(seat) === parseInt(selectedSeats[i].id))) {
             selectedSeats[i] = null;
           } //end of if
         } //end of if
@@ -461,7 +461,7 @@ async function compareToSelectedSeats(blockedSeatId) {
     if(selectedSeats[i] !== null) {
       selectedSeatInfo = selectedSeats[i];
       if(selectedSeatInfo !== null) {
-        if(parseInt(selectedSeatInfo.id) == parseInt(blockedSeatId)) {
+        if(parseInt(selectedSeatInfo.id) === parseInt(blockedSeatId)) {
           console.log("Blocked seat is " + blockedSeatId);
           seatWasBlocked = true;
         } //end of if
@@ -497,28 +497,31 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
   return corrupedSeatExists;
 } //end of checkSeatAreNotAlreadyBooked
 
+async function bookSeat(params) {
+  var ticket = await functions.httpsCallable('database-createTicket')(params.data);
+  bookedTickets.push(ticket);
+} //end of bookSeat
+
 async function book() {
   var bookingConflict = false;
   if(seatCounter > 0) {
     var paramBlockedSeats = {id: screeningReference};
     var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(paramBlockedSeats);
     var corruptedSeats = checkSeatsAreNotAlreadyBooked(blockedSeats);
-    console.log(corruptedSeats);
-    if(Boolean(corruptedSeats.value)) {
+    var bookingError = Boolean(corruptedSeats.value);
+    if(bookingError) {
       bookingConflict = true;
     } else {
       for(var i = 0; i < selectedSeats.length; i++) {
         var seatInfo = selectedSeats[i];
         console.log(seatInfo);
-        seatInfo = seatInfo;
         if(seatInfo !== null) {
           var ticketParam = {
             screening : screeningReference,
             row : (parseInt(seatInfo.row) + 1),
             seat : (parseInt(seatInfo.seat) + 1)
           } //end of ticketParam
-          var ticket = await functions.httpsCallable('database-createTicket')(ticketParam);
-          bookedTickets.push(ticket);
+          bookSeat(ticketParam);
         } //end of if
       } //end of for
     } //end of if-else
