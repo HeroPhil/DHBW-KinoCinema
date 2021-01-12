@@ -484,7 +484,6 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
       blocked = blocked.toString();
       if(blocked.localeCompare("true") === 0) {
         var seatWasBlocked = compareToSelectedSeats(blockedSeatId);
-        console.log(seatWasBlocked);
         seatWasBlocked = seatWasBlocked.value;
         if(seatWasBlocked) {
           seatsWithBookingConflict.push(blockedSeatId);
@@ -498,7 +497,9 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
 } //end of checkSeatAreNotAlreadyBooked
 
 async function bookSeat(params) {
-  var ticket = await functions.httpsCallable('database-createTicket')(params.data);
+  console.log("Created new ticket");
+  console.log(params);
+  var ticket = await functions.httpsCallable('database-createTicket')(params);
   bookedTickets.push(ticket);
 } //end of bookSeat
 
@@ -514,7 +515,6 @@ async function book() {
     } else {
       for(var i = 0; i < selectedSeats.length; i++) {
         var seatInfo = selectedSeats[i];
-        console.log(seatInfo);
         if(seatInfo !== null) {
           var ticketParam = {
             screening : screeningReference,
@@ -525,7 +525,6 @@ async function book() {
         } //end of if
       } //end of for
     } //end of if-else
-    console.log(bookedTickets);
     window.location.href = "../confirmation/";
   } //end of if
 } //end of book
