@@ -31,9 +31,9 @@ async function loginWithGoogle() {
 } //end of loginWithGoogle
 
 async function loginWithUserCredentials() {
-    var email = document.querySelector("#username");
-    var password = document.querySelector("#password");
-    firebase.auth().signInWithEmailAndPassword(email.value, password.value).then((user) => {
+    var email = document.querySelector("#username").value;
+    var password = document.querySelector("#password").value;
+    firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
         console.log(user);
     }).catch((error) => {
         console.log(error);
