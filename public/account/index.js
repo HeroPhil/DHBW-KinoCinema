@@ -35,8 +35,10 @@ async function loginWithUserCredentials() {
     var password = document.querySelector("#password").value;
     firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
         console.log(user);
+        return;
     }).catch((error) => {
         console.log(error);
+        return error;
     });   
 } //end of loginWithUserCredentials
 
