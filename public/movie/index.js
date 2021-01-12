@@ -67,6 +67,7 @@ async function loadContent() {
         date = new Date(singleScreeningData.startTime);
         addScreeningDataToArray(date.getDay(), screening);
     });
+    sortInfoArrays();
     var actualDay = new Date().getDay();
     screeningTable.createCaption().innerHTML = "Vorstellungen der nächsten 7 Tage:";
     var rowheadings;
@@ -188,10 +189,49 @@ async function addScreeningsToList(day, row) {
     } //end of switch-case
 }
 
+function sortInfoArrays() {
+    sortInfoArray(screeningsSunday);
+    sortInfoArray(screeningsMonday);
+    sortInfoArray(screeningsTuesday);
+    sortInfoArray(screeningsWednesday);
+    sortInfoArray(screeningsThursday);
+    sortInfoArray(screeningsFriday);
+    sortInfoArray(screeningsSaturday);
+} //end of sortInfoArrays
+
+function sortInfoArray(array) {
+    var counter = 0;
+    var sortingFinished = false;
+    var save = null;
+    if(array.length > 1) {
+        while(!sortingFinished) {
+            for(var i = 0; (i < array.length - 1); i++) {
+                if(parseInt(array[i].time) > parseInt(array[i + 1].time)) {
+                    save = array[i];
+                    array[i] = array[i + 1];
+                    array[i + 1] = array[i];
+                    counter++;
+                } //end of if
+            } //end of for
+            if(counter === 0) {
+                sortingFinished = true;
+            } //end of if
+            counter = 0; 
+        } //end of if
+    } //end of while
+} //end of sortInfoArray
+
+function checkForCorrectMinuteWriting(timeStamp) {
+    if(timeStamp < 10) {
+        return "0" + timeStamp;
+    } else {
+        return timeStamp;
+    } //end of if-else
+} //end of checkForCorrectMinuteWriting
+
 async function addScreeningToList(dataArray, row) {
     var cell = document.createElement("td");
     var placeholder = document.createElement("div");
-    console.log(dataArray.length);
     if(dataArray.length !== 0) {
         for(var i = 0; i < dataArray.length; i++) {
                 var information = dataArray[i];
@@ -205,7 +245,8 @@ async function addScreeningToList(dataArray, row) {
                 var labelScreening = document.createElement("label");
                 labelScreening.setAttribute("for", information.screeningId)
                 var dateOfScreening = new Date(information.time);
-                var time = dateOfScreening.getHours() + ":" + dateOfScreening.getMinutes();
+                var minutes = String(checkForCorrectMinuteWriting(dateOfScreening.getMinutes()));
+                var time = dateOfScreening.getHours() + ":" + minutes;
                 labelScreening.innerHTML = time;
                 placeholder.appendChild(inputScreening);
                 placeholder.appendChild(labelScreening);
@@ -223,9 +264,7 @@ async function addScreeningToList(dataArray, row) {
 async function analyzeRadioInput() {
     var screening = document.querySelector('input[name="time-slot"]:checked');
     if(screening !== null) {
-        console.log(screening.value);
         var information = sessionStorage.getItem(screening.value);
-        console.log(information);
         sessionStorage.setItem('informationOfBooking', information);
         var reference = "../booking/";
         window.location = reference;

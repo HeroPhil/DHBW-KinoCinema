@@ -498,7 +498,6 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
 
 async function bookSeat(params) {
   console.log("Created new ticket");
-  console.log(params);
   var ticket = await functions.httpsCallable('database-createTicket')(params);
   bookedTickets.push(ticket);
 } //end of bookSeat
@@ -525,6 +524,7 @@ async function book() {
         } //end of if
       } //end of for
     } //end of if-else
+    console.log(bookedTickets);
     window.location.href = "../confirmation/";
   } //end of if
 } //end of book
