@@ -25,6 +25,7 @@ let selectedSeats = [];
 let blockedSeats = [];
 let seatsWithBookingConflict = [];
 let screeningReference = "";
+let screeningTime;
 let bookedTickets = [];
 
 const container = document.querySelector('.container');
@@ -70,7 +71,6 @@ container.addEventListener('click', e => {
     var seat = e.target.getAttribute("id");
     if(e.target.classList.contains('selected')) {
       selectedSeats.push(seatsMap[seat]);
-      console.log(selectedSeats);
     } else {
       for(var i = 0; i < selectedSeats.length; i++) {
         if((selectedSeats[i] !== null)) {
@@ -79,7 +79,6 @@ container.addEventListener('click', e => {
           } //end of if
         } //end of if
       } //end of for
-      console.log(selectedSeats);
     } //end of if-else
     updateSelectedSeatsCount();
   } //end of if-else
@@ -94,6 +93,7 @@ async function loadContent() {
   var titlePlaceHolder = document.getElementById("movie-title");
   titlePlaceHolder.innerHTML = movieTitle;
   var hallInfo = information.hall.data;
+  screeningTime = information.time;
   seatGeneration(hallInfo);
   var param = {id: information.screeningId};
   var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
@@ -497,7 +497,6 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
 } //end of checkSeatAreNotAlreadyBooked
 
 async function bookSeat(params) {
-  console.log("Created new ticket");
   var ticket = await functions.httpsCallable('database-createTicket')(params);
   bookedTickets.push(ticket);
 } //end of bookSeat
@@ -524,7 +523,6 @@ async function book() {
         } //end of if
       } //end of for
     } //end of if-else
-    console.log(bookedTickets);
     window.location.href = "../confirmation/";
   } //end of if
 } //end of book

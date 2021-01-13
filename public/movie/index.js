@@ -209,7 +209,7 @@ function sortInfoArray(array) {
                 if(parseInt(array[i].time) > parseInt(array[i + 1].time)) {
                     save = array[i];
                     array[i] = array[i + 1];
-                    array[i + 1] = array[i];
+                    array[i + 1] = save;
                     counter++;
                 } //end of if
             } //end of for
@@ -228,6 +228,16 @@ function checkForCorrectMinuteWriting(timeStamp) {
         return timeStamp;
     } //end of if-else
 } //end of checkForCorrectMinuteWriting
+
+function changeStateOfBookingButton() {
+    var button = document.getElementById("book-button");
+    var selectedButtons = document.querySelector('input[name="time-slot"]:checked');
+    if(selectedButtons !== null) {
+        button.disabled = false;
+    } else {
+        button.disabled = true;
+    } //end of if-else
+} //end of changeStateOfBookingButton
 
 async function addScreeningToList(dataArray, row) {
     var cell = document.createElement("td");
