@@ -143,6 +143,7 @@ function seatGeneration(hallInfo) {
         var type = identifySeatType(seatType);
         seat.classList.add(type.value);
 
+        /*---------WIP--------------------------------------------------*/
         if(seatPrice == 0.8) {
           var design = document.createElement("img");
           design.setAttribute("src", "https://img.icons8.com/color/100/000000/accessibility1.png");
@@ -153,6 +154,7 @@ function seatGeneration(hallInfo) {
           lodgDesin.setAttribute("src", "https://img.icons8.com/color/100/000000/crown.png");
           seat.appendChild(lodgDesin);
         }
+        
 
         row.appendChild(seat);
       } //end of for
@@ -574,19 +576,20 @@ async function loginWithUserCredentials() {
 } //end of loginWithUserCredentials
 
 
-function loadCurrentUserData() {
+async function loadCurrentUserData() {
   if(firebase.auth().currentUser !== null){
     const param = {};
-    const userData = (await functions.httpsCallable('database-getInformationOfCurrentUser')(param)).data;
+    const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
+    const userData = result.data;
     document.getElementById("Vorname").value = userData.vorname;
-    document.getElementById("Nachname").value = userData.vorname;
-    document.getElementById("Email").value = userData.vorname;
-    document.getElementById("Rufnummer").value = userData.vorname;
-    document.getElementById("Postleitzahl").value = userData.vorname;
-    document.getElementById("Stadt").value = userData.vorname;
-    document.getElementById("Vorname").value = userData.vorname;
-    document.getElementById("Vorname").value = userData.vorname;
-
+    document.getElementById("Nachname").value = userData.nachname;
+    document.getElementById("Email").value = userData.email;
+    document.getElementById("Rufnummer").value = userData.phone;
+    document.getElementById("Postleitzahl").value = userData.zipCode;
+    document.getElementById("Stadt").value = userData.city;
+    document.getElementById("Straße").value = userData.primaryAdress;
+    document.getElementById("Zusatz").value = userData.secondaryAdres;
+    console.log(userData);
     document.getElementById("anmeldung").hidden = true;
   }else{
     document.getElementById("anmeldung").hidden = false;

@@ -25,6 +25,15 @@ document.addEventListener("DOMContentLoaded", event => {
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
+
+
+function testForCurrentUser() {
+    if(firebase.auth().currentUser !== null){
+        window.location = "../user";
+    }
+}
+
+
 async function loginWithGoogle() {
     const providerGoogle = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(providerGoogle).then(result => {
@@ -80,3 +89,5 @@ async function loginWithApple() {
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook
+
+
