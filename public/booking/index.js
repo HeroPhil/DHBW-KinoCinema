@@ -135,6 +135,13 @@ function seatGeneration(hallInfo) {
         seat.classList.add("seat");
         var type = identifySeatType(seatType);
         seat.classList.add(type.value);
+
+        if(seatPrice == 0.8) {
+          var design = document.createElement("img");
+          design.setAttribute("src", "https://img.icons8.com/color/100/000000/accessibility1.png");
+          seat.appendChild(design);
+        }
+
         row.appendChild(seat);
       } //end of for
       seatContainer.appendChild(row);
@@ -526,3 +533,34 @@ async function book() {
     window.location.href = "../confirmation/";
   } //end of if
 } //end of book
+
+
+
+async function loginWithGoogle() {
+  const providerGoogle = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(providerGoogle).then(result => {
+      var user = result.user;
+      var credential = result.credential;
+      console.log(user);
+      console.log(credential);
+      return;
+  }).catch((error) => {console.error(error)});
+} //end of loginWithGoogle
+
+async function loginWithUserCredentials() {
+  var email = document.querySelector("#username").value;
+  var password = document.querySelector("#password").value;
+  firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
+      console.log(user);
+      return;
+  }).catch((error) => {
+      console.log(error);
+      return error;
+  });   
+} //end of loginWithUserCredentials
+
+
+function loadCurrentUserData() {
+  //const userID = firebase.auth().currentUser.uid;
+  //console.log(userID);
+}
