@@ -54,14 +54,14 @@ export async function getInformationOfCurrentUser(context: CallableContext) {
     };
 }
 
-async function editInformationOfUserByID(uid: string, changes: UserInformation) {
+async function updateInformationOfUserByID(uid: string, changes: UserInformation) {
     await basics.updateDocumentByID(uid, changes);
     return await basics.getDocumentByID(uid);    
 }
 
-export async function editInformationOfCurrentUser(context: CallableContext, changes: UserInformation) {
+export async function updateInformationOfCurrentUser(context: CallableContext, changes: UserInformation) {
     if (context.auth.uid) {
-        return editInformationOfUserByID(context.auth.uid, changes);
+        return updateInformationOfUserByID(context.auth.uid, changes);
     }
     return {
         error: {
