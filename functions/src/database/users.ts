@@ -55,7 +55,7 @@ export async function getInformationOfCurrentUser(context: CallableContext) {
 }
 
 async function editInformationOfUserByID(uid: string, changes: UserInformation) {
-    const x = await basics.updateDocumentByID(uid, changes);
+    await basics.updateDocumentByID(uid, changes);
     return await basics.getDocumentByID(uid);    
 }
 
