@@ -14,7 +14,13 @@ let app;
 let functions;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
-    functions = app.functions("europe-west1");
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
@@ -503,11 +509,6 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
   return corrupedSeatExists;
 } //end of checkSeatAreNotAlreadyBooked
 
-async function bookSeat(params) {
-  var ticket = await functions.httpsCallable('database-createTicket')(params);
-  bookedTickets.push(ticket);
-} //end of bookSeat
-
 async function book() {
   var bookingConflict = false;
   if(seatCounter > 0) {
@@ -526,11 +527,18 @@ async function book() {
             row : (parseInt(seatInfo.row) + 1),
             seat : (parseInt(seatInfo.seat) + 1)
           } //end of ticketParam
-          bookSeat(ticketParam);
+          bookedTickets.push(functions.httpsCallable('database-createTicket')(ticketParam));
         } //end of if
       } //end of for
     } //end of if-else
-    window.location.href = "../confirmation/";
+
+    // TODO: need some loading animation
+    await Promise.all(bookedTickets); // waits for all Ticket Promises to be resolved by the backend
+
+    // TODO: error handling here
+    console.log(bookedTickets);
+
+    window.location.href = "../confirmation/"; // forward to next page
   } //end of if
 } //end of book
 
