@@ -83,5 +83,5 @@ export const getInformationOfCurrentUser = httpsOnCall((data, context) => {
 });
 
 export const editInformationOfCurrentUser = httpsOnCall((data, context) => {
-    return users.editInformationOfCurrentUser(context, data.newData);
+    return users.updateInformationOfCurrentUser(context, data.newData);
 });
