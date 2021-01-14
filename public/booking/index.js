@@ -105,6 +105,7 @@ async function loadContent() {
   var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
   blockAlreadyBookedSeats(blockedSeats);
   endLoading();
+  loadCurrentUserData();
 } //end of loadContent
 
 // dynamic seats
@@ -146,6 +147,11 @@ function seatGeneration(hallInfo) {
           var design = document.createElement("img");
           design.setAttribute("src", "https://img.icons8.com/color/100/000000/accessibility1.png");
           seat.appendChild(design);
+        }
+        if(seatPrice == 1.5) {
+          var lodgDesin = document.createElement("img");
+          lodgDesin.setAttribute("src", "https://img.icons8.com/color/100/000000/crown.png");
+          seat.appendChild(lodgDesin);
         }
 
         row.appendChild(seat);
@@ -569,6 +575,20 @@ async function loginWithUserCredentials() {
 
 
 function loadCurrentUserData() {
-  //const userID = firebase.auth().currentUser.uid;
-  //console.log(userID);
+  if(firebase.auth().currentUser !== null){
+    const param = {};
+    const userData = (await functions.httpsCallable('database-getInformationOfCurrentUser')(param)).data;
+    document.getElementById("Vorname").value = userData.vorname;
+    document.getElementById("Nachname").value = userData.vorname;
+    document.getElementById("Email").value = userData.vorname;
+    document.getElementById("Rufnummer").value = userData.vorname;
+    document.getElementById("Postleitzahl").value = userData.vorname;
+    document.getElementById("Stadt").value = userData.vorname;
+    document.getElementById("Vorname").value = userData.vorname;
+    document.getElementById("Vorname").value = userData.vorname;
+
+    document.getElementById("anmeldung").hidden = true;
+  }else{
+    document.getElementById("anmeldung").hidden = false;
+  }
 }
