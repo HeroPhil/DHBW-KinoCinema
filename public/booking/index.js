@@ -144,12 +144,12 @@ function seatGeneration(hallInfo) {
         seat.classList.add(type.value);
 
         /*---------WIP--------------------------------------------------*/
-        if(seatPrice == 0.8) {
+        if(seatPrice === 0.8) {
           var design = document.createElement("img");
           design.setAttribute("src", "https://img.icons8.com/color/100/000000/accessibility1.png");
           seat.appendChild(design);
         }
-        if(seatPrice == 1.5) {
+        if(seatPrice === 1.5) {
           var lodgDesin = document.createElement("img");
           lodgDesin.setAttribute("src", "https://img.icons8.com/color/100/000000/crown.png");
           seat.appendChild(lodgDesin);
