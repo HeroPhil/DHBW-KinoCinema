@@ -75,9 +75,17 @@ export async function addMovie(category: string, cover: string, description: str
 }
 
 export async function updateMovie(id: string, newData: {}) {
-    const promises = [];
+    const error: {message: string} = { message: "" };
+    if(id !== undefined) {
+        const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + id);
+        const movieDoc = await basics.getDocumentByRef(movieRef);
+        if(!movieDoc.exists) {
+            console.log("This movie does not exist!");
+            error.message = "This movie does not exist!";
+            return {error};
+        }
+    }
     const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, newData);
-    promises.push(movie);
-    await Promise.all(promises);
+    console.log(movie);
     return new Movie(id, newData); 
 }

@@ -129,7 +129,6 @@ export async function getBookedSeatsByScreeningID(id: string) {
 
 export async function addScreening(movie:  string, hall: string, price: number, startTime: number, repetitions: number, increments: number) {
     const error: {message: string} = { message: "" };
-    const promises: Promise<any>[] = [];
     const screenings: Screening[] = [];
     
     const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + movie);
@@ -138,7 +137,7 @@ export async function addScreening(movie:  string, hall: string, price: number, 
     if(!movieDoc.exists) {
         console.log("This movie does not exist!");
         error.message = "This movie does not exist!";
-        return error;
+        return {error};
     }
 
     const hallRef = await basics.getDocumentRefByID(hallCollectionPath + "/" + hall);
@@ -147,7 +146,7 @@ export async function addScreening(movie:  string, hall: string, price: number, 
     if(!hallDoc.exists) {
         console.log("This hall does not exist!");
         error.message = "This hall does not exist!";
-        return error;
+        return {error};
     }
     
     if(repetitions !== undefined && increments !== undefined) {
@@ -159,8 +158,6 @@ export async function addScreening(movie:  string, hall: string, price: number, 
                 price: price,
                 startTime: modifiedStartTime
             };
-
-            promises.push();
 
             const screeningRef = await basics.addDocToCollectionByID(screeningsCollectionPath, data);
             const screening = await basics.getDocumentByRef(screeningRef);
@@ -175,45 +172,51 @@ export async function addScreening(movie:  string, hall: string, price: number, 
             startTime: startTime
         };
 
-        promises.push();
-
         const screeningRef = await basics.addDocToCollectionByID(screeningsCollectionPath, dataOnce);
         const screening = await basics.getDocumentByRef(screeningRef);
 
         screenings.push(await new Screening(screening.id, screening.data()).resolveRefs(3));
     }
     
-  await Promise.all(promises);
   return screenings;
 }
 
 export async function updateScreening(id: string, newData: {movie: any, hall: any}) {
     const error: {message: string} = { message: "" };
-    const promises = [];
-
-    const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + newData.movie);
-    const movieDoc = await basics.getDocumentByRef(movieRef);
-
-    if(!movieDoc.exists) {
-        console.log("This movie does not exist!");
-        error.message = "This movie does not exist!";
-        return error;
+    if(id !== undefined) {
+        const screeningRef = await basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
+        const screeningDoc = await basics.getDocumentByRef(screeningRef);
+        if(!screeningDoc.exists) {
+            console.log("This screening does not exist!");
+            error.message = "This screening does not exist!";
+            return {error};
+        }
     }
 
-    const hallRef = await basics.getDocumentRefByID(hallCollectionPath + "/" + newData.hall);
-    const hallDoc = await basics.getDocumentByRef(hallRef);
-
-    if(!hallDoc.exists) {
-        console.log("This hall does not exist!");
-        error.message = "This hall does not exist!";
-        return error;
+    if(newData.movie !== undefined) {
+        const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + newData.movie);
+        const movieDoc = await basics.getDocumentByRef(movieRef);
+        if(!movieDoc.exists) {
+            console.log("This movie does not exist!");
+            error.message = "This movie does not exist!";
+            return {error};
+        }
+        newData.movie = movieRef;
     }
-
-    newData.movie = movieRef;
-    newData.hall = hallRef;
+    
+    if(newData.hall !== undefined) {
+        const hallRef = await basics.getDocumentRefByID(hallCollectionPath + "/" + newData.hall);
+        const hallDoc = await basics.getDocumentByRef(hallRef);
+    
+        if(!hallDoc.exists) {
+            console.log("This hall does not exist!");
+            error.message = "This hall does not exist!";
+            return {error};
+        }
+        newData.hall = hallRef;
+    }
 
     const screening = await basics.updateDocumentByID(screeningsCollectionPath+ '/' + id, newData);
-    promises.push(screening);
-    await Promise.all(promises);
-    return await new Screening(id, newData).resolveRefs(3); 
+    console.log(screening);
+    return await new Screening(id, newData); 
 }
