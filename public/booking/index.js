@@ -58,14 +58,23 @@ populateUI();
 const updateSelectedSeatsCount = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
   var sum = 0;
-  var countedSelectedSeats = 0;
   for(var i = 0; i < selectedSeats.length; i++) {
-    sum = sum + parseFloat(selectedSeats[i].getAttribute("value"));
-    countedSelectedSeats++;
+    sum += parseFloat(selectedSeats[i].getAttribute("value")) * 100;
+    sum = Math.floor(sum);
   } //end of for
-  count.innerText = countedSelectedSeats;
-  price.innerText = sum;
+  sum = sum / 100;
+  count.innerText = selectedSeats.length;
+  price.innerText = formatAsCurrency(sum);
 }; //end of lambda expression
+
+function formatAsCurrency(number) {
+  const sp = number.toString().split(".");
+  if (sp.length > 1) {
+    sp[sp.length-1] = sp[sp.length-1].concat("0".repeat(2 - sp[sp.length-1].length));
+    return sp.join(".");
+  }
+  return sp[0].concat(".00");
+}
 
 // Seat select event
 container.addEventListener('click', e => {
@@ -73,11 +82,25 @@ container.addEventListener('click', e => {
     e.target.classList.contains('seat') &&
     !e.target.classList.contains('occupied')
   ) {
+    if(e.target.classList.contains('lodge')) {
+      e.target.innerHTML = "";
+      var selectDes = document.createElement("img");
+      selectDes.setAttribute("id", "seatDesign");
+      selectDes.setAttribute("src", "../icons/jpg/crone.png");
+      e.target.appendChild(selectDes);
+    }
     e.target.classList.toggle('selected');
     var seat = e.target.getAttribute("id");
     if(e.target.classList.contains('selected')) {
       selectedSeats.push(seatsMap[seat]);
     } else {
+      if(e.target.classList.contains('lodge')) {
+        e.target.innerHTML = "";
+        var selectDes = document.createElement("img");
+        selectDes.setAttribute("id", "seatDesign");
+        selectDes.setAttribute("src", "../icons/jpg/krone.png");
+        e.target.appendChild(selectDes);
+      }
       for(var i = 0; i < selectedSeats.length; i++) {
         if((selectedSeats[i] !== null)) {
           if((parseInt(seat) === parseInt(selectedSeats[i].id))) {
@@ -109,7 +132,7 @@ async function loadContent() {
 } //end of loadContent
 
 // dynamic seats
-function seatGeneration(hallInfo) {
+async function seatGeneration(hallInfo) {
   var seatContainer = document.getElementById("seatContainer");
   var rowScreen = document.createElement("div");
   var numberOfSeats = parseInt(hallInfo.width);
@@ -125,6 +148,7 @@ function seatGeneration(hallInfo) {
     var seatType = hallInfo.rows[i].type.data.name;
     seatType = seatType.replace("\"", "");
     seatType = seatType.trim();
+
     for(var k = 0; k < rowAmount; k++) {
       var row = document.createElement("div");
       row.classList.add("seat-row");
@@ -140,22 +164,22 @@ function seatGeneration(hallInfo) {
         seatCounter++;
         seat.setAttribute("value", seatPrice);
         seat.classList.add("seat");
-        var type = identifySeatType(seatType);
-        seat.classList.add(type.value);
-
-        /*---------WIP--------------------------------------------------*/
-        if(seatPrice === 0.8) {
+        seatType = seatType.replace(/\s/g, '');
+        seat.classList.add(seatType);
+        
+        if(seat.classList.contains('withspecialneeds')) {
           var design = document.createElement("img");
-          design.setAttribute("src", "https://img.icons8.com/color/100/000000/accessibility1.png");
+          design.setAttribute("id", "seatDesign");
+          design.setAttribute("src", "../icons/jpg/special.png");
           seat.appendChild(design);
         }
-        if(seatPrice === 1.5) {
+        if(seat.classList.contains('lodge')) {
           var lodgDesin = document.createElement("img");
-          lodgDesin.setAttribute("src", "https://img.icons8.com/color/100/000000/crown.png");
+          lodgDesin.setAttribute("id", "seatDesign");
+          lodgDesin.setAttribute("src", "../icons/jpg/krone.png");
           seat.appendChild(lodgDesin);
         }
         
-
         row.appendChild(seat);
       } //end of for
       seatContainer.appendChild(row);
@@ -163,15 +187,6 @@ function seatGeneration(hallInfo) {
     } //end of for
   } //end of for
 } //end of seatGeneration
-
-async function identifySeatType(seat) {
-  if(seat.includes("special")) {
-    var type = "special";
-    return type;
-  } else {
-    return seat;
-  } //end of if-else
-} //end of identifySeatType
 
 async function blockAlreadyBookedSeats(seatInfo) {
   var blockedSeatsInfo = seatInfo.data;

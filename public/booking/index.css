@@ -28,12 +28,15 @@
 
 .seat {
     background-color: var(--layer10);
-    /*background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 172 172" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g><path d="M129,129h-86l-17.91667,-71.66667l35.83333,28.66667l25.08333,-46.58333l25.08333,46.58333l35.83333,-28.66667z" fill="#666666"></path><path d="M43,129h86v17.91667h-86zM86,25.08333c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM150.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM21.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667z" fill="#ff9800"></path></g></g></svg>');*/
     height: 1.5rem;
     width: 1.8rem;
     margin: 0.25rem;
     border-top-left-radius: 0.8rem;
     border-top-right-radius: 0.8rem;
+}
+
+#seatDesign {
+    pointer-events: none;
 }
 
 .seat.selected {
