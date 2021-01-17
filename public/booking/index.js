@@ -96,10 +96,10 @@ container.addEventListener('click', e => {
     } else {
       if(e.target.classList.contains('lodge')) {
         e.target.innerHTML = "";
-        var selectDes = document.createElement("img");
-        selectDes.setAttribute("id", "seatDesign");
-        selectDes.setAttribute("src", "../icons/jpg/krone.png");
-        e.target.appendChild(selectDes);
+        var unSelectDes = document.createElement("img");
+        unSelectDes.setAttribute("id", "seatDesign");
+        unSelectDes.setAttribute("src", "../icons/jpg/krone.png");
+        e.target.appendChild(unSelectDes);
       }
       for(var i = 0; i < selectedSeats.length; i++) {
         if((selectedSeats[i] !== null)) {
