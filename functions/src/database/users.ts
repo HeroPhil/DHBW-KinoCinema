@@ -55,7 +55,7 @@ export async function getInformationOfCurrentUser(context: CallableContext) {
 
 async function updateInformationOfUserByID(uid: string, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; hasOwnProperty?: any; }) {
 
-    let newData: any = {};
+    const newData: any = {};
     allowedKeys.forEach((key) => {
         if (key in changes) {
             newData[key] = changes[key];

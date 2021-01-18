@@ -360,14 +360,14 @@ async function stressTestCreateTicket() {
     };
 
     const results = [];
-    for(i = 0; i < 10; i++) {
+    for(i = 0; i < 2; i++) {
         results.push(functions.httpsCallable('database-createTicket')(param));
     }
     await Promise.all(results);
 
     for(result in results) {
-        if(result.error) {
-            console.error(result.error);
-        }
+        //if(result.message) {
+            console.error(result);
+        //}
     }
 } 
