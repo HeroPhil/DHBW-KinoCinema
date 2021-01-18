@@ -27,7 +27,8 @@ document.addEventListener("DOMContentLoaded", event => {
 
 
 
-function testForCurrentUser() {
+async function testForCurrentUser() {
+    await new Promise(resolve => setTimeout(resolve, 2500));
     if(firebase.auth().currentUser !== null){
         window.location = "../user";
     }
@@ -41,6 +42,7 @@ async function loginWithGoogle() {
         var credential = result.credential;
         console.log(user);
         console.log(credential);
+        testForCurrentUser();
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithGoogle
@@ -50,6 +52,7 @@ async function loginWithUserCredentials() {
     var password = document.querySelector("#password").value;
     firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
         console.log(user);
+        testForCurrentUser();
         return;
     }).catch((error) => {
         console.log(error);
@@ -64,6 +67,7 @@ async function loginWithMicrosoft() {
         var credential = result.credential;
         console.log(user);
         console.log(credential);
+        testForCurrentUser();
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithMicrosoft
@@ -75,6 +79,7 @@ async function loginWithFacebook() {
         var credential = result.credential;
         console.log(user);
         console.log(credential);
+        testForCurrentUser();
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook
@@ -86,6 +91,7 @@ async function loginWithApple() {
         var credential = result.credential;
         console.log(user);
         console.log(credential);
+        testForCurrentUser();
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook

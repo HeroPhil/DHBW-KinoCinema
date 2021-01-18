@@ -24,8 +24,53 @@ document.addEventListener("DOMContentLoaded", event => {
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-function updateDetails() {
-    //
+
+
+async function loadUserDetails() {
+
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    
+    if(firebase.auth().currentUser !== null){
+        const param = {};
+        const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
+        const userData = result.data.data;
+        document.getElementById("Vorname").value = userData.firstName === undefined ? "" : userData.firstName;
+        document.getElementById("Nachname").value = userData.lastName === undefined ? "" : userData.lastName;
+        document.getElementById("Email").value = userData.email === undefined ? "" : userData.email;
+        document.getElementById("Rufnummer").value = userData.phone === undefined ? "" : userData.phone;
+        document.getElementById("Postleitzahl").value = userData.zipCode === undefined ? "" : userData.zipCode;
+        document.getElementById("Stadt").value = userData.city === undefined ? "" : userData.city;
+        document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
+        document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
+    }
+}
+
+async function updateDetails() {
+
+    const pVorname = document.getElementById("Vorname").value;
+    const pNachname = document.getElementById("Nachname").value;
+    const pEmail = document.getElementById("Email").value;
+    const pRufnummer = document.getElementById("Rufnummer").value;
+    const pPostleitzahl = document.getElementById("Postleitzahl").value;
+    const pStadt = document.getElementById("Stadt").value;
+    const pStraße = document.getElementById("Straße").value;
+    const pZusatz = document.getElementById("Zusatz").value;
+
+    const param = {
+        newData: {
+            firstName: pVorname,
+            lastName: pNachname,
+            email: pEmail,
+            phone: pRufnummer,
+            zipCode: pPostleitzahl,
+            city: pStadt,
+            primaryAdress: pStraße,
+            secondaryAdres: pZusatz
+        }
+    }
+
+    await firebase.functions().httpsCallable('database-updateInformationOfCurrentUser')(param);
+
 }
 
 function loadLastTickets(count) {

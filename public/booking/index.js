@@ -86,7 +86,7 @@ container.addEventListener('click', e => {
       e.target.innerHTML = "";
       var selectDes = document.createElement("img");
       selectDes.setAttribute("id", "seatDesign");
-      selectDes.setAttribute("src", "../icons/jpg/crone.png");
+      selectDes.setAttribute("src", "../icons/png/krone2.png");
       e.target.appendChild(selectDes);
     }
     e.target.classList.toggle('selected');
@@ -98,7 +98,7 @@ container.addEventListener('click', e => {
         e.target.innerHTML = "";
         var unSelectDes = document.createElement("img");
         unSelectDes.setAttribute("id", "seatDesign");
-        unSelectDes.setAttribute("src", "../icons/jpg/krone.png");
+        unSelectDes.setAttribute("src", "../icons/png/krone1.png");
         e.target.appendChild(unSelectDes);
       }
       for(var i = 0; i < selectedSeats.length; i++) {
@@ -118,11 +118,13 @@ async function loadContent() {
   information = JSON.parse(information);
   console.log(information);
   screeningReference = information.screeningId;
+  screeningTime = information.time;
+  screeningTime = new Date(screeningTime);
+  var screeningDate = screeningTime.getDate() + "." + screeningTime.getMonth() + "." + screeningTime.getFullYear() + "<br>" + screeningTime.getHours() + ":" + screeningTime.getMinutes() + " Uhr";
   var movieTitle = sessionStorage.getItem('movieTitle');
   var titlePlaceHolder = document.getElementById("movie-title");
-  titlePlaceHolder.innerHTML = movieTitle;
+  titlePlaceHolder.innerHTML = movieTitle + "<br>" + screeningDate;
   var hallInfo = information.hall.data;
-  screeningTime = information.time;
   seatGeneration(hallInfo);
   var param = {id: information.screeningId};
   var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
@@ -170,13 +172,13 @@ async function seatGeneration(hallInfo) {
         if(seat.classList.contains('withspecialneeds')) {
           var design = document.createElement("img");
           design.setAttribute("id", "seatDesign");
-          design.setAttribute("src", "../icons/jpg/special.png");
+          design.setAttribute("src", "../icons/png/special.png");
           seat.appendChild(design);
         }
         if(seat.classList.contains('lodge')) {
           var lodgDesin = document.createElement("img");
           lodgDesin.setAttribute("id", "seatDesign");
-          lodgDesin.setAttribute("src", "../icons/jpg/krone.png");
+          lodgDesin.setAttribute("src", "../icons/png/krone1.png");
           seat.appendChild(lodgDesin);
         }
         
@@ -202,6 +204,13 @@ async function blockAlreadyBookedSeats(seatInfo) {
         var seat = document.getElementById(blockedSeatId);
         blockedSeats.push(seatsMap[blockedSeatId]);
         seat.classList.add('occupied');
+        if(seat.classList.contains('lodge')) {
+          seat.innerHTML = "";
+          var occupiedDes = document.createElement("img");
+          occupiedDes.setAttribute("id", "seatDesign");
+          occupiedDes.setAttribute("src", "../icons/png/krone3.png");
+          seat.appendChild(occupiedDes);
+        }
       } //end of if
       blockedSeatId++;
     } //end of for
@@ -595,16 +604,15 @@ async function loadCurrentUserData() {
   if(firebase.auth().currentUser !== null){
     const param = {};
     const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
-    const userData = result.data;
-    document.getElementById("Vorname").value = userData.vorname;
-    document.getElementById("Nachname").value = userData.nachname;
-    document.getElementById("Email").value = userData.email;
-    document.getElementById("Rufnummer").value = userData.phone;
-    document.getElementById("Postleitzahl").value = userData.zipCode;
-    document.getElementById("Stadt").value = userData.city;
-    document.getElementById("Straße").value = userData.primaryAdress;
-    document.getElementById("Zusatz").value = userData.secondaryAdres;
-    console.log(userData);
+    const userData = result.data.data;
+    document.getElementById("Vorname").value = userData.vorname === undefined ? "" : userData.vorname;
+    document.getElementById("Nachname").value = userData.nachname === undefined ? "" : userData.nachname;
+    document.getElementById("Email").value = userData.email === undefined ? "" : userData.email;
+    document.getElementById("Rufnummer").value = userData.phone === undefined ? "" : userData.phone;
+    document.getElementById("Postleitzahl").value = userData.zipCode === undefined ? "" : userData.zipCode;
+    document.getElementById("Stadt").value = userData.city === undefined ? "" : userData.city;
+    document.getElementById("Straße").value = userData.primaryAdress === undefined ? "" : userData.primaryAdress;
+    document.getElementById("Zusatz").value = userData.secondaryAdres === undefined ? "" : userData.secondaryAdres;
     document.getElementById("anmeldung").hidden = true;
   }else{
     document.getElementById("anmeldung").hidden = false;
