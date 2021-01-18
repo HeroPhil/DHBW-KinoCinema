@@ -44,6 +44,7 @@ async function loadContent() {
     title.innerHTML = movieData.data.name;
     sessionStorage.setItem('movieTitle', movieData.data.name);
     description.innerHTML = movieData.data.description;
+    sessionStorage.setItem('movieCover', movieData.data.cover);
     var url = await storage.refFromURL(movieData.data.cover).getDownloadURL();
     cover.src = url;
     var subLevel = 4;

@@ -12,9 +12,11 @@
 // firebase.performance(); // call to activate
 let app;
 let functions;
+let storage;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
     functions = app.functions("europe-west1");
+    storage = firebase.storage();
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
@@ -26,6 +28,9 @@ let blockedSeats = [];
 let seatsWithBookingConflict = [];
 let screeningReference = "";
 let screeningTime;
+let cinemaName;
+let movieName;
+let movieCoverReference;
 let bookedTickets = [];
 
 const container = document.querySelector('.container');
@@ -90,10 +95,13 @@ async function loadContent() {
   console.log(information);
   screeningReference = information.screeningId;
   var movieTitle = sessionStorage.getItem('movieTitle');
+  movieName = sessionStorage.getItem('movieTitle');
   var titlePlaceHolder = document.getElementById("movie-title");
   titlePlaceHolder.innerHTML = movieTitle;
   var hallInfo = information.hall.data;
   screeningTime = information.time;
+  cinemaName = hallInfo.name;
+  movieCoverReference = sessionStorage.getItem('movieCover');
   seatGeneration(hallInfo);
   var param = {id: information.screeningId};
   var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
@@ -368,17 +376,26 @@ function ausgabe() {
   document.getElementById("ZahlungDetails").open = false;
   document.getElementById("zusammenfassungDetails").hidden = false;
   location.href = '#Zusammenfassung';
-  test();
+  addTicketsToWebsite();
 }
 
 
 /*__________________________________Ticket-Preview_____________________________________________________*/
 
-function test() {
-  createTicket("Geiler Film", "7", "4", "8", "22.10.2021", "www.google.de")
+function addTicketsToWebsite() {
+  if(selectedSeats.length > 0) {
+    var date = new Date(screeningTime);
+    var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+    console.log(dateAsString);
+    for(var i = 0; i < selectedSeats.length; i++) {
+      console.log(selectedSeats[i]);
+      var seat = selectedSeats[i];
+      createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString);
+    } //end of for
+  } //end of if
 }
 
-function createTicket(title, hall, row, seat, date, value) {
+function createTicket(title, hall, row, seat, date) {
     var tickets = document.getElementById("tickets");
     var ticket = document.createElement("div");
     ticket.classList.add("ticket");
@@ -433,7 +450,8 @@ function movieLogo(element) {
   movieContainer.classList.add("pic");
   var picContainer = movieContainer.appendChild(document.createElement("div"));
   picContainer.classList.add("image");
-  picContainer.innerHTML = "<img src=\"../icons/jpg/JamesBond.jpg\"></img>";
+  var url = await storage.refFromURL(movieCoverReference).getDownloadURL();
+  picContainer.innerHTML = url;
 }
 
 /*
