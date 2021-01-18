@@ -14,7 +14,13 @@ let app;
 let functions;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
-    functions = app.functions("europe-west1");
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
@@ -44,8 +50,8 @@ async function loadContent() {
     title.innerHTML = movieData.data.name;
     sessionStorage.setItem('movieTitle', movieData.data.name);
     description.innerHTML = movieData.data.description;
-    sessionStorage.setItem('movieCover', movieData.data.cover);
     var url = await storage.refFromURL(movieData.data.cover).getDownloadURL();
+    sessionStorage.setItem('movieCover', url);
     cover.src = url;
     var subLevel = 4;
     var sinceDate = Math.floor(Date.now());

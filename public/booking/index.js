@@ -15,8 +15,14 @@ let functions;
 let storage;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
-    functions = app.functions("europe-west1");
     storage = firebase.storage();
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
@@ -57,14 +63,23 @@ populateUI();
 const updateSelectedSeatsCount = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
   var sum = 0;
-  var countedSelectedSeats = 0;
   for(var i = 0; i < selectedSeats.length; i++) {
-    sum = sum + parseFloat(selectedSeats[i].getAttribute("value"));
-    countedSelectedSeats++;
+    sum += parseFloat(selectedSeats[i].getAttribute("value")) * 100;
+    sum = Math.floor(sum);
   } //end of for
-  count.innerText = countedSelectedSeats;
-  price.innerText = sum;
+  sum = sum / 100;
+  count.innerText = selectedSeats.length;
+  price.innerText = formatAsCurrency(sum);
 }; //end of lambda expression
+
+function formatAsCurrency(number) {
+  const sp = number.toString().split(".");
+  if (sp.length > 1) {
+    sp[sp.length-1] = sp[sp.length-1].concat("0".repeat(2 - sp[sp.length-1].length));
+    return sp.join(".");
+  }
+  return sp[0].concat(".00");
+}
 
 // Seat select event
 container.addEventListener('click', e => {
@@ -72,11 +87,25 @@ container.addEventListener('click', e => {
     e.target.classList.contains('seat') &&
     !e.target.classList.contains('occupied')
   ) {
+    if(e.target.classList.contains('lodge')) {
+      e.target.innerHTML = "";
+      var selectDes = document.createElement("img");
+      selectDes.setAttribute("id", "seatDesign");
+      selectDes.setAttribute("src", "../icons/jpg/crone.png");
+      e.target.appendChild(selectDes);
+    }
     e.target.classList.toggle('selected');
     var seat = e.target.getAttribute("id");
     if(e.target.classList.contains('selected')) {
       selectedSeats.push(seatsMap[seat]);
     } else {
+      if(e.target.classList.contains('lodge')) {
+        e.target.innerHTML = "";
+        var unSelectDes = document.createElement("img");
+        unSelectDes.setAttribute("id", "seatDesign");
+        unSelectDes.setAttribute("src", "../icons/jpg/krone.png");
+        e.target.appendChild(unSelectDes);
+      }
       for(var i = 0; i < selectedSeats.length; i++) {
         if((selectedSeats[i] !== null)) {
           if((parseInt(seat) === parseInt(selectedSeats[i].id))) {
@@ -107,10 +136,11 @@ async function loadContent() {
   var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
   blockAlreadyBookedSeats(blockedSeats);
   endLoading();
+  loadCurrentUserData();
 } //end of loadContent
 
 // dynamic seats
-function seatGeneration(hallInfo) {
+async function seatGeneration(hallInfo) {
   var seatContainer = document.getElementById("seatContainer");
   var rowScreen = document.createElement("div");
   var numberOfSeats = parseInt(hallInfo.width);
@@ -126,6 +156,7 @@ function seatGeneration(hallInfo) {
     var seatType = hallInfo.rows[i].type.data.name;
     seatType = seatType.replace("\"", "");
     seatType = seatType.trim();
+
     for(var k = 0; k < rowAmount; k++) {
       var row = document.createElement("div");
       row.classList.add("seat-row");
@@ -141,8 +172,22 @@ function seatGeneration(hallInfo) {
         seatCounter++;
         seat.setAttribute("value", seatPrice);
         seat.classList.add("seat");
-        var type = identifySeatType(seatType);
-        seat.classList.add(type.value);
+        seatType = seatType.replace(/\s/g, '');
+        seat.classList.add(seatType);
+        
+        if(seat.classList.contains('withspecialneeds')) {
+          var design = document.createElement("img");
+          design.setAttribute("id", "seatDesign");
+          design.setAttribute("src", "../icons/jpg/special.png");
+          seat.appendChild(design);
+        }
+        if(seat.classList.contains('lodge')) {
+          var lodgDesin = document.createElement("img");
+          lodgDesin.setAttribute("id", "seatDesign");
+          lodgDesin.setAttribute("src", "../icons/jpg/krone.png");
+          seat.appendChild(lodgDesin);
+        }
+        
         row.appendChild(seat);
       } //end of for
       seatContainer.appendChild(row);
@@ -150,15 +195,6 @@ function seatGeneration(hallInfo) {
     } //end of for
   } //end of for
 } //end of seatGeneration
-
-async function identifySeatType(seat) {
-  if(seat.includes("special")) {
-    var type = "special";
-    return type;
-  } else {
-    return seat;
-  } //end of if-else
-} //end of identifySeatType
 
 async function blockAlreadyBookedSeats(seatInfo) {
   var blockedSeatsInfo = seatInfo.data;
@@ -386,9 +422,7 @@ function addTicketsToWebsite() {
   if(selectedSeats.length > 0) {
     var date = new Date(screeningTime);
     var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
-    console.log(dateAsString);
     for(var i = 0; i < selectedSeats.length; i++) {
-      console.log(selectedSeats[i]);
       var seat = selectedSeats[i];
       createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString);
     } //end of for
@@ -445,13 +479,14 @@ function createTicket(title, hall, row, seat, date) {
     movieLogo(ticket);
 }
 
-function movieLogo(element) {
+async function movieLogo(element) {
   var movieContainer = element.appendChild(document.createElement("div"));
   movieContainer.classList.add("pic");
   var picContainer = movieContainer.appendChild(document.createElement("div"));
   picContainer.classList.add("image");
-  var url = await storage.refFromURL(movieCoverReference).getDownloadURL();
-  picContainer.innerHTML = url;
+  var img = document.createElement("img");
+  img.src = movieCoverReference;
+  picContainer.appendChild(img);
 }
 
 /*
@@ -514,11 +549,6 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
   return corrupedSeatExists;
 } //end of checkSeatAreNotAlreadyBooked
 
-async function bookSeat(params) {
-  var ticket = await functions.httpsCallable('database-createTicket')(params);
-  bookedTickets.push(ticket);
-} //end of bookSeat
-
 async function book() {
   var bookingConflict = false;
   if(seatCounter > 0) {
@@ -537,10 +567,63 @@ async function book() {
             row : (parseInt(seatInfo.row) + 1),
             seat : (parseInt(seatInfo.seat) + 1)
           } //end of ticketParam
-          bookSeat(ticketParam);
+          bookedTickets.push(functions.httpsCallable('database-createTicket')(ticketParam));
         } //end of if
       } //end of for
     } //end of if-else
-    window.location.href = "../confirmation/";
+
+    // TODO: need some loading animation
+    await Promise.all(bookedTickets); // waits for all Ticket Promises to be resolved by the backend
+
+    // TODO: error handling here
+    console.log(bookedTickets);
+
+    window.location.href = "../confirmation/"; // forward to next page
   } //end of if
 } //end of book
+
+
+
+async function loginWithGoogle() {
+  const providerGoogle = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(providerGoogle).then(result => {
+      var user = result.user;
+      var credential = result.credential;
+      console.log(user);
+      console.log(credential);
+      return;
+  }).catch((error) => {console.error(error)});
+} //end of loginWithGoogle
+
+async function loginWithUserCredentials() {
+  var email = document.querySelector("#username").value;
+  var password = document.querySelector("#password").value;
+  firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
+      console.log(user);
+      return;
+  }).catch((error) => {
+      console.log(error);
+      return error;
+  });   
+} //end of loginWithUserCredentials
+
+
+async function loadCurrentUserData() {
+  if(firebase.auth().currentUser !== null){
+    const param = {};
+    const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
+    const userData = result.data;
+    document.getElementById("Vorname").value = userData.vorname;
+    document.getElementById("Nachname").value = userData.nachname;
+    document.getElementById("Email").value = userData.email;
+    document.getElementById("Rufnummer").value = userData.phone;
+    document.getElementById("Postleitzahl").value = userData.zipCode;
+    document.getElementById("Stadt").value = userData.city;
+    document.getElementById("Straße").value = userData.primaryAdress;
+    document.getElementById("Zusatz").value = userData.secondaryAdres;
+    console.log(userData);
+    document.getElementById("anmeldung").hidden = true;
+  }else{
+    document.getElementById("anmeldung").hidden = false;
+  }
+}

@@ -77,3 +77,11 @@ export const addScreening = httpsOnCall((data, context) => {
 export const updateScreening = httpsOnCall((data, context) => {
     return screenings.updateScreening(data.id, data.newData);
 });
+
+export const getInformationOfCurrentUser = httpsOnCall((data, context) => {
+    return users.getInformationOfCurrentUser(context);
+});
+
+export const updateInformationOfCurrentUser = httpsOnCall((data, context) => {
+    return users.updateInformationOfCurrentUser(context, data.newData);
+});

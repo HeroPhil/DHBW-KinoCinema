@@ -14,10 +14,25 @@ let app;
 let functions;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
-    functions = app.functions("europe-west1");
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+
+
+function testForCurrentUser() {
+    if(firebase.auth().currentUser !== null){
+        window.location = "../user";
+    }
+}
+
 
 async function loginWithGoogle() {
     const providerGoogle = new firebase.auth.GoogleAuthProvider();
@@ -74,3 +89,5 @@ async function loginWithApple() {
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook
+
+

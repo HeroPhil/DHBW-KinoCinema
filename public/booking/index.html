@@ -64,7 +64,7 @@
             </div>
 
             <div id="main" hidden>
-
+                <button class="button" onclick = loadCurrentUserData()>User Test</button>
 
                 <div class="row">
                     <div class="col-1">&nbsp;</div>
@@ -78,18 +78,67 @@
                                 </div>
               
                                 <ul class="showcase">
-                                        <li>
-                                            <div class="seat" id="big"></div>
-                                            <small>Available</small>
-                                        </li>
-                                        <li>
-                                            <div class="seat selected" id="big"></div>
-                                            <small>Selected</small>
-                                        </li>
-                                        <li>
-                                            <div class="seat occupied" id="big"></div>
+                                        <ul>
+                                            <li>
+                                                <div class="seat" id="big"></div>
+                                                <small>Available</small>
+                                            </li>
+                                            <hr>
+                                            <li>
+                                                <div class="seat" id="big"></div>
+                                                <small>Normal:</small>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <div class="seat" id="big">
+                                                    <img src="../icons/jpg/krone.png">
+                                                </div>
+                                                <small>Lodge:</small>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <div class="seat" id="big">
+                                                    <img src="../icons/jpg/special.png">
+                                                </div>
+                                                <small>Special needs:</small>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <div class="seat selected" id="big"></div>
+                                                <small>Selected</small>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <div></div>
+                                                <small>1</small>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <div></div>
+                                                <small>1.5</small>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <div></div>
+                                                <small>0.8</small>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <div class="seat occupied" id="big"></div>
                                             <small>Occupied</small>
-                                        </li>
+                                            </li>
+                                            <li>
+                                                <div></div>
+                                            </li>
+                                            <li>
+                                                <div></div>
+                                            </li>
+                                            <li>
+                                                <div></div>
+                                            </li>
+                                        </ul>
                                 </ul>
                               
                                 <div id="seatContainer" class="container">
@@ -115,7 +164,27 @@
                         <summary id="Zahlung" class="expand">Zahlung</summary>
                         <form id="formStyle">
                             <div class="row">
+                                <div class="col-7" id="anmeldung">
+                                    <br>
+                                    <fieldset>
+                                        <legend>Anmeldung</legend>
+                                        <div class="fieldContainer">
+                                            <div class="field">
+                                                <label for="username" class="label">Username</label>
+                                                <input type="text" name="username" class="input" placeholder=" " autocomplete="off"/>
+                                                
+                                            </div>
+                                            <div class="field">
+                                                <label for="password" class="label">Password</label>
+                                                <input type="password" name="password" class="input" placeholder=" " autocomplete="off"/>
+                                            </div>
+                                            <button onclick="loginWithUserCredentials()" class="SignUp" id="emailLogin">Login</button>
+                                            <button onclick="loginWithGoogle()" class="SignUp" id="googleLogin">Google</button>
+                                        </div>
+                                    </fieldset>
+                                </div>
                                 <div class="col-10">
+                                    <br>
                                     <fieldset>
                                         <legend>Rechnungsadresse</legend>
                                         <div class="fieldContainer">
@@ -148,31 +217,17 @@
                                             </div>
                                         </div>
                                     </fieldset>
+                                    <br>
                                 </div>
                                 <div class="col-6">
+                                    <br>
                                     <fieldset>
                                         <legend>Lieferadresse</legend>
                                         <input type="checkbox" id="check" onclick = otherAdr() checked>
                                         <label>Lieferadresse identisch mit Rechnungsadresse</label><br>
                                         <div id="Rechnungsadresse"></div>
                                     </fieldset>
-                                    <br>
-                                    <br>
-                                    <fieldset>
-                                        <legend>Anmeldung</legend>
-                                        <div class="fieldContainer">
-                                            <div class="field">
-                                                <label for="username" class="label">Username</label>
-                                                <input type="text" name="username" class="input" placeholder=" " autocomplete="off"/>
-                                                
-                                            </div>
-                                            <div class="field">
-                                                <label for="password" class="label">Password</label>
-                                                <input type="password" name="password" class="input" placeholder=" " autocomplete="off"/>
-                                            </div>
-                                            <button id="SignUp">Sign Up</button>
-                                        </div>
-                                    </fieldset>
+                                    <br>                               
                                 </div>
                             </div>
     
@@ -193,6 +248,7 @@
                                         <br>
                                         <div id="radioAus"></div>
                                     </fieldset>
+                                    <br>
                                 </div>
                             </div>
     
