@@ -5,6 +5,17 @@ import * as basics from './basics';
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
 
+const allowedKeys = [
+    "city",
+    "displayName",
+    "email",
+    "firstName",
+    "lastName",
+    "phone",
+    "primaryAddress",
+    "secondaryAddress"
+];
+
 export class User {
     id: string;
     data: FirebaseFirestore.DocumentData;
@@ -14,18 +25,6 @@ export class User {
         this.data = data;
     }
 }
-
-interface UserInformation {
-    vorname?: string;
-    nachname?: string;
-    email?: string;
-    phone?: number;
-    zipCode?: number;
-    city?: string;
-    primaryAdress?: string;
-    secondaryAdress?: string;
-}
-
 
 export async function createNewUserInDatabase(user: auth.UserRecord){
     const data = {
@@ -49,23 +48,31 @@ export async function getInformationOfCurrentUser(context: CallableContext) {
     }
     return {
         error: {
-            message: "No user is sigend in"
+            message: "No user is signed in"
         }
     };
 }
 
-async function updateInformationOfUserByID(uid: string, changes: UserInformation) {
-    await basics.updateDocumentByID(uid, changes);
-    return await basics.getDocumentByID(uid);    
+async function updateInformationOfUserByID(uid: string, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; hasOwnProperty?: any; }) {
+
+    let newData: any = {};
+    allowedKeys.forEach((key) => {
+        if (key in changes) {
+            newData[key] = changes[key];
+        }
+    });
+
+    await basics.updateDocumentByID(customersCollectionPath + "/" + uid, newData);
+    return await getInformationOfUserByID(uid);
 }
 
-export async function updateInformationOfCurrentUser(context: CallableContext, changes: UserInformation) {
+export async function updateInformationOfCurrentUser(context: CallableContext, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; }) {
     if (context.auth.uid) {
         return updateInformationOfUserByID(context.auth.uid, changes);
     }
     return {
         error: {
-            message: "No user is sigend in"
+            message: "No user is signed in"
         }
     };
 }
