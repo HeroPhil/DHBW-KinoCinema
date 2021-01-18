@@ -12,8 +12,10 @@
 // firebase.performance(); // call to activate
 let app;
 let functions;
+let storage;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
+    storage = firebase.storage();
     if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
         console.log('This is local emulator environment');
         functions = firebase.functions();
@@ -32,6 +34,10 @@ let blockedSeats = [];
 let seatsWithBookingConflict = [];
 let screeningReference = "";
 let screeningTime;
+let cinemaName;
+let movieName;
+let movieCoverReference;
+let normalTicketPrice = 0;
 let bookedTickets = [];
 
 const container = document.querySelector('.container');
@@ -119,12 +125,16 @@ async function loadContent() {
   console.log(information);
   screeningReference = information.screeningId;
   screeningTime = information.time;
-  screeningTime = new Date(screeningTime);
-  var screeningDate = screeningTime.getDate() + "." + screeningTime.getMonth() + "." + screeningTime.getFullYear() + "<br>" + screeningTime.getHours() + ":" + screeningTime.getMinutes() + " Uhr";
+  var screeningDate = new Date(screeningTime);
+  screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + "<br>" + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
   var movieTitle = sessionStorage.getItem('movieTitle');
+  movieName = sessionStorage.getItem('movieTitle');
   var titlePlaceHolder = document.getElementById("movie-title");
   titlePlaceHolder.innerHTML = movieTitle + "<br>" + screeningDate;
   var hallInfo = information.hall.data;
+  normalTicketPrice = parseFloat(information.price);
+  cinemaName = hallInfo.name;
+  movieCoverReference = sessionStorage.getItem('movieCover');
   seatGeneration(hallInfo);
   var param = {id: information.screeningId};
   var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
@@ -147,6 +157,7 @@ async function seatGeneration(hallInfo) {
   for(var i = 0; i < hallInfo.rows.length; i++) {
     var rowAmount = hallInfo.rows[i].count;
     var seatPrice = hallInfo.rows[i].type.data.price;
+    seatPrice = normalTicketPrice * parseFloat(seatPrice);
     var seatType = hallInfo.rows[i].type.data.name;
     seatType = seatType.replace("\"", "");
     seatType = seatType.trim();
@@ -413,17 +424,24 @@ function ausgabe() {
   document.getElementById("ZahlungDetails").open = false;
   document.getElementById("zusammenfassungDetails").hidden = false;
   location.href = '#Zusammenfassung';
-  test();
+  addTicketsToWebsite();
 }
 
 
 /*__________________________________Ticket-Preview_____________________________________________________*/
 
-function test() {
-  createTicket("Geiler Film", "7", "4", "8", "22.10.2021", "www.google.de")
+function addTicketsToWebsite() {
+  if(selectedSeats.length > 0) {
+    var date = new Date(screeningTime);
+    var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+    for(var i = 0; i < selectedSeats.length; i++) {
+      var seat = selectedSeats[i];
+      createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString);
+    } //end of for
+  } //end of if
 }
 
-function createTicket(title, hall, row, seat, date, value) {
+function createTicket(title, hall, row, seat, date) {
     var tickets = document.getElementById("tickets");
     var ticket = document.createElement("div");
     ticket.classList.add("ticket");
@@ -473,12 +491,14 @@ function createTicket(title, hall, row, seat, date, value) {
     movieLogo(ticket);
 }
 
-function movieLogo(element) {
+async function movieLogo(element) {
   var movieContainer = element.appendChild(document.createElement("div"));
   movieContainer.classList.add("pic");
   var picContainer = movieContainer.appendChild(document.createElement("div"));
   picContainer.classList.add("image");
-  picContainer.innerHTML = "<img src=\"../icons/jpg/JamesBond.jpg\"></img>";
+  var img = document.createElement("img");
+  img.src = movieCoverReference;
+  picContainer.appendChild(img);
 }
 
 /*

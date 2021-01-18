@@ -51,6 +51,7 @@ async function loadContent() {
     sessionStorage.setItem('movieTitle', movieData.data.name);
     description.innerHTML = movieData.data.description;
     var url = await storage.refFromURL(movieData.data.cover).getDownloadURL();
+    sessionStorage.setItem('movieCover', url);
     cover.src = url;
     var subLevel = 4;
     var sinceDate = Math.floor(Date.now());
@@ -109,6 +110,7 @@ async function addScreeningDataToArray(day, data) {
         case 0:
             screeningsSunday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
                 hall : data.data.hall,
                 screeningId : data.id
@@ -117,6 +119,7 @@ async function addScreeningDataToArray(day, data) {
         case 1:
             screeningsMonday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
                 hall : data.data.hall,
                 screeningId : data.id
@@ -125,6 +128,7 @@ async function addScreeningDataToArray(day, data) {
         case 2:
             screeningsTuesday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
                 hall : data.data.hall,
                 screeningId : data.id
@@ -133,6 +137,7 @@ async function addScreeningDataToArray(day, data) {
         case 3:
             screeningsWednesday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
                 hall : data.data.hall,
                 screeningId : data.id
@@ -141,6 +146,7 @@ async function addScreeningDataToArray(day, data) {
         case 4:
             screeningsThursday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
                 hall : data.data.hall,
                 screeningId : data.id
@@ -149,6 +155,7 @@ async function addScreeningDataToArray(day, data) {
         case 5:
             screeningsFriday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
                 hall : data.data.hall,
                 screeningId : data.id
@@ -157,6 +164,7 @@ async function addScreeningDataToArray(day, data) {
         case 6:
             screeningsSaturday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
                 hall : data.data.hall,
                 screeningId : data.id
