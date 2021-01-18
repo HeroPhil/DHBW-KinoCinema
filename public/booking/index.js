@@ -37,6 +37,7 @@ let screeningTime;
 let cinemaName;
 let movieName;
 let movieCoverReference;
+let normalTicketPrice = 0;
 let bookedTickets = [];
 
 const container = document.querySelector('.container');
@@ -128,6 +129,7 @@ async function loadContent() {
   var titlePlaceHolder = document.getElementById("movie-title");
   titlePlaceHolder.innerHTML = movieTitle;
   var hallInfo = information.hall.data;
+  normalTicketPrice = parseFloat(information.price);
   screeningTime = information.time;
   cinemaName = hallInfo.name;
   movieCoverReference = sessionStorage.getItem('movieCover');
@@ -153,6 +155,7 @@ async function seatGeneration(hallInfo) {
   for(var i = 0; i < hallInfo.rows.length; i++) {
     var rowAmount = hallInfo.rows[i].count;
     var seatPrice = hallInfo.rows[i].type.data.price;
+    seatPrice = normalTicketPrice * parseFloat(seatPrice);
     var seatType = hallInfo.rows[i].type.data.name;
     seatType = seatType.replace("\"", "");
     seatType = seatType.trim();
