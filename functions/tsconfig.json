@@ -9,10 +9,15 @@
     "strictNullChecks": false,
     "target": "es2017",
     "watch": false,
-    "types": []
+    "types": ["mocha", "jest"],
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": [
-    "src"
+    "src",
+    "test"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

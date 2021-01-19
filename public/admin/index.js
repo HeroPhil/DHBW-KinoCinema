@@ -14,10 +14,45 @@ let app;
 let functions;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
-    functions = app.functions("europe-west1");
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+let activeMovieID;
+
+async function OnLoad(){
+    switchEditOption(1);
+    loadDropdown();
+}
+
+function switchEditOption(index){
+    var listItems = document.getElementById("editOptions").getElementsByTagName("li");
+    for (let index = 0; index < listItems.length; index++) {
+        listItems[index].classList.remove("checked");
+    }
+    
+    switch (index) {
+        case 1:
+            listItems[0].classList.add("checked");
+            document.getElementById("editMovie").hidden = true;
+            document.getElementById("movieInformation").hidden = false;
+            break;
+        case 2:
+            listItems[1].classList.add("checked");
+            document.getElementById("editMovie").hidden = false;
+            document.getElementById("movieInformation").hidden = true;
+            break;
+    }
+}
+
+
 
 var API_Key = "d67e6d39e535da8b280d6346698efb87";
 
@@ -77,6 +112,55 @@ function loadMovie(movie_id) {
     
     movie_request.send();
 }
+
+
+function addMovie(){
+
+}
+
+async function loadDropdown(){
+    console.log("getMovies...");
+    let movies = await functions.httpsCallable('database-getAllMovies')({});
+    console.log(movies);
+    var dropdown_content = document.getElementById("dropdown-content");
+
+    movies.data.forEach( movie => {
+        let content = movie.data;
+        var entry = document.createElement("a");
+        entry.onclick = function() {
+            selectDropdownMovie(movie.id);
+        };
+        entry.innerHTML = content.name;
+        dropdown_content.appendChild(entry);
+    });
+}
+
+function selectDropdownMovie(id){
+    document.getElementById("MovieIDInput").value = id;
+}
+
+function loadDatabaseMovie(){
+    var id = document.getElementById("MovieIDInput").value;
+    console.log(id);
+    const param = {id: id};
+
+    functions.httpsCallable('database-getMovieByID')(param)
+        .then(result => {
+            console.log(result.data);
+            activeMovieID = id;
+            return ;
+        }).catch((error) => {console.error(error)});
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -35,6 +35,7 @@
         <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
         <script src="./index.js"></script>
+        <script src="../global.js"></script>
 
         
     </head>
@@ -49,84 +50,95 @@
 
         <main>
             <div id="headerX"></div>
-
-            <!--Slide-show-->
-            <div class="row">
-                <div id="test" class="col-1">&nbsp;</div>
-                <div class="col-14">
-                    <!-- Slideshow container -->
-                    <div id="slideshow-container">
-
-                        
+            <div id="loading">
+                <div class="loadingio-spinner-pulse-utrg899k0nk">
+                    <div class="ldio-t32oece7z3">
+                        <img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png">
                     </div>
-                    <br>
-                    
-                    <!-- The dots/circles -->
-                    <div style="text-align:center" id="dots">
+                </div> 
+            </div>
+
+            <div id="main" hidden>
+                <!--Slide-show-->
+                <div class="row">
+                    <div id="test" class="col-1">&nbsp;</div>
+                    <div class="col-14">
+                        <!-- Slideshow container -->
+                        <div id="slideshow-container">
+    
+                            
+                        </div>
+                        <br>
                         
+                        <!-- The dots/circles -->
+                        <div style="text-align:center" id="dots">
+                            
+                        </div>
+                    </div>
+                </div>
+    
+    
+    
+    
+    
+    
+    
+    
+                <div class="row">
+                    <div id="test" class="col-11">&nbsp;</div>
+                    <div id="test" class="col-4">
+                        <!--Hier fehlt Funktion!-->
+                        <form class="field" action="void">
+                            <input type="text" placeholder="Search.." name="search">
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>   
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div id="test" class="col-1">&nbsp;</div>
+                    <div id="test" class="col-14 bar">
+                        <p id="Abenteuer">Abenteuer</p>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div id="test" class="col-1">&nbsp;</div>
+                    <div id="test" class="col-14 bar">
+                        <p>Action</p>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div id="test" class="col-1">&nbsp;</div>
+                    <div id="test" class="col-14 bar">
+                        <p>Horror</p>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div id="test" class="col-1">&nbsp;</div>
+                    <div id="test" class="col-14 bar">
+                        <p>Komödie</p>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div id="test" class="col-1">&nbsp;</div>
+                    <div id="test" class="col-14 bar">
+                        <p>Romantik</p>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div id="test" class="col-1">&nbsp;</div>
+                    <div id="test" class="col-14 bar">
+                        <p>Thriller</p>
                     </div>
                 </div>
             </div>
 
-
-
-
-
-
-
-
-            <div class="row">
-                <div id="test" class="col-11">&nbsp;</div>
-                <div id="test" class="col-4">
-                    <!--Hier fehlt Funktion!-->
-                    <form class="field" action="void">
-                        <input type="text" placeholder="Search.." name="search">
-                        <button type="submit"><i class="fa fa-search"></i></button>
-                    </form>   
-                </div>
-            </div>
-
-            <div class="row">
-                <div id="test" class="col-1">&nbsp;</div>
-                <div id="test" class="col-14 bar">
-                    <p>Abenteuer</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div id="test" class="col-1">&nbsp;</div>
-                <div id="test" class="col-14 bar">
-                    <p>Action</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div id="test" class="col-1">&nbsp;</div>
-                <div id="test" class="col-14 bar">
-                    <p>Horror</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div id="test" class="col-1">&nbsp;</div>
-                <div id="test" class="col-14 bar">
-                    <p>Komödie</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div id="test" class="col-1">&nbsp;</div>
-                <div id="test" class="col-14 bar">
-                    <p>Romantik</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div id="test" class="col-1">&nbsp;</div>
-                <div id="test" class="col-14 bar">
-                    <p>Thriller</p>
-                </div>
-            </div>
+            
         </main>
 
         <footer id="footer"></footer>

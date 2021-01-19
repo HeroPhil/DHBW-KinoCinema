@@ -12,6 +12,20 @@
 // firebase.performance(); // call to activate
 let app;
 let functions;
+document.addEventListener("DOMContentLoaded", event => {
+    app = firebase.app();
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
+});
+//
+// // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+let screenings = 0;
 const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 const days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 let screeningsMonday = [];
@@ -21,12 +35,6 @@ let screeningsThursday = [];
 let screeningsFriday = [];
 let screeningsSaturday = [];
 let screeningsSunday = [];
-document.addEventListener("DOMContentLoaded", event => {
-    app = firebase.app();
-    functions = app.functions("europe-west1");
-});
-//
-// // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 async function loadContent() {
     var id = location.search;
@@ -40,39 +48,39 @@ async function loadContent() {
     var cover = document.getElementById("movie-cover");
     var storage = firebase.storage();
     title.innerHTML = movieData.data.name;
+    sessionStorage.setItem('movieTitle', movieData.data.name);
     description.innerHTML = movieData.data.description;
     var url = await storage.refFromURL(movieData.data.cover).getDownloadURL();
+    sessionStorage.setItem('movieCover', url);
     cover.src = url;
     var subLevel = 4;
-    var date = Math.floor(Date.now());
+    var sinceDate = Math.floor(Date.now());
+    var untilDate = Math.floor(Date.now() + (1000 * 60 *60 *24 *7));
     var paramScreenings = {
+        id : movieData.id,
         sublevel : subLevel,
-        since : date
+        since : sinceDate,
+        until : untilDate
     };
     var singleScreeningData
     var screeningList = document.getElementById("movie-screening-list");
     var screeningTable = document.createElement("table");
     screeningTable.setAttribute("border", "1");
-    var screeningsForMovie = await functions.httpsCallable("database-getAllScreenings")(paramScreenings);
+    var screeningsForMovie = await functions.httpsCallable("database-getScreeningsOfMovieByID")(paramScreenings);
+    console.log(screeningsForMovie);
     screeningData = screeningsForMovie.data;
     screeningData.forEach(screening => {
         singleScreeningData = screening.data;
         date = new Date(singleScreeningData.startTime);
         addScreeningDataToArray(date.getDay(), screening);
     });
+    sortInfoArrays();
     var actualDay = new Date().getDay();
     screeningTable.createCaption().innerHTML = "Vorstellungen der nächsten 7 Tage:";
     var rowheadings;
     var rowScreenings;
     var cell;
     rowheadings = document.createElement("tr");
-    console.log(screeningsSunday);
-    console.log(screeningsMonday);
-    console.log(screeningsTuesday);
-    console.log(screeningsWednesday);
-    console.log(screeningsThursday);
-    console.log(screeningsFriday);
-    console.log(screeningsSaturday);
     for(var k = 0; k < days.length; k++) {
         if(actualDay === 7) {
             actualDay = 0;
@@ -94,6 +102,7 @@ async function loadContent() {
     screeningTable.appendChild(rowheadings);
     screeningTable.appendChild(rowScreenings);
     screeningList.appendChild(screeningTable);
+    endLoading();
 }
 
 async function addScreeningDataToArray(day, data) {
@@ -101,49 +110,63 @@ async function addScreeningDataToArray(day, data) {
         case 0:
             screeningsSunday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
         case 1:
             screeningsMonday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
         case 2:
             screeningsTuesday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
         case 3:
             screeningsWednesday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
         case 4:
             screeningsThursday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
         case 5:
             screeningsFriday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
         case 6:
             screeningsSaturday.push({
                 time : data.data.startTime,
+                price : data.data.price,
                 hallId : data.data.hall.id,
+                hall : data.data.hall,
                 screeningId : data.id
             })
             break;
@@ -180,21 +203,74 @@ async function addScreeningsToList(day, row) {
     } //end of switch-case
 }
 
+function sortInfoArrays() {
+    sortInfoArray(screeningsSunday);
+    sortInfoArray(screeningsMonday);
+    sortInfoArray(screeningsTuesday);
+    sortInfoArray(screeningsWednesday);
+    sortInfoArray(screeningsThursday);
+    sortInfoArray(screeningsFriday);
+    sortInfoArray(screeningsSaturday);
+} //end of sortInfoArrays
+
+function sortInfoArray(array) {
+    var counter = 0;
+    var sortingFinished = false;
+    var save = null;
+    if(array.length > 1) {
+        while(!sortingFinished) {
+            for(var i = 0; (i < array.length - 1); i++) {
+                if(parseInt(array[i].time) > parseInt(array[i + 1].time)) {
+                    save = array[i];
+                    array[i] = array[i + 1];
+                    array[i + 1] = save;
+                    counter++;
+                } //end of if
+            } //end of for
+            if(counter === 0) {
+                sortingFinished = true;
+            } //end of if
+            counter = 0; 
+        } //end of if
+    } //end of while
+} //end of sortInfoArray
+
+function checkForCorrectMinuteWriting(timeStamp) {
+    if(timeStamp < 10) {
+        return "0" + timeStamp;
+    } else {
+        return timeStamp;
+    } //end of if-else
+} //end of checkForCorrectMinuteWriting
+
+function changeStateOfBookingButton() {
+    var button = document.getElementById("book-button");
+    var selectedButtons = document.querySelector('input[name="time-slot"]:checked');
+    if(selectedButtons !== null) {
+        button.disabled = false;
+    } else {
+        button.disabled = true;
+    } //end of if-else
+} //end of changeStateOfBookingButton
+
 async function addScreeningToList(dataArray, row) {
     var cell = document.createElement("td");
     var placeholder = document.createElement("div");
-    console.log(dataArray.length);
     if(dataArray.length !== 0) {
         for(var i = 0; i < dataArray.length; i++) {
                 var information = dataArray[i];
                 var inputScreening = document.createElement("input");
                 inputScreening.setAttribute("type", "radio");
                 inputScreening.setAttribute("id", information.screeningId);
+                inputScreening.setAttribute("value", screenings);
+                sessionStorage.setItem(screenings, JSON.stringify(information));
+                screenings++;
                 inputScreening.setAttribute("name", "time-slot");
                 var labelScreening = document.createElement("label");
                 labelScreening.setAttribute("for", information.screeningId)
                 var dateOfScreening = new Date(information.time);
-                var time = dateOfScreening.getHours() + ":" + dateOfScreening.getMinutes();
+                var minutes = String(checkForCorrectMinuteWriting(dateOfScreening.getMinutes()));
+                var time = dateOfScreening.getHours() + ":" + minutes;
                 labelScreening.innerHTML = time;
                 placeholder.appendChild(inputScreening);
                 placeholder.appendChild(labelScreening);
@@ -208,3 +284,13 @@ async function addScreeningToList(dataArray, row) {
         row.appendChild(cell);
     }
 } //end of addScreeningToList
+
+async function analyzeRadioInput() {
+    var screening = document.querySelector('input[name="time-slot"]:checked');
+    if(screening !== null) {
+        var information = sessionStorage.getItem(screening.value);
+        sessionStorage.setItem('informationOfBooking', information);
+        var reference = "../booking/";
+        window.location = reference;
+    } //end of if
+} //end of analyzeRadioInput

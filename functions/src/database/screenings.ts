@@ -1,9 +1,13 @@
 import * as basics from './basics';
 import { Movie, moviesCollectionPath } from './movies';
 import { Hall } from './hall';
+import { createEmptyHallSeatArray, markSeatsAsOccupied } from '../logic/screenings';
+import { countRowsOfScreening } from '../logic/row';
+import { Ticket } from './tickets';
 
 export const screeningsCollectionPath = 'live/events/screenings'
 const ticketsCollectionPath = 'live/events/tickets';
+const hallCollectionPath = '/live/infastructure/halls';
 
 export class Screening {
     id: string;
@@ -100,30 +104,119 @@ export async function getScreeningsOfMovieByID(id: string, since = 0, until=9999
 
 export async function getBookedSeatsByScreeningID(id: string) {
     const screeningRef = basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
+
     const query = basics.getCollectionRefByID(ticketsCollectionPath)
         .where("screening", "==", screeningRef);
-    const collection = await basics.getCollectionByRef(query);
-    
-    const screening = await getScreeningByID(id, 1);
-    const width = screening.data.hall.data.width;
-    let rows = 0;
-
-    screening.data.hall.data.rows.forEach((element: { count: number; }) => {
-        rows += element.count;
-    });
-        
-    const seats: (boolean[])[] = [];
-    for(let r = 0; r < rows; r++) {
-        const row: boolean[] = [];
-        for(let s = 0; s < width; s++) {
-            row.push(false);
+    const tickets = basics.getCollectionByRef(query).then((collection: { docs: any; }) => {
+        const result = [];
+        for (const doc of collection.docs) {
+            result.push(new Ticket(doc.id, doc.data()));
         }
-        seats.push(row);
-    }
-
-    collection.docs.forEach((ticket: { data: () => any; }) => {
-        seats[ticket.data().row - 1][ticket.data().seat - 1] = true;
+        return result;
     });
+
+    const screening = await getScreeningByID(id, 1);
+
+    const rows = countRowsOfScreening(screening);
+    
+    const width = screening.data.hall.data.width;
+    let seats = createEmptyHallSeatArray(width, rows);
+
+    seats = markSeatsAsOccupied(seats, await tickets);
     
     return seats; 
+}
+
+export async function addScreening(movie:  string, hall: string, price: number, startTime: number, repetitions: number, increments: number) {
+    const error: {message: string} = { message: "" };
+    const screenings: Screening[] = [];
+    
+    const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + movie);
+    const movieDoc = await basics.getDocumentByRef(movieRef);
+
+    if(!movieDoc.exists) {
+        console.log("This movie does not exist!");
+        error.message = "This movie does not exist!";
+        return {error};
+    }
+
+    const hallRef = await basics.getDocumentRefByID(hallCollectionPath + "/" + hall);
+    const hallDoc = await basics.getDocumentByRef(hallRef);
+
+    if(!hallDoc.exists) {
+        console.log("This hall does not exist!");
+        error.message = "This hall does not exist!";
+        return {error};
+    }
+    
+    if(repetitions !== undefined && increments !== undefined) {
+        for(let i = 0; i < repetitions; i++){
+            const modifiedStartTime = startTime + (i * increments);
+            const data = {
+                movie:  movieRef,
+                hall: hallRef,
+                price: price,
+                startTime: modifiedStartTime
+            };
+
+            const screeningRef = await basics.addDocToCollectionByID(screeningsCollectionPath, data);
+            const screening = await basics.getDocumentByRef(screeningRef);
+
+            screenings.push(await new Screening(screening.id, screening.data()).resolveRefs(3));
+        } 
+    } else {
+        const dataOnce = {
+            movie:  movieRef,
+            hall: hallRef,
+            price: price,
+            startTime: startTime
+        };
+
+        const screeningRef = await basics.addDocToCollectionByID(screeningsCollectionPath, dataOnce);
+        const screening = await basics.getDocumentByRef(screeningRef);
+
+        screenings.push(await new Screening(screening.id, screening.data()).resolveRefs(3));
+    }
+    
+  return screenings;
+}
+
+export async function updateScreening(id: string, newData: {movie: any, hall: any}) {
+    const error: {message: string} = { message: "" };
+    if(id !== undefined) {
+        const screeningRef = await basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
+        const screeningDoc = await basics.getDocumentByRef(screeningRef);
+        if(!screeningDoc.exists) {
+            console.log("This screening does not exist!");
+            error.message = "This screening does not exist!";
+            return {error};
+        }
+    }
+
+    if(newData.movie !== undefined) {
+        const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + newData.movie);
+        const movieDoc = await basics.getDocumentByRef(movieRef);
+        if(!movieDoc.exists) {
+            console.log("This movie does not exist!");
+            error.message = "This movie does not exist!";
+            return {error};
+        }
+        newData.movie = movieRef;
+    }
+    
+    if(newData.hall !== undefined) {
+        const hallRef = await basics.getDocumentRefByID(hallCollectionPath + "/" + newData.hall);
+        const hallDoc = await basics.getDocumentByRef(hallRef);
+    
+        if(!hallDoc.exists) {
+            console.log("This hall does not exist!");
+            error.message = "This hall does not exist!";
+            return {error};
+        }
+        newData.hall = hallRef;
+    }
+
+    const screening = await basics.updateDocumentByID(screeningsCollectionPath+ '/' + id, newData);
+    console.log(screening);
+    return await new Screening(id, newData); 
 }

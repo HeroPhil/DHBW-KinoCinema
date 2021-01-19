@@ -12,12 +12,33 @@
 // firebase.performance(); // call to activate
 let app;
 let functions;
+let storage;
 document.addEventListener("DOMContentLoaded", event => {
     app = firebase.app();
-    functions = app.functions("europe-west1");
+    storage = firebase.storage();
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        console.log('This is local emulator environment');
+        functions = firebase.functions();
+        functions.useFunctionsEmulator("http://localhost:5001");
+    } else {
+        functions = app.functions("europe-west1");
+    }
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+let seatCounter = 0;
+let seatsMap = [];
+let selectedSeats = [];
+let blockedSeats = [];
+let seatsWithBookingConflict = [];
+let screeningReference = "";
+let screeningTime;
+let cinemaName;
+let movieName;
+let movieCoverReference;
+let normalTicketPrice = 0;
+let bookedTickets = [];
 
 const container = document.querySelector('.container');
 const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
@@ -27,31 +48,39 @@ const price = document.getElementById('price');
 let ticketPrice = Number(document.getElementById('movie').getAttribute('value'));
 
 const populateUI = () => {
-  const selectedSeats = document.querySelectorAll('.seat-row .selected');
-
-  if (selectedSeats !== null && selectedSeats.length > 0) {
+  const selectedSeatsInfo = document.querySelectorAll('.seat-row .selected');
+  if (selectedSeatsInfo !== null && selectedSeatsInfo.length > 0) {
     seats.forEach((seat, index) => {
-      if (selectedSeats.indexOf(index) > -1) {
+      if (selectedSeatsInfo.indexOf(index) > -1) {
         seat.classList.add('selected');
       }
     });
-  }
-
-};
+  } //end of if
+}; //end of lambda expression
 
 populateUI();
 
 
 const updateSelectedSeatsCount = () => {
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
+  var sum = 0;
+  for(var i = 0; i < selectedSeats.length; i++) {
+    sum += parseFloat(selectedSeats[i].getAttribute("value")) * 100;
+    sum = Math.floor(sum);
+  } //end of for
+  sum = sum / 100;
+  count.innerText = selectedSeats.length;
+  price.innerText = formatAsCurrency(sum);
+}; //end of lambda expression
 
-  const seatsIndex = [...selectedSeats].map(seat => [...seats].indexOf(seat));
-
-  const selectedSeatsCount = selectedSeats.length;
-
-  count.innerText = selectedSeatsCount;
-  price.innerText = selectedSeatsCount * ticketPrice;
-};
+function formatAsCurrency(number) {
+  const sp = number.toString().split(".");
+  if (sp.length > 1) {
+    sp[sp.length-1] = sp[sp.length-1].concat("0".repeat(2 - sp[sp.length-1].length));
+    return sp.join(".");
+  }
+  return sp[0].concat(".00");
+}
 
 // Seat select event
 container.addEventListener('click', e => {
@@ -59,37 +88,145 @@ container.addEventListener('click', e => {
     e.target.classList.contains('seat') &&
     !e.target.classList.contains('occupied')
   ) {
+    if(e.target.classList.contains('lodge')) {
+      e.target.innerHTML = "";
+      var selectDes = document.createElement("img");
+      selectDes.setAttribute("id", "seatDesign");
+      selectDes.setAttribute("src", "../icons/png/krone2.png");
+      e.target.appendChild(selectDes);
+    }
     e.target.classList.toggle('selected');
-
+    var seat = e.target.getAttribute("id");
+    if(e.target.classList.contains('selected')) {
+      selectedSeats.push(seatsMap[seat]);
+    } else {
+      if(e.target.classList.contains('lodge')) {
+        e.target.innerHTML = "";
+        var unSelectDes = document.createElement("img");
+        unSelectDes.setAttribute("id", "seatDesign");
+        unSelectDes.setAttribute("src", "../icons/png/krone1.png");
+        e.target.appendChild(unSelectDes);
+      }
+      for(var i = 0; i < selectedSeats.length; i++) {
+        if((selectedSeats[i] !== null)) {
+          if((parseInt(seat) === parseInt(selectedSeats[i].id))) {
+            selectedSeats[i] = null;
+          } //end of if
+        } //end of if
+      } //end of for
+    } //end of if-else
     updateSelectedSeatsCount();
-  }
-});
+  } //end of if-else
+}); //end of eventhandler
 
+async function loadContent() {
+  var information = sessionStorage.getItem('informationOfBooking');
+  information = JSON.parse(information);
+  console.log(information);
+  screeningReference = information.screeningId;
+  screeningTime = information.time;
+  var screeningDate = new Date(screeningTime);
+  screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + "<br>" + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
+  var movieTitle = sessionStorage.getItem('movieTitle');
+  movieName = sessionStorage.getItem('movieTitle');
+  var titlePlaceHolder = document.getElementById("movie-title");
+  titlePlaceHolder.innerHTML = movieTitle + "<br>" + screeningDate;
+  var hallInfo = information.hall.data;
+  normalTicketPrice = parseFloat(information.price);
+  cinemaName = hallInfo.name;
+  movieCoverReference = sessionStorage.getItem('movieCover');
+  seatGeneration(hallInfo);
+  var param = {id: information.screeningId};
+  var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(param);
+  blockAlreadyBookedSeats(blockedSeats);
+  endLoading();
+  loadCurrentUserData();
+} //end of loadContent
 
 // dynamic seats
-function seatGeneration() {
+async function seatGeneration(hallInfo) {
   var seatContainer = document.getElementById("seatContainer");
   var rowScreen = document.createElement("div");
-    rowScreen.classList.add("seat-row");
-    var screen = document.createElement("div");
-      screen.classList.add("screen");
-    rowScreen.appendChild(screen);
-    seatContainer.appendChild(rowScreen);
-  
-  for(i = 1; i <= 14; i++) {
-    var row = document.createElement("div");
-      row.classList.add("seat-row")
-      for(j = 1; j <= 14; j++) {
+  var numberOfSeats = parseInt(hallInfo.width);
+  var rowCounter = 0;
+  rowScreen.classList.add("seat-row");
+  var screen = document.createElement("div");
+  screen.classList.add("screen");
+  rowScreen.appendChild(screen);
+  seatContainer.appendChild(rowScreen);
+  for(var i = 0; i < hallInfo.rows.length; i++) {
+    var rowAmount = hallInfo.rows[i].count;
+    var seatPrice = hallInfo.rows[i].type.data.price;
+    seatPrice = normalTicketPrice * parseFloat(seatPrice);
+    var seatType = hallInfo.rows[i].type.data.name;
+    seatType = seatType.replace("\"", "");
+    seatType = seatType.trim();
+
+    for(var k = 0; k < rowAmount; k++) {
+      var row = document.createElement("div");
+      row.classList.add("seat-row");
+      for(var j = 0; j < numberOfSeats; j++) {
         var seat = document.createElement("div");
+        var seatIdentificationObject = {
+          id : seatCounter,
+          row : rowCounter,
+          seat : j
+        } //end of seatObject
+        seatsMap[seatCounter] = seatIdentificationObject;
+        seat.id = seatCounter;
+        seatCounter++;
+        seat.setAttribute("value", seatPrice);
         seat.classList.add("seat");
+        seatType = seatType.replace(/\s/g, '');
+        seat.classList.add(seatType);
+        
+        if(seat.classList.contains('withspecialneeds')) {
+          var design = document.createElement("img");
+          design.setAttribute("id", "seatDesign");
+          design.setAttribute("src", "../icons/png/special.png");
+          seat.appendChild(design);
+        }
+        if(seat.classList.contains('lodge')) {
+          var lodgDesin = document.createElement("img");
+          lodgDesin.setAttribute("id", "seatDesign");
+          lodgDesin.setAttribute("src", "../icons/png/krone1.png");
+          seat.appendChild(lodgDesin);
+        }
+        
         row.appendChild(seat);
-      }
+      } //end of for
       seatContainer.appendChild(row);
-    
-  }
-}
+      rowCounter++;
+    } //end of for
+  } //end of for
+} //end of seatGeneration
 
-
+async function blockAlreadyBookedSeats(seatInfo) {
+  var blockedSeatsInfo = seatInfo.data;
+  var rowInfo;
+  var blocked;
+  var blockedSeatId = 0;
+  for(var i = 0; i < parseInt(blockedSeatsInfo.length); i++) {
+    rowInfo = blockedSeatsInfo[i];
+    for(var j = 0; j < parseInt(rowInfo.length); j++) {
+      blocked = rowInfo[j];
+      blocked = blocked.toString();
+      if(blocked.localeCompare("true") === 0) {
+        var seat = document.getElementById(blockedSeatId);
+        blockedSeats.push(seatsMap[blockedSeatId]);
+        seat.classList.add('occupied');
+        if(seat.classList.contains('lodge')) {
+          seat.innerHTML = "";
+          var occupiedDes = document.createElement("img");
+          occupiedDes.setAttribute("id", "seatDesign");
+          occupiedDes.setAttribute("src", "../icons/png/krone3.png");
+          seat.appendChild(occupiedDes);
+        }
+      } //end of if
+      blockedSeatId++;
+    } //end of for
+  } //end of for
+} //end of blockAlreadyBookedSeats
 
 /*
  * --------------------------------------------------------------------------
@@ -188,24 +325,14 @@ function otherAdr() {
 }
 
 //Checkbox Zahlungsmethode
-function pay() {
-  /*var guidesValue = document.querySelector('input[name=paymethod]:checked').value;
-  var guidesValue = document.getElementsByName("input").values;
-  var farben = ["rot", "blau", "grün"];
-  
+function pay(id) {
   var ausgabe = document.getElementById("radioAus");
-  for(i = 0; i<100;i++) {
-    ausgabe.innerHTML = guidesValue[i];
-  }
-  
-  var vorOrt = document.getElementById("vorOrt");
-  var kreditkarte = document.getElementById("Kreditkarte");
-
-  switch (Number(guidesValue)) {
-    case 1:
+  switch(id) {
+    case 0:
       ausgabe.innerHTML = "";
       break;
-    case 2:
+    case 1:
+      ausgabe.innerHTML = "";
       var field1 = document.createElement("div");
       field1.classList.add("field");
       var field2 = document.createElement("div");
@@ -239,68 +366,39 @@ function pay() {
       num.setAttribute("max", "999");
       num.required = true;
   
-      var secContainer = document.getElementById("radioAus");
-  
       field1.appendChild(kartennummer);
       field2.appendChild(datum);
       field3.appendChild(inhaber);
       field4.appendChild(num);
-      secContainer.appendChild(field1);
-      secContainer.appendChild(field2);
-      secContainer.appendChild(field3);
-      secContainer.appendChild(field4);
+      ausgabe.appendChild(field1);
+      ausgabe.appendChild(field2);
+      ausgabe.appendChild(field3);
+      ausgabe.appendChild(field4);
       break;
-
-  }*/
-
-  var zahlungsmethode = document.getElementById("Zahlungsmethode");
-
-  if(zahlungsmethode.checked === true) {
-    document.getElementById("radioAus").innerHTML = "";
-  }else {
-    var field1 = document.createElement("div");
-    field1.classList.add("field");
-    var field2 = document.createElement("div");
-    field2.classList.add("field");
-    var field3 = document.createElement("div");
-    field3.classList.add("field");
-    var field4 = document.createElement("div");
-    field4.classList.add("field");
-
-    var kartennummer = document.createElement("input");
-    kartennummer.setAttribute("id", "Kartennummer");
-    kartennummer.setAttribute("type", "number");
-    kartennummer.classList.add("input");
-    kartennummer.setAttribute("placeholder", "Kartennummer");
-    kartennummer.required = true;
-    var datum = document.createElement("input");
-    datum.setAttribute("id", "Ablaufdatum");
-    datum.setAttribute("type", "month");
-    datum.classList.add("input");
-    datum.setAttribute("placeholder", "Ablaufdatum");
-    datum.required = true;
-    var inhaber = document.createElement("input");
-    inhaber.setAttribute("id", "Karteninhaber");
-    inhaber.classList.add("input");
-    inhaber.setAttribute("placeholder", "Karteninhaber");
-    inhaber.required = true;
-    var num = document.createElement("input");
-    num.setAttribute("id", "number");
-    num.classList.add("input");
-    num.setAttribute("placeholder", "CVV");
-    num.setAttribute("max", "999");
-    num.required = true;
-
-    var secContainer = document.getElementById("radioAus");
-
-    field1.appendChild(kartennummer);
-    field2.appendChild(datum);
-    field3.appendChild(inhaber);
-    field4.appendChild(num);
-    secContainer.appendChild(field1);
-    secContainer.appendChild(field2);
-    secContainer.appendChild(field3);
-    secContainer.appendChild(field4);
+    case 2:
+      ausgabe.innerHTML = "";
+      var button1 = document.createElement("button");
+      button1.classList.add("button");
+      button1.setAttribute("id","GooglePay");
+      button1.innerHTML = "Google Pay";
+      ausgabe.appendChild(button1);
+      break;
+    case 3:
+      ausgabe.innerHTML = "";
+      var button2 = document.createElement("button");
+      button2.classList.add("button");
+      button2.setAttribute("id","ApplePay");
+      button2.innerHTML = "Apple Pay";
+      ausgabe.appendChild(button2);
+      break;
+    case 4:
+      ausgabe.innerHTML = "";
+      var button3 = document.createElement("button");
+      button3.classList.add("button");
+      button3.setAttribute("id","PayPal");
+      button3.innerHTML = "PayPal";
+      ausgabe.appendChild(button3);
+      break;
   }
 }
  
@@ -326,17 +424,24 @@ function ausgabe() {
   document.getElementById("ZahlungDetails").open = false;
   document.getElementById("zusammenfassungDetails").hidden = false;
   location.href = '#Zusammenfassung';
-  test();
+  addTicketsToWebsite();
 }
 
 
 /*__________________________________Ticket-Preview_____________________________________________________*/
 
-function test() {
-  createTicket("Geiler Film", "7", "4", "8", "22.10.2021", "www.google.de")
+function addTicketsToWebsite() {
+  if(selectedSeats.length > 0) {
+    var date = new Date(screeningTime);
+    var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+    for(var i = 0; i < selectedSeats.length; i++) {
+      var seat = selectedSeats[i];
+      createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString);
+    } //end of for
+  } //end of if
 }
 
-function createTicket(title, hall, row, seat, date, value) {
+function createTicket(title, hall, row, seat, date) {
     var tickets = document.getElementById("tickets");
     var ticket = document.createElement("div");
     ticket.classList.add("ticket");
@@ -386,12 +491,14 @@ function createTicket(title, hall, row, seat, date, value) {
     movieLogo(ticket);
 }
 
-function movieLogo(element) {
+async function movieLogo(element) {
   var movieContainer = element.appendChild(document.createElement("div"));
   movieContainer.classList.add("pic");
   var picContainer = movieContainer.appendChild(document.createElement("div"));
   picContainer.classList.add("image");
-  picContainer.innerHTML = "<img src=\"../icons/jpg/JamesBond.jpg\"></img>";
+  var img = document.createElement("img");
+  img.src = movieCoverReference;
+  picContainer.appendChild(img);
 }
 
 /*
@@ -412,6 +519,122 @@ function createQrCode(element, textValue) {
 
 /*______________________________________________________________________________________________*/
 
-function book() {
-  window.location.href = "../confirmation/";
+async function compareToSelectedSeats(blockedSeatId) {
+  var selectedSeatInfo;
+  var seatWasBlocked = false;
+  for(var i = 0; i < selectedSeats.length; i++) {
+    if(selectedSeats[i] !== null) {
+      selectedSeatInfo = selectedSeats[i];
+      if(selectedSeatInfo !== null) {
+        if(parseInt(selectedSeatInfo.id) === parseInt(blockedSeatId)) {
+          console.log("Blocked seat is " + blockedSeatId);
+          seatWasBlocked = true;
+        } //end of if
+      } //end of if
+    } //end of if
+  } //end of for
+  return seatWasBlocked;
+} //end of compareToSelectedSeats
+
+async function checkSeatsAreNotAlreadyBooked(hallInfo) {
+  var blockedSeatsInfo = hallInfo.data;
+  var rowInfo;
+  var blocked;
+  var corrupedSeatExists = false;
+  var blockedSeatId = 0;
+  for(var i = 0; i < parseInt(blockedSeatsInfo.length); i++) {
+    rowInfo = blockedSeatsInfo[i];
+    for(var j = 0; j < parseInt(rowInfo.length); j++) {
+      blocked = rowInfo[j];
+      blocked = blocked.toString();
+      if(blocked.localeCompare("true") === 0) {
+        var seatWasBlocked = compareToSelectedSeats(blockedSeatId);
+        seatWasBlocked = seatWasBlocked.value;
+        if(seatWasBlocked) {
+          seatsWithBookingConflict.push(blockedSeatId);
+          corrupedSeatExists = true;
+        } //end of if
+      } //end of if
+      blockedSeatId++;
+    } //end of for
+  } //end of for
+  return corrupedSeatExists;
+} //end of checkSeatAreNotAlreadyBooked
+
+async function book() {
+  var bookingConflict = false;
+  if(seatCounter > 0) {
+    var paramBlockedSeats = {id: screeningReference};
+    var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(paramBlockedSeats);
+    var corruptedSeats = checkSeatsAreNotAlreadyBooked(blockedSeats);
+    var bookingError = Boolean(corruptedSeats.value);
+    if(bookingError) {
+      bookingConflict = true;
+    } else {
+      for(var i = 0; i < selectedSeats.length; i++) {
+        var seatInfo = selectedSeats[i];
+        if(seatInfo !== null) {
+          var ticketParam = {
+            screening : screeningReference,
+            row : (parseInt(seatInfo.row) + 1),
+            seat : (parseInt(seatInfo.seat) + 1)
+          } //end of ticketParam
+          bookedTickets.push(functions.httpsCallable('database-createTicket')(ticketParam));
+        } //end of if
+      } //end of for
+    } //end of if-else
+
+    // TODO: need some loading animation
+    await Promise.all(bookedTickets); // waits for all Ticket Promises to be resolved by the backend
+
+    // TODO: error handling here
+    console.log(bookedTickets);
+
+    window.location.href = "../confirmation/"; // forward to next page
+  } //end of if
+} //end of book
+
+
+
+async function loginWithGoogle() {
+  const providerGoogle = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(providerGoogle).then(result => {
+      var user = result.user;
+      var credential = result.credential;
+      console.log(user);
+      console.log(credential);
+      return;
+  }).catch((error) => {console.error(error)});
+} //end of loginWithGoogle
+
+async function loginWithUserCredentials() {
+  var email = document.querySelector("#username").value;
+  var password = document.querySelector("#password").value;
+  firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
+      console.log(user);
+      return;
+  }).catch((error) => {
+      console.log(error);
+      return error;
+  });   
+} //end of loginWithUserCredentials
+
+
+async function loadCurrentUserData() {
+  if(firebase.auth().currentUser !== null){
+    const param = {};
+    const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
+    const userData = result.data.data;
+    document.getElementById("Vorname").value = userData.vorname === undefined ? "" : userData.vorname;
+    document.getElementById("Nachname").value = userData.nachname === undefined ? "" : userData.nachname;
+    document.getElementById("Email").value = userData.email === undefined ? "" : userData.email;
+    document.getElementById("Rufnummer").value = userData.phone === undefined ? "" : userData.phone;
+    document.getElementById("Postleitzahl").value = userData.zipCode === undefined ? "" : userData.zipCode;
+    document.getElementById("Stadt").value = userData.city === undefined ? "" : userData.city;
+    document.getElementById("Straße").value = userData.primaryAdress === undefined ? "" : userData.primaryAdress;
+    document.getElementById("Zusatz").value = userData.secondaryAdres === undefined ? "" : userData.secondaryAdres;
+    document.getElementById("anmeldung").hidden = true;
+  }else{
+    document.getElementById("anmeldung").hidden = false;
+  }
 }

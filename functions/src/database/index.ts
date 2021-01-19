@@ -27,19 +27,19 @@ export const getMovieByID = httpsOnCall((data, context) => {
 });
 
 export const getMoviesByCategory = httpsOnCall((data, context) => {
-    return movies.getMoviesByCategory(data.category, data.amount || 5);
+    return movies.getMoviesByCategory(data.category, parseInt(data.amount) || 5);
 });
 
 export const getTopMovies = httpsOnCall((data, context) => {
-    return movies.getTopMovies(data.amount);
+    return movies.getTopMovies(parseInt(data.amount));
 });
 
 export const getAllScreenings = httpsOnCall((data, context) => {
-    return screenings.getAllScreenings(data.since || 0, data.sublevel || 0);
+    return screenings.getAllScreenings(parseInt(data.since) || 0, parseInt(data.sublevel) || 0);
 });
 
 export const getScreeningsOfMovieByID = httpsOnCall((data, context) => {
-    return screenings.getScreeningsOfMovieByID(data.id, data.since || 0, data.until || 99999999999999, data.sublevel || 0);
+    return screenings.getScreeningsOfMovieByID(data.id, parseInt(data.since) || 0, parseInt(data.until) || 99999999999999, parseInt(data.sublevel) || 0);
 });
 
 export const createNewUserInDatabase = auth().user().onCreate((user) => {
@@ -51,13 +51,37 @@ export const getBookedSeatsByScreeningID = httpsOnCall((data, context) => {
 });
 
 export const createTicket = httpsOnCall((data, context) => {
-    return tickets.createTicket(data.screening, data.row, data.seat, context);
+    return tickets.createTicket(data.screening, parseInt(data.row), parseInt(data.seat), context);
 });
 
 export const getTicketByID = httpsOnCall((data, context) => {
-    return tickets.getTicketByID(data.id, context, data.sublevel || 3);
+    return tickets.getTicketByID(data.id, context, parseInt(data.sublevel) || 3);
 });
 
 export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
-    return tickets.getTicketsOfCurrentUser(context, data.orderByAttribute || "buyTime", data.order || "desc", data.amount || 99999, data.sublevel || 3);
+    return tickets.getTicketsOfCurrentUser(context, data.orderByAttribute || "buyTime", data.order || "desc", parseInt(data.amount) || 99999, parseInt(data.sublevel) || 3);
+});
+
+export const addMovie = httpsOnCall((data, context) => {
+    return movies.addMovie(data.category, data.cover, data.description, parseInt(data.duration), data.name, parseInt(data.priority));
+});
+
+export const updateMovie = httpsOnCall((data, context) => {
+    return movies.updateMovie(data.id, data.newData);
+});
+
+export const addScreening = httpsOnCall((data, context) => {
+    return screenings.addScreening(data.movie, data.hall, parseInt(data.price), parseInt(data.startTime), parseInt(data.repetitions) || undefined, parseInt(data.increments) || undefined);
+});
+
+export const updateScreening = httpsOnCall((data, context) => {
+    return screenings.updateScreening(data.id, data.newData);
+});
+
+export const getInformationOfCurrentUser = httpsOnCall((data, context) => {
+    return users.getInformationOfCurrentUser(context);
+});
+
+export const updateInformationOfCurrentUser = httpsOnCall((data, context) => {
+    return users.updateInformationOfCurrentUser(context, data.newData);
 });

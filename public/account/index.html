@@ -40,7 +40,7 @@
 
 
 
-    <body class="dark">
+    <body class="dark" onload="testForCurrentUser()">
         <div class="navbar"></div>
 
         <main>
@@ -60,8 +60,9 @@
                             <label for="password" class="label">Password</label>
                             <input type="password" name="password" class="input" placeholder=" " autocomplete="off"/>
                         </div>
-                        <button >Sign Up</button>
                     </form>
+                    <button onclick="loginWithUserCredentials()" id="emailLogin">Login</button>
+                    <button onclick="loginWithGoogle()" id="googleLogin">Google</button>
                 </div>
             </div>
             
@@ -71,7 +72,7 @@
         <footer id="footer"></footer>
 
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
         <script type="text/javascript" charset="utf-8"> 
             (function($) {
                 $(".navbar").load("../snippets/navbar.html", function() {
