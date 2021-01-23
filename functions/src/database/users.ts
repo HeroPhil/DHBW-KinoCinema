@@ -1,6 +1,7 @@
 import { auth } from 'firebase-admin';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as basics from './basics';
+import { checkIfAnyLogin } from '../logic/auth';
 
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
@@ -44,11 +45,12 @@ async function getInformationOfUserByID(uid: string) {
 
 export async function getInformationOfCurrentUser(context: CallableContext) {
     let error: {message: string} = { message: "" };
-    if (context.auth.uid) {
-        return getInformationOfUserByID(context.auth.uid);
+    const checkLogin = checkIfAnyLogin(context);
+    if (checkLogin.error) {
+        error = checkLogin.error;
+        return {error};
     }
-    error.message = "You are not signed in!";
-    return {error};
+    return getInformationOfUserByID(context.auth.uid);
 }
 
 async function updateInformationOfUserByID(uid: string, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; hasOwnProperty?: any; }) {
@@ -66,9 +68,10 @@ async function updateInformationOfUserByID(uid: string, changes: { [x: string]: 
 
 export async function updateInformationOfCurrentUser(context: CallableContext, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; }) {
     let error: {message: string} = { message: "" };
-    if (context.auth.uid) {
-        return updateInformationOfUserByID(context.auth.uid, changes);
+    const checkLogin = checkIfAnyLogin(context);
+    if (checkLogin.error) {
+        error = checkLogin.error;
+        return {error};
     }
-    error.message = "You are not signed in!";
-    return {error};
+    return updateInformationOfUserByID(context.auth.uid, changes);
 }
