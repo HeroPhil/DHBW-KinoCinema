@@ -43,14 +43,12 @@ async function getInformationOfUserByID(uid: string) {
 
 
 export async function getInformationOfCurrentUser(context: CallableContext) {
+    let error: {message: string} = { message: "" };
     if (context.auth.uid) {
         return getInformationOfUserByID(context.auth.uid);
     }
-    return {
-        error: {
-            message: "No user is signed in"
-        }
-    };
+    error.message = "You are not signed in!";
+    return {error};
 }
 
 async function updateInformationOfUserByID(uid: string, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; hasOwnProperty?: any; }) {
@@ -67,12 +65,10 @@ async function updateInformationOfUserByID(uid: string, changes: { [x: string]: 
 }
 
 export async function updateInformationOfCurrentUser(context: CallableContext, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; }) {
+    let error: {message: string} = { message: "" };
     if (context.auth.uid) {
         return updateInformationOfUserByID(context.auth.uid, changes);
     }
-    return {
-        error: {
-            message: "No user is signed in"
-        }
-    };
+    error.message = "You are not signed in!";
+    return {error};
 }
