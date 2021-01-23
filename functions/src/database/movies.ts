@@ -13,6 +13,10 @@ export class Movie {
     }
 }
 
+interface validChangesInterface {
+    [key: string]: any
+}
+
 export async function getAllMovies() {
     const movies: Movie[] = [];
 
@@ -74,8 +78,11 @@ export async function addMovie(category: string, cover: string, description: str
     return new Movie(movie.id, movie.data()); 
 }
 
-export async function updateMovie(id: string, newData: {}) {
+export async function updateMovie(id: string, newData: {category: string, cover: string, name: string, priority: number, duration: number, description: string}) {
     const error: {message: string} = { message: "" };
+    let validChanges: validChangesInterface = {};
+    
+    //check if movie is passed as parameter (defaulted to undefined) and check if movie exists in database
     if(id !== undefined) {
         const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + id);
         const movieDoc = await basics.getDocumentByRef(movieRef);
@@ -84,8 +91,39 @@ export async function updateMovie(id: string, newData: {}) {
             error.message = "This movie does not exist!";
             return {error};
         }
+    } else {
+        console.log("No movie was passed to the function!");
+        error.message = "No movie was passed to the function!";
+        return {error};
     }
-    const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, newData);
+
+    //add only valid changes to the object
+    if("category" in newData) {
+        validChanges.category = newData.category;
+    }
+
+    if("cover" in newData) {
+        validChanges.cover = newData.cover;
+    }
+
+    if("description" in newData) {
+        validChanges.description = newData.description;
+    }
+
+    if("duration" in newData) {
+        validChanges.duration = newData.duration;
+    }
+
+    if("name" in newData) {
+        validChanges.name = newData.name;
+    }
+
+    if("priority" in newData) {
+        validChanges.priority = newData.priority;
+    }
+    
+    //write valid changes to database
+    const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, validChanges);
     console.log(movie);
-    return new Movie(id, newData); 
+    return new Movie(id, validChanges); 
 }

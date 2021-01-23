@@ -67,7 +67,7 @@ export const addMovie = httpsOnCall((data, context) => {
 });
 
 export const updateMovie = httpsOnCall((data, context) => {
-    return movies.updateMovie(data.id, data.newData);
+    return movies.updateMovie(data.id || undefined, data.newData);
 });
 
 export const addScreening = httpsOnCall((data, context) => {
