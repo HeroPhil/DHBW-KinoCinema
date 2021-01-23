@@ -75,7 +75,7 @@ export const addScreening = httpsOnCall((data, context) => {
 });
 
 export const updateScreening = httpsOnCall((data, context) => {
-    return screenings.updateScreening(data.id, data.newData);
+    return screenings.updateScreening(data.id || undefined, data.newData);
 });
 
 export const getInformationOfCurrentUser = httpsOnCall((data, context) => {

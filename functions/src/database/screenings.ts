@@ -48,6 +48,10 @@ export class Screening {
 
 }
 
+interface validChangesInterface {
+    [key: string]: any
+}
+
 export async function getScreeningByID(id: string, sublevel = 0) {
     const document = await basics.getDocumentByID(screeningsCollectionPath + '/' + id);
     return new Screening(document.id, document.data()).resolveRefs(sublevel);
@@ -181,8 +185,11 @@ export async function addScreening(movie:  string, hall: string, price: number, 
   return screenings;
 }
 
-export async function updateScreening(id: string, newData: {movie: any, hall: any}) {
+export async function updateScreening(id: string, newData: {movie: any, hall: any, price: any, startTime: any}) {
     const error: {message: string} = { message: "" };
+    let validChanges: validChangesInterface = {};
+
+    //check if screening is passed as parameter (defaulted to undefined) and check if screening exists in database
     if(id !== undefined) {
         const screeningRef = await basics.getDocumentRefByID(screeningsCollectionPath + "/" + id);
         const screeningDoc = await basics.getDocumentByRef(screeningRef);
@@ -191,8 +198,13 @@ export async function updateScreening(id: string, newData: {movie: any, hall: an
             error.message = "This screening does not exist!";
             return {error};
         }
+    } else {
+        console.log("No screening was passed to the function!");
+        error.message = "No screening was passed to the function!";
+        return {error};
     }
 
+    //check if movie exists in database
     if(newData.movie !== undefined) {
         const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + newData.movie);
         const movieDoc = await basics.getDocumentByRef(movieRef);
@@ -201,9 +213,10 @@ export async function updateScreening(id: string, newData: {movie: any, hall: an
             error.message = "This movie does not exist!";
             return {error};
         }
-        newData.movie = movieRef;
+        validChanges.movie = movieRef;
     }
     
+    //check if hall exists in database
     if(newData.hall !== undefined) {
         const hallRef = await basics.getDocumentRefByID(hallCollectionPath + "/" + newData.hall);
         const hallDoc = await basics.getDocumentByRef(hallRef);
@@ -213,10 +226,20 @@ export async function updateScreening(id: string, newData: {movie: any, hall: an
             error.message = "This hall does not exist!";
             return {error};
         }
-        newData.hall = hallRef;
+        validChanges.hall = hallRef;
     }
 
-    const screening = await basics.updateDocumentByID(screeningsCollectionPath+ '/' + id, newData);
+    //add other valid changes that don't need a database test
+    if("startTime" in newData) {
+        validChanges.startTime = newData.startTime;
+    }
+
+    if("price" in newData) {
+        validChanges.price = newData.price;
+    }
+
+    //update database if every check passed
+    const screening = await basics.updateDocumentByID(screeningsCollectionPath+ '/' + id, validChanges);
     console.log(screening);
-    return await new Screening(id, newData); 
+    return new Screening(id, validChanges); 
 }
