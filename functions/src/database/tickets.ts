@@ -142,13 +142,13 @@ export async function createTicket(screening: string, row: number, seat: number,
 }
 
 export async function getTicketByID(id: string, context: CallableContext, sublevel = 3) {
-  const error: {message: string} = { message: "" };
+  let error: {message: string} = { message: "" };
   const document = await basics.getDocumentByID(ticketsCollectionPath + '/' + id);
-  if(!context.auth) {
-    console.log("You are not logged in!");
-    error.message = "You are not logged in!";
+  const checkLogin = checkIfAnyLogin(context);
+  if (checkLogin.error) {
+    error = checkLogin.error;
     return {error};
-  }
+}
   if(!document.exists) {
     console.log("This ticket does not exist!");
     error.message = "This ticket does not exist!";
