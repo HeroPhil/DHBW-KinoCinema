@@ -181,16 +181,21 @@ async function seatGeneration(hallInfo) {
         seat.classList.add(seatType);
         
         if(seat.classList.contains('withspecialneeds')) {
+          document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice);
           var design = document.createElement("img");
           design.setAttribute("id", "seatDesign");
           design.setAttribute("src", "../icons/png/special.png");
           seat.appendChild(design);
         }
         if(seat.classList.contains('lodge')) {
+          document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice);
           var lodgDesin = document.createElement("img");
           lodgDesin.setAttribute("id", "seatDesign");
           lodgDesin.setAttribute("src", "../icons/png/krone1.png");
           seat.appendChild(lodgDesin);
+        }
+        if(seat.classList.contains('normal')) {
+          document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice);
         }
         
         row.appendChild(seat);
