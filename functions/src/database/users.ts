@@ -2,6 +2,7 @@ import { auth } from 'firebase-admin';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as basics from './basics';
 import { checkIfAnyLogin } from '../logic/auth';
+import { admin } from './admin';
 
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
@@ -107,6 +108,10 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
 
     const updateToAdmin = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
     console.log(updateToAdmin);
+
+    admin
+    .auth()
+    .setCustomUserClaims(id, { admin: true });
 
     return await getInformationOfUserByID(id);
 }
