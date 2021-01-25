@@ -187,7 +187,7 @@ export async function addScreening(movie:  string, hall: string, price: number, 
 
 export async function updateScreening(id: string, newData: {movie: any, hall: any, price: any, startTime: any}) {
     const error: {message: string} = { message: "" };
-    let validChanges: validChangesInterface = {};
+    const validChanges: validChangesInterface = {};
 
     //check if screening is passed as parameter (defaulted to undefined) and check if screening exists in database
     if(id !== undefined) {
