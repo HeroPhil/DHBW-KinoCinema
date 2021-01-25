@@ -64,13 +64,32 @@ async function updateDetails() {
             phone: pRufnummer,
             zipCode: pPostleitzahl,
             city: pStadt,
-            primaryAdress: pStraße,
-            secondaryAdres: pZusatz
+            primaryAddress: pStraße,
+            secondaryAddress: pZusatz
         }
     }
 
-    await firebase.functions().httpsCallable('database-updateInformationOfCurrentUser')(param);
+    const result = await firebase.functions().httpsCallable('database-updateInformationOfCurrentUser')(param);
+    const userData = result.data.data;
 
+    var x = [];
+
+    userData.firstName === pVorname ? x[0] = true : alert('Vorname konnte nicht übernommen werden');
+    userData.lastName === pNachname ? x[1] = true : alert('Nachname konnte nicht übernommen werden');
+    userData.email === pEmail ? x[2] = true : alert('Email konnte nicht übernommen werden');
+    userData.phone === pRufnummer ? x[3] = true : alert('Rufnummer konnte nicht übernommen werden');
+    userData.zipCode === pPostleitzahl ? x[4] = true : alert('Postleitzahl konnte nicht übernommen werden');
+    userData.city === pStadt ? x[5] = true : alert('Stadt konnte nicht übernommen werden');
+    userData.primaryAddress === pStraße ? x[6] = true : alert('Straßekonnte nicht übernommen werden');
+    userData.secondaryAddress === pZusatz ? x[7] = true : alert('Zusatz konnte nicht übernommen werden');
+
+    /*for(var i = 0; i < x.length; i++) {
+        var y = x[i];
+        if(y = false){
+            break;
+        }
+    }*/
+    alert('Ihr Update war erfolgreich');
 }
 
 function loadLastTickets(count) {

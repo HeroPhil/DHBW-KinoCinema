@@ -126,7 +126,9 @@
     box-shadow: inset 0 -4px 2px -2px var(--accent);
 }
 
-
+#UpdateInformationButton{
+    margin: 1rem 0 1.5rem auto;
+}
 
 /* Style The Dropdown Button */
 .dropdownButton{
@@ -175,4 +177,33 @@
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
     background-color: #3e8e41;
+}
+
+
+
+
+
+#screeningsTable{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#screeningsTable td{
+    border: 1px solid var(--layer8);
+    width: 14.25%;
+    text-align: left;
+    vertical-align: middle;
+    padding-left:  0.7rem;
+    font-size: 1.2rem;
+}
+
+#screeningsTable th{
+    border: 1px solid var(--layer8);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.25rem;
+    text-align: center;
+    background-color: var(--layer3);
+    color: var(--accent);
+    font-size: 1.5rem;
 }

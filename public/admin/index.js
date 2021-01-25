@@ -27,6 +27,10 @@ document.addEventListener("DOMContentLoaded", event => {
 
 let activeMovieID;
 
+document.addEventListener('DOMContentLoaded', function() {
+    OnLoad();
+})
+
 async function OnLoad(){
     switchEditOption(1);
     loadDropdown();
@@ -119,9 +123,9 @@ function addMovie(){
 }
 
 async function loadDropdown(){
-    console.log("getMovies...");
+    
     let movies = await functions.httpsCallable('database-getAllMovies')({});
-    console.log(movies);
+    
     var dropdown_content = document.getElementById("dropdown-content");
 
     movies.data.forEach( movie => {
@@ -139,17 +143,47 @@ function selectDropdownMovie(id){
     document.getElementById("MovieIDInput").value = id;
 }
 
-function loadDatabaseMovie(){
+async function loadDatabaseMovie(){
     var id = document.getElementById("MovieIDInput").value;
-    console.log(id);
+    
     const param = {id: id};
 
-    functions.httpsCallable('database-getMovieByID')(param)
-        .then(result => {
-            console.log(result.data);
-            activeMovieID = id;
-            return ;
-        }).catch((error) => {console.error(error)});
+    let result = await functions.httpsCallable('database-getMovieByID')(param);
+    var movie = result.data.data;
+    document.getElementById("EDIT_Movie_Title").value = movie.name;
+    document.getElementById("EDIT_Movie_Description").value = movie.description;
+    document.getElementById("EDIT_Movie_Abstract").value = movie.description;
+    document.getElementById("EDIT_Movie_Duration").value = movie.duration;
+    document.getElementById("EDIT_Movie_Category").value = movie.category;
+    document.getElementById("EDIT_Movie_Rating").value = movie.priority;
+
+    const date = Math.floor(Date.now());
+    const param2 = {
+        sublevel: 4,
+        since: date,
+        id: id
+    };
+
+    let screenings = await functions.httpsCallable('database-getScreeningsOfMovieByID')(param2);
+    console.log(screenings);
+    var table = document.getElementById("screeningsTable");
+    screenings.data.forEach(screening => {
+        var row = document.createElement("tr");
+        var tID = document.createElement("td");
+        var tHall = document.createElement("td");
+        var tPrice = document.createElement("td");
+        var tStartTime = document.createElement("td");
+        tID.innerHTML = screening.id;
+        tHall.innerHTML = screening.data.hall.data.name;
+        tPrice.innerHTML = screening.data.price;
+        tStartTime.innerHTML = screening.data.startTime;
+        row.appendChild(tID);
+        row.appendChild(tHall);
+        row.appendChild(tPrice);
+        row.appendChild(tStartTime);
+        table.appendChild(row);
+        row.onclick = function() {test2(screening.id);}
+    });
 }
 
 
@@ -158,13 +192,14 @@ function loadDatabaseMovie(){
 
 
 
+function test2(index){
+    console.log(index);
+}
 
 
 
 
-
-
-function test() {
+function test(index) {
     var search_content = document.getElementById("SearchInput").value.replace(" ", "+");
     console.log(search_content);
     var API_Key = "d67e6d39e535da8b280d6346698efb87";

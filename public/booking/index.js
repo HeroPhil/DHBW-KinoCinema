@@ -181,21 +181,21 @@ async function seatGeneration(hallInfo) {
         seat.classList.add(seatType);
         
         if(seat.classList.contains('withspecialneeds')) {
-          document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice);
+          document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
           var design = document.createElement("img");
           design.setAttribute("id", "seatDesign");
           design.setAttribute("src", "../icons/png/special.png");
           seat.appendChild(design);
         }
         if(seat.classList.contains('lodge')) {
-          document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice);
+          document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
           var lodgDesin = document.createElement("img");
           lodgDesin.setAttribute("id", "seatDesign");
           lodgDesin.setAttribute("src", "../icons/png/krone1.png");
           seat.appendChild(lodgDesin);
         }
         if(seat.classList.contains('normal')) {
-          document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice);
+          document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
         }
         
         row.appendChild(seat);
@@ -238,10 +238,10 @@ async function blockAlreadyBookedSeats(seatInfo) {
  */
 
 function jumpToZahlung() {
-   document.getElementById("ZahlungDetails").open = true;
-   document.getElementById("selectionDetails").open = false;
-   document.getElementById("ZahlungDetails").hidden = false;
-   location.href = '#Zahlung';
+  document.getElementById("ZahlungDetails").open = true;
+  document.getElementById("selectionDetails").open = false;
+  document.getElementById("ZahlungDetails").hidden = false;
+  location.href = '#Zahlung';
 }
 
 //Checkbox Rechnungsadresse
@@ -600,7 +600,6 @@ async function book() {
 } //end of book
 
 
-
 async function loginWithGoogle() {
   const providerGoogle = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(providerGoogle).then(result => {
@@ -624,6 +623,13 @@ async function loginWithUserCredentials() {
   });   
 } //end of loginWithUserCredentials
 
+async function loginAsGuest() {
+  document.getElementById("anmeldung").hidden = true;
+  document.getElementById("guestLogin").hidden = true;
+  document.getElementById("Information1").hidden = false;
+  document.getElementById("Information2").hidden = false;
+}
+
 
 async function loadCurrentUserData() {
   if(firebase.auth().currentUser !== null){
@@ -639,7 +645,11 @@ async function loadCurrentUserData() {
     document.getElementById("Straße").value = userData.primaryAdress === undefined ? "" : userData.primaryAdress;
     document.getElementById("Zusatz").value = userData.secondaryAdres === undefined ? "" : userData.secondaryAdres;
     document.getElementById("anmeldung").hidden = true;
+    document.getElementById("guestLogin").hidden = true;
+    document.getElementById("Information1").hidden = false;
+    document.getElementById("Information2").hidden = false;
   }else{
     document.getElementById("anmeldung").hidden = false;
+    document.getElementById("guestLogin").hidden = false;
   }
 }
