@@ -87,5 +87,9 @@ export const updateInformationOfCurrentUser = httpsOnCall((data, context) => {
 });
 
 export const promoteUserToAdminByID = httpsOnCall((data, context) => {
-    return users.promoteUserToAdminByID(context, data.id);
+    return users.promoteUserToAdminByID(context, data.id || undefined);
+});
+
+export const checkIfCurrentUserIsAdmin = httpsOnCall((data, context) => {
+    return users.checkIfCurrentUserIsAdmin(context);
 });

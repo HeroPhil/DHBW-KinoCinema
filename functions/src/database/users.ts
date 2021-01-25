@@ -2,6 +2,7 @@ import { auth } from 'firebase-admin';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as basics from './basics';
 import { checkIfAnyLogin } from '../logic/auth';
+import { admin } from './admin';
 
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
@@ -10,7 +11,6 @@ const adminsCollectionPath  = userCollectionPath + "/admins";
 const allowedKeys = [
     "city",
     "displayName",
-    "email",
     "firstName",
     "lastName",
     "phone",
@@ -80,6 +80,12 @@ export async function updateInformationOfCurrentUser(context: CallableContext, c
 
 export async function promoteUserToAdminByID(context: CallableContext, id: string) {
     let error: {message: string} = { message: "" };
+    if (id === undefined) {
+        console.log("No user was passed to the function!");
+        error = {message : "No user was passed to the function!"};
+        return {error};
+    }
+
     const checkLogin = checkIfAnyLogin(context);
     if (checkLogin.error) {
         error = checkLogin.error;
@@ -100,10 +106,24 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
         return {error};
     }
 
-    const updateToUser = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
-    console.log(updateToUser)
+    const updateToAdmin = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
+    console.log(updateToAdmin);
+
+    admin
+    .auth()
+    .setCustomUserClaims(id, { admin: true });
 
     return await getInformationOfUserByID(id);
+}
+
+export async function checkIfCurrentUserIsAdmin(context: CallableContext) {
+    let error: {message: string} = { message: "" };
+    const checkCurrentUser = await checkIfAdminLogin(context);
+    if (checkCurrentUser.error) {
+        error = checkCurrentUser.error;
+        return {error};
+    }
+    return await getInformationOfUserByID(context.auth.uid);
 }
 
 export const checkIfAdminLogin = async (context: CallableContext) => {
