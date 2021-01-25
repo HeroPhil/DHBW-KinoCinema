@@ -14,7 +14,8 @@ const allowedKeys = [
     "lastName",
     "phone",
     "primaryAddress",
-    "secondaryAddress"
+    "secondaryAddress",
+    "zipCode"
 ];
 
 export class User {
