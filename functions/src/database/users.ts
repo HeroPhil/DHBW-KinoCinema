@@ -5,6 +5,7 @@ import { checkIfAnyLogin } from '../logic/auth';
 
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
+const adminsCollectionPath  = userCollectionPath + "/admins";
 
 const allowedKeys = [
     "city",
@@ -75,4 +76,48 @@ export async function updateInformationOfCurrentUser(context: CallableContext, c
         return {error};
     }
     return updateInformationOfUserByID(context.auth.uid, changes);
+}
+
+export async function promoteUserToAdminByID(context: CallableContext, id: string) {
+    let error: {message: string} = { message: "" };
+    const checkLogin = checkIfAnyLogin(context);
+    if (checkLogin.error) {
+        error = checkLogin.error;
+        return {error};
+    }
+
+    const checkAdmin = await checkIfAdminLogin(context)
+    if (checkAdmin.error) {
+        error = checkAdmin.error;
+        return {error};
+    }
+
+    const user = await basics.getDocumentByID(customersCollectionPath + '/' + id);
+    console.log(customersCollectionPath + '/' + id);
+    if(!user.exists) {
+        console.log("This user does not exist!");
+        const error = {message : "This user does not exist!"};
+        return {error};
+    }
+
+    basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
+
+    return await getInformationOfUserByID(id);
+}
+
+export const checkIfAdminLogin = async (context: CallableContext) => {
+    if(!context.auth) {
+      console.log("You are not logged in!");
+      const error = {message: "You are not logged in!"};
+      return {error};
+    }
+    
+    const admin = await basics.getDocumentByID(adminsCollectionPath + '/' + context.auth.uid);
+    if(!admin.exists) {
+        console.log("You don't have the permission to do this!");
+        const error = { message : "You don't have the permission to do this!"};
+        return {error};
+    }
+
+    return {};
 }
