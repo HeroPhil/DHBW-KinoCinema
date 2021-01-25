@@ -566,7 +566,7 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
   return corrupedSeatExists;
 } //end of checkSeatAreNotAlreadyBooked
 
-function loadTicketInfoIntoLocalStorage() {
+async function loadTicketInfoIntoLocalStorage() {
     sessionStorage.clear();
     console.log(bookedTickets);
     sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
@@ -595,7 +595,7 @@ async function book() {
             row : (parseInt(seatInfo.row) + 1),
             seat : (parseInt(seatInfo.seat) + 1)
           } //end of ticketParam
-          bookedTickets.push(await functions.httpsCallable('database-createTicket')(ticketParam));
+          bookedTickets.push(functions.httpsCallable('database-createTicket')(ticketParam));
         } //end of if
       } //end of for
     } //end of if-else
