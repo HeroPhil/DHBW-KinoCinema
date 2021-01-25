@@ -96,11 +96,12 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
     console.log(customersCollectionPath + '/' + id);
     if(!user.exists) {
         console.log("This user does not exist!");
-        const error = {message : "This user does not exist!"};
+        error = {message : "This user does not exist!"};
         return {error};
     }
 
-    basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
+    const updateToUser = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
+    console.log(updateToUser)
 
     return await getInformationOfUserByID(id);
 }
