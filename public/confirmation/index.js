@@ -32,9 +32,10 @@ let ticketsInfo = [];
 function loadContent() {
   numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
   for(var i = 0; i < numberOfTickets; i++) {
-    var identifier = "Ticket(" + 1 + ")";
+    var identifier = "Ticket(" + i + ")";
     ticketsInfo.push(JSON.parse(sessionStorage.getItem(identifier)));
   } //end of for
+  console.log(ticketsInfo);
 } //end of loadContent
 
 function home() {

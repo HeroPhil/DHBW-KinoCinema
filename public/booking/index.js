@@ -566,8 +566,9 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
   return corrupedSeatExists;
 } //end of checkSeatAreNotAlreadyBooked
 
-function loadTicketInfoIntoLocalStorage() {
+async function loadTicketInfoIntoLocalStorage() {
     sessionStorage.clear();
+    console.log(bookedTickets);
     sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
     for(var i = 0; i < parseInt(bookedTickets.length); i++) {
       var storageIdentifier = "Ticket(" + i + ")";
@@ -600,11 +601,10 @@ async function book() {
     } //end of if-else
 
     // TODO: need some loading animation
-    await Promise.all(bookedTickets); // waits for all Ticket Promises to be resolved by the backend
-
-    // TODO: error handling here
-    console.log(bookedTickets);
+    await Promise.all(bookedTickets);
     loadTicketInfoIntoLocalStorage();
+    console.log(bookedTickets);// waits for all Ticket Promises to be resolved by the backend
+    // TODO: error handling here
     window.location.href = "../confirmation/"; // forward to next page
   } //end of if
 } //end of book
