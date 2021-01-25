@@ -371,3 +371,12 @@ async function stressTestCreateTicket() {
         //}
     }
 } 
+
+async function uploadImageFromURL() {
+
+    let blob = await fetch(document.getElementById('eingabeID').value).then(r => r.blob());
+    firebase.storage().ref().child('/live/events/movies/cover' + 'newFile').put(blob).then((snaphsot) => {
+        console.log(snaphsot);
+    })
+
+}
