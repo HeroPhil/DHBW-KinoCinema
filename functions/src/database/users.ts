@@ -54,7 +54,7 @@ export async function getInformationOfCurrentUser(context: CallableContext) {
     return getInformationOfUserByID(context.auth.uid);
 }
 
-async function updateInformationOfUserByID(uid: string, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; hasOwnProperty?: any; }) {
+async function updateInformationOfUserByID(uid: string, changes: { [x: string]: any; }) {
 
     const newData: any = {};
     allowedKeys.forEach((key) => {
@@ -67,7 +67,7 @@ async function updateInformationOfUserByID(uid: string, changes: { [x: string]: 
     return await getInformationOfUserByID(uid);
 }
 
-export async function updateInformationOfCurrentUser(context: CallableContext, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; }) {
+export async function updateInformationOfCurrentUser(context: CallableContext, changes: { [x: string]: any; }) {
     let error: {message: string} = { message: "" };
     const checkLogin = checkIfAnyLogin(context);
     if (checkLogin.error) {
