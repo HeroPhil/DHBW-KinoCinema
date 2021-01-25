@@ -10,7 +10,6 @@ const adminsCollectionPath  = userCollectionPath + "/admins";
 const allowedKeys = [
     "city",
     "displayName",
-    "email",
     "firstName",
     "lastName",
     "phone",
