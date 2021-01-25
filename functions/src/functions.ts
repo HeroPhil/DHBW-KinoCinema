@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 
-function func() {
+export function func() {
     return functions.region('europe-west1');
 }
 

@@ -1,4 +1,4 @@
-import { httpsOnCall, auth} from '../functions';
+import { httpsOnCall, auth, func} from '../functions';
 
 // import * as basics from './basics';
 import * as movies from './movies';
@@ -92,4 +92,8 @@ export const promoteUserToAdminByID = httpsOnCall((data, context) => {
 
 export const checkIfCurrentUserIsAdmin = httpsOnCall((data, context) => {
     return users.checkIfCurrentUserIsAdmin(context);
+});
+
+export const updateLabelToAdminOnAdminAddedOverDatabase = func().firestore.document('live/users/admins/{docId}').onWrite((change, context) => {
+    return users.updateLabelToAdminOnAdminAddedOverDatabase(change, context);
 });
