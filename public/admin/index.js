@@ -119,7 +119,7 @@ function loadMovie(movie_id) {
 
 
 function addMovie(){
-
+    
 }
 
 async function loadDropdown(){
