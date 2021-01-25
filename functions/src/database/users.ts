@@ -111,7 +111,10 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
 
     admin
     .auth()
-    .setCustomUserClaims(id, { admin: true });
+    .setCustomUserClaims(id, { admin: true }).then(() => {
+        console.log("SUCCESS!");
+      })
+      .catch((err) => console.log(err));
 
     return await getInformationOfUserByID(id);
 }
@@ -133,8 +136,8 @@ export const checkIfAdminLogin = async (context: CallableContext) => {
       return {error};
     }
     
-    const admin = await basics.getDocumentByID(adminsCollectionPath + '/' + context.auth.uid);
-    if(!admin.exists) {
+    const adminCheck = await basics.getDocumentByID(adminsCollectionPath + '/' + context.auth.uid);
+    if(!adminCheck.exists) {
         console.log("You don't have the permission to do this!");
         const error = { message : "You don't have the permission to do this!"};
         return {error};
