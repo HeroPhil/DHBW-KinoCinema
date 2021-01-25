@@ -605,7 +605,7 @@ async function book() {
     // TODO: error handling here
     console.log(bookedTickets);
     loadTicketInfoIntoLocalStorage();
-    //window.location.href = "../confirmation/"; // forward to next page
+    window.location.href = "../confirmation/"; // forward to next page
   } //end of if
 } //end of book
 
