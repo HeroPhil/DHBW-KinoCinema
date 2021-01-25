@@ -164,6 +164,7 @@
                     <details id="ZahlungDetails" hidden = true>
                         <summary id="Zahlung" class="expand">Zahlung</summary>
                         <form id="formStyle">
+
                             <div class="row">
                                 <div class="col-7" id="anmeldung">
                                     <br>
@@ -184,6 +185,14 @@
                                         </div>
                                     </fieldset>
                                 </div>
+                                <div class="col-4">&nbsp;</div>
+                                <div class="col-1">
+                                    <button onclick="loginAsGuest()" class="SignUp" id="guestLogin">Gast</button>
+                                </div>
+                                <div class="col-4">&nbsp;</div>
+                            </div>
+
+                            <div class="row" id="Information1" hidden>
                                 <div class="col-10">
                                     <br>
                                     <fieldset>
@@ -211,9 +220,6 @@
                                                 <input id ="Straße" class="input" placeholder="Straße" required>
                                             </div>
                                             <div class="field">
-                                                <input id ="Hausnummer" type="number" class="input" placeholder="Hausnummer" required><br>
-                                            </div>
-                                            <div class="field">
                                                 <input id ="Zusatz" class="input" placeholder="Adress-Zusatz"><br>                           
                                             </div>
                                         </div>
@@ -232,7 +238,7 @@
                                 </div>
                             </div>
     
-                            <div class="row">
+                            <div class="row" id="Information2" hidden>
                                 <div class="col-16">
                                     <fieldset>
                                         <legend>Zahlungsmittel</legend>
@@ -256,14 +262,15 @@
                             <div class="row">
                                 <div class="col-14">&nbsp;</div>
                                 <div class="col-2">
-                                    <button class="button" type="submit" id="weiter" onclick = ausgabe()>Weiter</button>
+                                    <button class="button" type="button" id="weiter" onclick = ausgabe()>Weiter</button>
                                 </div>
                               </div>
                         </form>                  
                     </details>
                   </div>
                 </div>
-    
+
+<!-----------------------------------Zusammenfassung-------------------------------------------------------------------------------------->                
                 <div class="row">
                     <div class="col-1">&nbsp;</div>
                     <div class="col-14">

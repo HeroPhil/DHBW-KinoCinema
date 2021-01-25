@@ -27,6 +27,10 @@ document.addEventListener("DOMContentLoaded", event => {
 
 let activeMovieID;
 
+document.addEventListener('DOMContentLoaded', () => {
+    OnLoad();
+});
+
 async function OnLoad(){
     switchEditOption(1);
     loadDropdown();
@@ -119,9 +123,9 @@ function addMovie(){
 }
 
 async function loadDropdown(){
-    console.log("getMovies...");
+    
     let movies = await functions.httpsCallable('database-getAllMovies')({});
-    console.log(movies);
+    
     var dropdown_content = document.getElementById("dropdown-content");
 
     movies.data.forEach( movie => {
@@ -139,35 +143,89 @@ function selectDropdownMovie(id){
     document.getElementById("MovieIDInput").value = id;
 }
 
-function loadDatabaseMovie(){
+async function loadDatabaseMovie(){
     var id = document.getElementById("MovieIDInput").value;
-    console.log(id);
+    
     const param = {id: id};
 
-    functions.httpsCallable('database-getMovieByID')(param)
-        .then(result => {
-            console.log(result.data);
-            activeMovieID = id;
-            return ;
-        }).catch((error) => {console.error(error)});
+    let result = await functions.httpsCallable('database-getMovieByID')(param);
+    var movie = result.data.data;
+    document.getElementById("EDIT_Movie_Title").value = movie.name;
+    document.getElementById("EDIT_Movie_Description").value = movie.description;
+    document.getElementById("EDIT_Movie_Abstract").value = movie.description;
+    document.getElementById("EDIT_Movie_Duration").value = movie.duration;
+    document.getElementById("EDIT_Movie_Category").value = movie.category;
+    document.getElementById("EDIT_Movie_Rating").value = movie.priority;
+
+    const date = Math.floor(Date.now());
+    const param2 = {
+        sublevel: 4,
+        since: date,
+        id: id
+    };
+
+    let screenings = await functions.httpsCallable('database-getScreeningsOfMovieByID')(param2);
+    console.log(screenings);
+    var table = document.getElementById("screeningsTable");
+    screenings.data.forEach(screening => {
+        var row = document.createElement("tr");
+        var tID = document.createElement("td");
+        var tHall = document.createElement("td");
+        var tPrice = document.createElement("td");
+        var tStartTime = document.createElement("td");
+        tID.innerHTML = screening.id;
+        tHall.innerHTML = screening.data.hall.data.name;
+        tHall.setAttribute("hallID", screening.data.hall.id);
+        tPrice.innerHTML = screening.data.price;
+        tStartTime.innerHTML = new Date(screening.data.startTime).toLocaleString();
+        tStartTime.setAttribute("timeInMS", screening.data.startTime);
+        row.appendChild(tID);
+        row.appendChild(tHall);
+        row.appendChild(tPrice);
+        row.appendChild(tStartTime);
+        table.appendChild(row);
+        row.onclick = function() {loadScreeningRow(screening.id);}
+        console.log(screening.data.startTime);
+    });
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-function test() {
-    var search_content = document.getElementById("SearchInput").value.replace(" ", "+");
-    console.log(search_content);
-    var API_Key = "d67e6d39e535da8b280d6346698efb87";
-    var searchQuery = "https://api.themoviedb.org/3/search/movie?api_key="+API_Key+"&query="+search_content;
-    console.log(searchQuery);
+function loadScreeningRow(id){
+    var table = document.getElementById("screeningsTable");
+    var rows = table.getElementsByTagName("tr");
+    for (let index = 1; index < rows.length; index++) {
+        if(rows[index].getElementsByTagName("td")[0].innerHTML === id){
+            document.getElementById("EDIT_Screening_ID").value = rows[index].getElementsByTagName("td")[0].innerHTML;
+            document.getElementById("EDIT_Screening_Hall").value = rows[index].getElementsByTagName("td")[1].getAttribute("hallID");
+            document.getElementById("EDIT_Screening_Price").value = rows[index].getElementsByTagName("td")[2].innerHTML;
+            var time = Number(rows[index].getElementsByTagName("td")[3].getAttribute("timeInMS"));
+            time = time + (new Date().getTimezoneOffset() * -60000);
+            var date = new Date(time).toISOString();
+            document.getElementById("EDIT_Screening_StartTime").value = date.substring(0, date.length-5);
+        }
+    }
 }
+
+async function updateScreeningInformation(){
+
+    var sID = document.getElementById("EDIT_Screening_ID").value;
+    var sHall = document.getElementById("EDIT_Screening_Hall").value;
+    var sPrice = document.getElementById("EDIT_Screening_Price").value;
+    var timeString = document.getElementById("EDIT_Screening_StartTime").value;
+    var sTime = new Date(timeString).getTime();
+
+    const param = {
+        id: sID,
+        newData: {
+            hall: sHall,
+            price: sPrice,
+            startTime: sTime
+        }
+    };
+
+    let screening = await firebase.functions().httpsCallable('database-updateScreening')(param);
+
+    console.log(screening);
+    
+}
+
