@@ -80,6 +80,12 @@ export async function updateInformationOfCurrentUser(context: CallableContext, c
 
 export async function promoteUserToAdminByID(context: CallableContext, id: string) {
     let error: {message: string} = { message: "" };
+    if (id == undefined) {
+        console.log("No user was passed to the function!");
+        error = {message : "No user was passed to the function!"};
+        return {error};
+    }
+
     const checkLogin = checkIfAnyLogin(context);
     if (checkLogin.error) {
         error = checkLogin.error;
