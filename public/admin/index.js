@@ -185,7 +185,7 @@ async function loadDropdownHalls(){
     });
 }
 
-function selectDropdownMovie(id){
+function selectDropdownHall(id){
     document.getElementById("EDIT_Screening_Hall").value = id;
 }
 
