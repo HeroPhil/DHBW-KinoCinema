@@ -74,7 +74,7 @@
                             <input id="Movie_Title" type="text" class="input" placeholder="Title" required>
                         </div>
                         <div class="field">
-                            <textarea id="Movie_Description" rows="5" cols="20" class="input" placeholder="Description" required></textarea>
+                            <textarea id="Movie_Description" rows="4" class="input layer1-back" placeholder="Description" required></textarea>
                         </div>
                         <div class="field">
                             <input id="Movie_Duration" type="number" class="input" placeholder="Duration" required>
@@ -117,7 +117,7 @@
                                 <input id="EDIT_Movie_Title" type="text" class="input" placeholder="Title" required>
                             </div>
                             <div class="field">
-                                <textarea id="EDIT_Movie_Description" rows="5" cols="20" class="input" placeholder="Description" required></textarea>
+                                <textarea id="EDIT_Movie_Description" rows="4" class="input layer1-back" placeholder="Description" required></textarea>
                             </div>
                             <div class="field">
                                 <input id="EDIT_Movie_Duration" type="number" class="input" placeholder="Duration" required>
@@ -133,8 +133,12 @@
                         <div id="editScreenings">
                             <h1>Screenings</h1>
                             <div class="flex">
-                                <div class="field">
-                                    <input id="EDIT_Screening_ID" type="text" class="input" placeholder="ID" required>
+                                <div id="dropdownHalls" class="dropdown">
+                                    <button class="dropdownButton">Halls</button>
+                                    <div id="dropdownHalls-content" class="dropdown-content">
+                                        <a>Hall 1</a>
+                                        <a>Hall 2</a>
+                                    </div>
                                 </div>
                                 <div class="field">
                                     <input id="EDIT_Screening_Hall" type="text" class="input" placeholder="Hall" required>

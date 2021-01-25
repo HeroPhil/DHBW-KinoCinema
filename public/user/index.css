@@ -101,6 +101,9 @@ fieldset {
     font-weight: bold;
     transition: border 500ms;
 }
+.readonly {
+    color: var(--layer9);
+}
 
 .field::after{
     content: "";

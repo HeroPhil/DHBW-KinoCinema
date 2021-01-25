@@ -42,6 +42,11 @@ async function loadUserDetails() {
         document.getElementById("Stadt").value = userData.city === undefined ? "" : userData.city;
         document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
+
+        document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName;
+        document.getElementById("fullEmail").innerHTML = userData.email;
+        document.getElementById("fullStraße").innerHTML = userData.primaryAddress;
+        document.getElementById("fullStadt").innerHTML = userData.city;
     }else {
         window.location = "../account"
         return ;

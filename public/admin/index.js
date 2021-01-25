@@ -147,7 +147,7 @@ async function addMovie(){
 
 
 
-async function loadDropdown(){
+async function loadDropdownMovies(){
     
     let movies = await functions.httpsCallable('database-getAllMovies')({});
     
@@ -166,6 +166,27 @@ async function loadDropdown(){
 
 function selectDropdownMovie(id){
     document.getElementById("MovieIDInput").value = id;
+}
+
+async function loadDropdownHalls(){
+    
+    let halls = await functions.httpsCallable('database-getAllHalls')({});
+    
+    var dropdown_content = document.getElementById("dropdownHalls-content");
+
+    halls.data.forEach( hall => {
+        let hall_content = hall.data;
+        var entry = document.createElement("a");
+        entry.onclick = function() {
+            selectDropdownHall(hall.id);
+        };
+        entry.innerHTML = hall_content.name;
+        dropdown_content.appendChild(entry);
+    });
+}
+
+function selectDropdownMovie(id){
+    document.getElementById("EDIT_Screening_Hall").value = id;
 }
 
 async function loadDatabaseMovie(){
@@ -228,7 +249,7 @@ function loadScreeningRow(id){
     var rows = table.getElementsByTagName("tr");
     for (let index = 1; index < rows.length; index++) {
         if(rows[index].getElementsByTagName("td")[0].innerHTML === id){
-            document.getElementById("EDIT_Screening_ID").value = rows[index].getElementsByTagName("td")[0].innerHTML;
+            document.getElementById("EDIT_Screening_Hall").setAttribute("selectedScreeningID", rows[index].getElementsByTagName("td")[0].innerHTML);
             document.getElementById("EDIT_Screening_Hall").value = rows[index].getElementsByTagName("td")[1].getAttribute("hallID");
             document.getElementById("EDIT_Screening_Price").value = rows[index].getElementsByTagName("td")[2].innerHTML;
             var time = Number(rows[index].getElementsByTagName("td")[3].getAttribute("timeInMS"));
@@ -241,7 +262,7 @@ function loadScreeningRow(id){
 
 async function updateScreeningInformation(){
 
-    var sID = document.getElementById("EDIT_Screening_ID").value;
+    var sID = document.getElementById("EDIT_Screening_Hall").getAttribute("selectedScreeningID");
     var sHall = document.getElementById("EDIT_Screening_Hall").value;
     var sPrice = document.getElementById("EDIT_Screening_Price").value;
     var timeString = document.getElementById("EDIT_Screening_StartTime").value;

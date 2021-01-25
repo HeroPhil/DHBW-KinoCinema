@@ -220,3 +220,11 @@
     width: 20rem;
     margin: 0;
 }
+
+.layer1-back{
+    background-color: var(--layer1);
+}
+
+#dropdownHalls {
+    margin-right: 2.5%;
+}
