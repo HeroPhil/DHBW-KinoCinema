@@ -148,7 +148,7 @@ export async function getTicketByID(id: string, context: CallableContext, sublev
   if (checkLogin.error) {
     error = checkLogin.error;
     return {error};
-}
+  }
   if(!document.exists) {
     console.log("This ticket does not exist!");
     error.message = "This ticket does not exist!";
