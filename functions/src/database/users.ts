@@ -105,8 +105,8 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
         return {error};
     }
 
-    const updateToUser = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
-    console.log(updateToUser);
+    const updateToAdmin = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
+    console.log(updateToAdmin);
 
     return await getInformationOfUserByID(id);
 }
