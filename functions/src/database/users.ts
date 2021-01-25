@@ -5,6 +5,7 @@ import { checkIfAnyLogin } from '../logic/auth';
 
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
+const adminsCollectionPath  = userCollectionPath + "/admins";
 
 const allowedKeys = [
     "city",
@@ -14,7 +15,8 @@ const allowedKeys = [
     "lastName",
     "phone",
     "primaryAddress",
-    "secondaryAddress"
+    "secondaryAddress",
+    "zipCode"
 ];
 
 export class User {
@@ -53,7 +55,7 @@ export async function getInformationOfCurrentUser(context: CallableContext) {
     return getInformationOfUserByID(context.auth.uid);
 }
 
-async function updateInformationOfUserByID(uid: string, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; hasOwnProperty?: any; }) {
+async function updateInformationOfUserByID(uid: string, changes: { [x: string]: any; }) {
 
     const newData: any = {};
     allowedKeys.forEach((key) => {
@@ -66,7 +68,7 @@ async function updateInformationOfUserByID(uid: string, changes: { [x: string]: 
     return await getInformationOfUserByID(uid);
 }
 
-export async function updateInformationOfCurrentUser(context: CallableContext, changes: { [x: string]: any; firstName?: any; lastName?: any; phone?: any; zipCode?: any; city?: any; primaryAddress?: any; secondaryAddress?: any; email?: any; }) {
+export async function updateInformationOfCurrentUser(context: CallableContext, changes: { [x: string]: any; }) {
     let error: {message: string} = { message: "" };
     const checkLogin = checkIfAnyLogin(context);
     if (checkLogin.error) {
@@ -74,4 +76,49 @@ export async function updateInformationOfCurrentUser(context: CallableContext, c
         return {error};
     }
     return updateInformationOfUserByID(context.auth.uid, changes);
+}
+
+export async function promoteUserToAdminByID(context: CallableContext, id: string) {
+    let error: {message: string} = { message: "" };
+    const checkLogin = checkIfAnyLogin(context);
+    if (checkLogin.error) {
+        error = checkLogin.error;
+        return {error};
+    }
+
+    const checkAdmin = await checkIfAdminLogin(context)
+    if (checkAdmin.error) {
+        error = checkAdmin.error;
+        return {error};
+    }
+
+    const user = await basics.getDocumentByID(customersCollectionPath + '/' + id);
+    console.log(customersCollectionPath + '/' + id);
+    if(!user.exists) {
+        console.log("This user does not exist!");
+        error = {message : "This user does not exist!"};
+        return {error};
+    }
+
+    const updateToUser = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
+    console.log(updateToUser)
+
+    return await getInformationOfUserByID(id);
+}
+
+export const checkIfAdminLogin = async (context: CallableContext) => {
+    if(!context.auth) {
+      console.log("You are not logged in!");
+      const error = {message: "You are not logged in!"};
+      return {error};
+    }
+    
+    const admin = await basics.getDocumentByID(adminsCollectionPath + '/' + context.auth.uid);
+    if(!admin.exists) {
+        console.log("You don't have the permission to do this!");
+        const error = { message : "You don't have the permission to do this!"};
+        return {error};
+    }
+
+    return {};
 }

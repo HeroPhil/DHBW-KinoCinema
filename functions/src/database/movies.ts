@@ -80,7 +80,7 @@ export async function addMovie(category: string, cover: string, description: str
 
 export async function updateMovie(id: string, newData: {category: string, cover: string, name: string, priority: number, duration: number, description: string}) {
     const error: {message: string} = { message: "" };
-    let validChanges: validChangesInterface = {};
+    const validChanges: validChangesInterface = {};
     
     //check if movie is passed as parameter (defaulted to undefined) and check if movie exists in database
     if(id !== undefined) {
