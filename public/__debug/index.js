@@ -379,6 +379,6 @@ async function uploadImageFromURL() {
 
     await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
     
-    console.log("gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/movieID"); // link to added to database.
+    console.log("gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/"+movieID); // link to added to database.
 
 }
