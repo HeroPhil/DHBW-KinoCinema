@@ -79,7 +79,7 @@ export async function updateInformationOfCurrentUser(context: CallableContext, c
 
 export async function promoteUserToAdminByID(context: CallableContext, id: string) {
     let error: {message: string} = { message: "" };
-    if (id == undefined) {
+    if (id === undefined) {
         console.log("No user was passed to the function!");
         error = {message : "No user was passed to the function!"};
         return {error};
@@ -106,9 +106,19 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
     }
 
     const updateToUser = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
-    console.log(updateToUser)
+    console.log(updateToUser);
 
     return await getInformationOfUserByID(id);
+}
+
+export async function checkIfCurrentUserIsAdmin(context: CallableContext) {
+    let error: {message: string} = { message: "" };
+    const checkCurrentUser = await checkIfAdminLogin(context);
+    if (checkCurrentUser.error) {
+        error = checkCurrentUser.error;
+        return {error};
+    }
+    return await getInformationOfUserByID(context.auth.uid);
 }
 
 export const checkIfAdminLogin = async (context: CallableContext) => {
