@@ -566,6 +566,16 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
   return corrupedSeatExists;
 } //end of checkSeatAreNotAlreadyBooked
 
+function loadTicketInfoIntoLocalStorage() {
+    sessionStorage.clear();
+    sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
+    for(var i = 0; i < parseInt(bookedTickets.length); i++) {
+      var storageIdentifier = "Ticket(" + i + ")";
+      var arrayObjectAsString = JSON.stringify(bookedTickets[i].value.data.data);
+      sessionStorage.setItem(storageIdentifier, arrayObjectAsString);
+    } //end of for
+} //end of loadTicketInfoIntoLocalStorage
+
 async function book() {
   var bookingConflict = false;
   if(seatCounter > 0) {
@@ -594,8 +604,8 @@ async function book() {
 
     // TODO: error handling here
     console.log(bookedTickets);
-
-    window.location.href = "../confirmation/"; // forward to next page
+    loadTicketInfoIntoLocalStorage();
+    //window.location.href = "../confirmation/"; // forward to next page
   } //end of if
 } //end of book
 
