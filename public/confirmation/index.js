@@ -26,6 +26,17 @@ document.addEventListener("DOMContentLoaded", event => {
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 //loadQRCodes();
+let numberOfTickets;
+let ticketsInfo = [];
+
+function loadContent() {
+  numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
+  for(var i = 0; i < numberOfTickets; i++) {
+    var identifier = "Ticket(" + i + ")";
+    ticketsInfo.push(JSON.parse(sessionStorage.getItem(identifier)));
+  } //end of for
+  console.log(ticketsInfo);
+} //end of loadContent
 
 function home() {
   window.location.href = "../index/";
@@ -39,9 +50,17 @@ function loadQRCodes() {
   });
 }
 
-function test() {
-  createTicket("Geiler Film", "7", "4", "8", "22.10.2021", "www.google.de")
-}
+function loadTicketsWithQRCode() {
+  for(var i = 0; i < numberOfTickets; i++) {
+    var actualTicket = ticketsInfo[i];
+    var movieTitle = actualTicket.screening.data.movie.data.name;
+    var ticketId = actualTicket.id;
+    var hallId = actualTicket.screening.data.hall.data.name;
+    var dateOfScreening = new Date(parseInt(actualTicket.screening.data.startTime));
+    var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear;
+    createTicket(movieTitle, hallId, actualTicket.row, actualTicket.seat, date, ticketId);
+  } //end of for
+} //end of loadTicketsWithQRCode
 
 function createTicket(title, hall, row, seat, date, value) {
     var tickets = document.getElementById("tickets");

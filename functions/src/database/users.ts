@@ -79,6 +79,12 @@ export async function updateInformationOfCurrentUser(context: CallableContext, c
 
 export async function promoteUserToAdminByID(context: CallableContext, id: string) {
     let error: {message: string} = { message: "" };
+    if (id == undefined) {
+        console.log("No user was passed to the function!");
+        error = {message : "No user was passed to the function!"};
+        return {error};
+    }
+
     const checkLogin = checkIfAnyLogin(context);
     if (checkLogin.error) {
         error = checkLogin.error;
@@ -95,11 +101,12 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
     console.log(customersCollectionPath + '/' + id);
     if(!user.exists) {
         console.log("This user does not exist!");
-        const error = {message : "This user does not exist!"};
+        error = {message : "This user does not exist!"};
         return {error};
     }
 
-    basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
+    const updateToUser = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
+    console.log(updateToUser)
 
     return await getInformationOfUserByID(id);
 }
