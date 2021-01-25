@@ -3,6 +3,8 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as basics from './basics';
 import { checkIfAnyLogin } from '../logic/auth';
 import { admin } from './admin';
+import { Change, EventContext } from 'firebase-functions';
+import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
@@ -144,4 +146,12 @@ export const checkIfAdminLogin = async (context: CallableContext) => {
     }
 
     return {};
+}
+
+export const updateLabelToAdminOnAdminAddedOverDatabase = async (change: Change<DocumentSnapshot>, context: EventContext) => {
+    return await admin.auth()
+        .setCustomUserClaims(change.after.id, { admin: true }).then(() => {
+            console.log("Promote to admin: "+ change.after.id);
+        })
+        .catch((err) => console.log(err));
 }
