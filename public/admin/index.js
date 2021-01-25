@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
 async function OnLoad(){
     switchEditOption(1);
     loadDropdown();
+    document.getElementById("Movie_Cover_URL").addEventListener('input', () => {
+        document.getElementById("Movie_IMG").src = document.getElementById("Movie_Cover_URL").value;
+    });
 }
 
 function switchEditOption(index){
@@ -99,7 +102,6 @@ function loadMovie(movie_id) {
             console.log(movie_data)
             document.getElementById("Movie_Title").value = movie_data.original_title;
             document.getElementById("Movie_Description").value = movie_data.overview;
-            document.getElementById("Movie_Abstract").value = movie_data.overview;
             document.getElementById("Movie_Duration").value = movie_data.runtime;
             var categories = document.getElementById("Movie_Category");
             categories.value = "";
@@ -108,6 +110,7 @@ function loadMovie(movie_id) {
             });
             categories.value = categories.value.substring(0, categories.value.length-1);
             document.getElementById("Movie_Rating").value = movie_data.vote_average;
+            document.getElementById("Movie_Cover_URL").value = "https://image.tmdb.org/t/p/w500" + movie_data.poster_path;
             document.getElementById("Movie_IMG").src = "https://image.tmdb.org/t/p/w500" + movie_data.poster_path;
         }else {
             console.log('error')
@@ -118,9 +121,31 @@ function loadMovie(movie_id) {
 }
 
 
-function addMovie(){
-    
+async function addMovie(){
+
+    let title = document.getElementById("Movie_Title").value;
+    let description = document.getElementById("Movie_Description").value;
+    let duration = document.getElementById("Movie_Duration").value;
+    let categories = document.getElementById("Movie_Category").value;
+    let rating = Number(document.getElementById("Movie_Rating").value);
+    rating = rating * 10;
+    let coverURL = document.getElementById("Movie_IMG").src;
+
+    const param = {
+        name: title,
+        description: description,
+        duration: duration,
+        category: categories,
+        priority: rating
+    };
+
+    let movie = await firebase.functions().httpsCallable('database-addMovie')(param);
+    console.log(movie);
+    let movieID = movie.data.id;
+    await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
 }
+
+
 
 async function loadDropdown(){
     
@@ -152,7 +177,6 @@ async function loadDatabaseMovie(){
     var movie = result.data.data;
     document.getElementById("EDIT_Movie_Title").value = movie.name;
     document.getElementById("EDIT_Movie_Description").value = movie.description;
-    document.getElementById("EDIT_Movie_Abstract").value = movie.description;
     document.getElementById("EDIT_Movie_Duration").value = movie.duration;
     document.getElementById("EDIT_Movie_Category").value = movie.category;
     document.getElementById("EDIT_Movie_Rating").value = movie.priority;
