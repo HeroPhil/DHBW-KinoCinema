@@ -42,14 +42,22 @@ async function loadUserDetails() {
         document.getElementById("Stadt").value = userData.city === undefined ? "" : userData.city;
         document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
+    }else {
+        window.location = "../account"
+        return ;
     }
+    endLoading();
+}
+
+function logout() {
+    firebase.auth().signOut();
+    window.location = "../account";
 }
 
 async function updateDetails() {
 
     const pVorname = document.getElementById("Vorname").value;
     const pNachname = document.getElementById("Nachname").value;
-    const pEmail = document.getElementById("Email").value;
     const pRufnummer = document.getElementById("Rufnummer").value;
     const pPostleitzahl = document.getElementById("Postleitzahl").value;
     const pStadt = document.getElementById("Stadt").value;
@@ -60,7 +68,6 @@ async function updateDetails() {
         newData: {
             firstName: pVorname,
             lastName: pNachname,
-            email: pEmail,
             phone: pRufnummer,
             zipCode: pPostleitzahl,
             city: pStadt,
@@ -76,20 +83,15 @@ async function updateDetails() {
 
     userData.firstName === pVorname ? x[0] = true : alert('Vorname konnte nicht übernommen werden');
     userData.lastName === pNachname ? x[1] = true : alert('Nachname konnte nicht übernommen werden');
-    userData.email === pEmail ? x[2] = true : alert('Email konnte nicht übernommen werden');
     userData.phone === pRufnummer ? x[3] = true : alert('Rufnummer konnte nicht übernommen werden');
     userData.zipCode === pPostleitzahl ? x[4] = true : alert('Postleitzahl konnte nicht übernommen werden');
     userData.city === pStadt ? x[5] = true : alert('Stadt konnte nicht übernommen werden');
     userData.primaryAddress === pStraße ? x[6] = true : alert('Straßekonnte nicht übernommen werden');
     userData.secondaryAddress === pZusatz ? x[7] = true : alert('Zusatz konnte nicht übernommen werden');
 
-    /*for(var i = 0; i < x.length; i++) {
-        var y = x[i];
-        if(y = false){
-            break;
-        }
-    }*/
-    alert('Ihr Update war erfolgreich');
+    if(x.every((e) => e === true)) {
+        alert('Ihr Update war erfolgreich');
+    }
 }
 
 function loadLastTickets(count) {

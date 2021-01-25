@@ -296,12 +296,6 @@ function otherAdr() {
     straße.classList.add("input");
     straße.setAttribute("placeholder", "Straße");
     straße.required = true;
-    var nummer = document.createElement("input");
-    nummer.setAttribute("id", "Hausnummer2");
-    nummer.setAttribute("type", "number");
-    nummer.classList.add("input");
-    nummer.setAttribute("placeholder", "Hausnummer");
-    nummer.required = true;
     var zusatz = document.createElement("input");
     zusatz.setAttribute("id", "Adress-Zusatz2");
     zusatz.setAttribute("type", "text");
@@ -414,7 +408,7 @@ function ausgabe() {
   document.getElementById("ausEmail").innerHTML = document.getElementById("Email").value;
   document.getElementById("ausRufnummer").innerHTML = document.getElementById("Rufnummer").value;
   document.getElementById("ausPLZ").innerHTML = document.getElementById("Postleitzahl").value + " " + document.getElementById("Stadt").value;
-  document.getElementById("ausStraße").innerHTML = document.getElementById("Straße").value + " " + document.getElementById("Hausnummer").value;
+  document.getElementById("ausStraße").innerHTML = document.getElementById("Straße").value;
 
   var payment = document.getElementById("Zahlungsmethode");
   var ausPayment = document.getElementById("ausKartennummer");
@@ -617,7 +611,8 @@ async function loginWithGoogle() {
       var credential = result.credential;
       console.log(user);
       console.log(credential);
-      return;
+      loadCurrentUserData();
+      return ;
   }).catch((error) => {console.error(error)});
 } //end of loginWithGoogle
 
@@ -646,14 +641,14 @@ async function loadCurrentUserData() {
     const param = {};
     const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
     const userData = result.data.data;
-    document.getElementById("Vorname").value = userData.vorname === undefined ? "" : userData.vorname;
-    document.getElementById("Nachname").value = userData.nachname === undefined ? "" : userData.nachname;
+    document.getElementById("Vorname").value = userData.firstName === undefined ? "" : userData.firstName;
+    document.getElementById("Nachname").value = userData.lastName === undefined ? "" : userData.lastName;
     document.getElementById("Email").value = userData.email === undefined ? "" : userData.email;
     document.getElementById("Rufnummer").value = userData.phone === undefined ? "" : userData.phone;
     document.getElementById("Postleitzahl").value = userData.zipCode === undefined ? "" : userData.zipCode;
     document.getElementById("Stadt").value = userData.city === undefined ? "" : userData.city;
-    document.getElementById("Straße").value = userData.primaryAdress === undefined ? "" : userData.primaryAdress;
-    document.getElementById("Zusatz").value = userData.secondaryAdres === undefined ? "" : userData.secondaryAdres;
+    document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
+    document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
     document.getElementById("anmeldung").hidden = true;
     document.getElementById("guestLogin").hidden = true;
     document.getElementById("Information1").hidden = false;

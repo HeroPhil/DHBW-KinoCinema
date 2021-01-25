@@ -146,9 +146,13 @@
                                     <input id="EDIT_Screening_Price" type="text" class="input" placeholder="Price" required>
                                 </div>
                                 <div class="field">
-                                    <input id="EDIT_Screening_Time" type="text" class="input" placeholder="Start Time" required>
+                                    <input id="EDIT_Screening_StartTime" type="datetime-local" class="input" placeholder="Start Time" required>
                                 </div>
+
+                                <button class="button" id="UpdateScreeningButton" onclick = updateScreeningInformation()>Update</button>
+
                             </div>
+                            
                             <table id="screeningsTable">
                                 <tr>
                                     <th>ID</th>
