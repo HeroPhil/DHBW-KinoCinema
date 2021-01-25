@@ -157,16 +157,26 @@ async function loadDatabaseMovie(){
     document.getElementById("EDIT_Movie_Category").value = movie.category;
     document.getElementById("EDIT_Movie_Rating").value = movie.priority;
 
+    loadScreenings(id);
+}
+
+async function loadScreenings(pID) {
     const date = Math.floor(Date.now());
     const param2 = {
         sublevel: 4,
         since: date,
-        id: id
+        id: pID
     };
 
     let screenings = await functions.httpsCallable('database-getScreeningsOfMovieByID')(param2);
-    console.log(screenings);
+    
     var table = document.getElementById("screeningsTable");
+
+    
+    while(table.rows.length > 1){
+        table.deleteRow(-1);
+    }
+    table.setAttribute("movieID", pID);
     screenings.data.forEach(screening => {
         var row = document.createElement("tr");
         var tID = document.createElement("td");
@@ -188,7 +198,6 @@ async function loadDatabaseMovie(){
         console.log(screening.data.startTime);
     });
 }
-
 
 function loadScreeningRow(id){
     var table = document.getElementById("screeningsTable");
@@ -224,8 +233,6 @@ async function updateScreeningInformation(){
     };
 
     let screening = await firebase.functions().httpsCallable('database-updateScreening')(param);
-
-    console.log(screening);
-    
+    loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
 

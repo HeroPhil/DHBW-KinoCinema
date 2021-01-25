@@ -76,7 +76,7 @@ async function updateDetails() {
         }
     }
 
-    const result = await firebase.functions().httpsCallable('database-updateInformationOfCurrentUser')(param);
+    const result = await functions.httpsCallable('database-updateInformationOfCurrentUser')(param);
     const userData = result.data.data;
 
     var x = [];
