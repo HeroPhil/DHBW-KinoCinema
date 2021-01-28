@@ -52,7 +52,10 @@ function loadQRCodes() {
   } //end of if
 } //end of loadQRCodes
 
+
+
 function loadTicketsWithQRCode() {
+  
   for(var i = 0; i < numberOfTickets; i++) {
     var actualTicket = ticketsInfo[i];
     var movieTitle = actualTicket.screening.data.movie.data.name;
@@ -62,6 +65,17 @@ function loadTicketsWithQRCode() {
     var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear();
     createTicket(movieTitle, hallId, actualTicket.row, actualTicket.seat, date, ticketId);
   } //end of for
+  
+  /*
+  for(var i = 0; i < 5; i++) {
+    //var actualTicket = ticketsInfo[i];
+    var movieTitle = "Title"+i;
+    var ticketId = "www.google.de/"+i+".html";
+    var hallId = "Hall"+i;
+    var dateOfScreening = new Date(Date.now());
+    var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear();
+    createTicket(movieTitle, hallId, i, i, date, ticketId);
+  }*/
 } //end of loadTicketsWithQRCode
 
 function createTicket(title, hall, row, seat, date, value) {

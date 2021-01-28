@@ -83,47 +83,47 @@
                             </table>
                         </div>
                         <details id="pref">
-                            <summary id="pref-sum" class="expand">Präferenzen</summary>
+                            <summary id="pref-sum" class="expand">Preferences</summary>
                             <fieldset>
                                 <legend>Adresse</legend>
                                 <div class="fieldContainer">
                                     <div class="field">
-                                        <input id ="Vorname" class="input" placeholder="Vorname" required>
+                                        <input id ="Vorname" class="input" placeholder="First Name" required>
                                     </div>
                                     <div class="field">
-                                        <input id ="Nachname" class="input" placeholder="Nachname" required><br>
+                                        <input id ="Nachname" class="input" placeholder="Surname" required><br>
                                     </div>
                                     <div class="field">
-                                        <input id ="Email" type="email" class="readonly input" placeholder="E-Mail-Adresse" required readonly>
+                                        <input id ="Email" type="email" class="readonly input" placeholder="E-Mail" required readonly>
                                     </div>
                                     <div class="field">
-                                        <input id ="Rufnummer" type="tel" class="input" placeholder="Rufnummer"><br>
+                                        <input id ="Rufnummer" type="tel" class="input" placeholder="Phone Number"><br>
                                     </div>
                                     <div class="field" style="width: 25%;">
-                                        <input id ="Postleitzahl" type="number" class="input" placeholder="Postleitzahl" required>
+                                        <input id ="Postleitzahl" type="number" class="input" placeholder="Post Code" required>
                                     </div>
                                     <div class="field" style="width: 70%;">
-                                        <input id ="Stadt" class="input" placeholder="Stadt" required><br>
+                                        <input id ="Stadt" class="input" placeholder="City" required><br>
                                     </div>
                                     <div class="field">
-                                        <input id ="Straße" class="input" placeholder="Straße" required>
+                                        <input id ="Straße" class="input" placeholder="Street + House Number" required>
                                     </div>
                                     <div class="field">
-                                        <input id ="Zusatz" class="input" placeholder="Adress-Zusatz"><br>                           
+                                        <input id ="Zusatz" class="input" placeholder="Addition"><br>                           
                                     </div>
                                 </div>
                             </fieldset>
                             <fieldset>
-                                <legend>Zahlungsmittel</legend>
+                                <legend>Payment Method</legend>
                                 <div class="fieldContainer">
                                     <div class="field">
-                                        <input id="Kartennummer" type="number" class="input" placeholder="Kartennummer" required>
+                                        <input id="Kartennummer" type="number" class="input" placeholder="Card Number" required>
                                     </div>
                                     <div class="field">
-                                        <input id="Ablaufdatum" type="month" class="input" placeholder="Ablaufdatum" required>
+                                        <input id="Ablaufdatum" type="month" class="input" placeholder="Expiry Date" required>
                                     </div>
                                     <div class="field">
-                                        <input id="Karteninhaber" class="input" placeholder="Karteninhaber" required>
+                                        <input id="Karteninhaber" class="input" placeholder="Cardholder" required>
                                     </div>
                                     <div class="field">
                                         <input type="number" class="input" placeholder="CVV" max="999" required>
@@ -133,7 +133,7 @@
                             <button class="button" id="updateAdr" onclick = updateDetails()>Update</button>
                         </details>
                         <details>
-                            <summary id="history" class="expand">Bestellungen</summary>
+                            <summary id="history" class="expand">Orders</summary>
                             <div id="selection-buttons">
                                 <button class="button" type="button" onclick = loadLastTickets(5)>5</button>
                                 <button class="button" type="button" onclick = loadLastTickets(25)>25</button>

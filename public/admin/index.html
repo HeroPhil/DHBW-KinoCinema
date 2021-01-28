@@ -128,10 +128,38 @@
                             <div class="field">
                                 <input id="EDIT_Movie_Rating" type="number" class="input" placeholder="Rating" required>
                             </div>
+                            <div class="field">
+                                <input id="EDIT_Movie_Cover_URL" type="text" class="input" placeholder="Cover URL" required>
+                            </div>
+                            <img src="" id="EDIT_Movie_IMG">
                         </div>
                         <button class="button" id="UpdateInformationButton" onclick = updateInformationOfMovie()>Update Information</button>
                         <div id="editScreenings">
                             <h1>Screenings</h1>
+                            
+                            <div class="flex">
+                                <div id="dropdownHalls" class="dropdown">
+                                    <button class="dropdownButton">Halls</button>
+                                    <div id="dropdownHalls-content" class="dropdown-content">
+                                        <a>Hall 1</a>
+                                        <a>Hall 2</a>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <input id="EDIT_ADD_Screening_Hall" type="text" class="input" placeholder="Hall ID" required>
+                                </div>
+                                <div class="field">
+                                    <input id="EDIT_ADD_Screening_Price" type="number" class="input" placeholder="Price" required>
+                                </div>
+                                <div class="field">
+                                    <input id="EDIT_ADD_Screening_StartTime" type="datetime-local" class="input" placeholder="Start Time" required>
+                                </div>
+                                <div class="field">
+                                    <input id="EDIT_ADD_Repetitions" type="number" class="input" placeholder="Repetitions" required>
+                                </div>
+                                <button class="button" id="UpdateScreeningButton" onclick = updateScreeningInformation()>Update</button>
+                            </div>
+
                             <div class="flex">
                                 <div id="dropdownHalls" class="dropdown">
                                     <button class="dropdownButton">Halls</button>

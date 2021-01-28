@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", event => {
 
 let screenings = 0;
 const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
-const days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 let screeningsMonday = [];
 let screeningsTuesday = [];
 let screeningsWednesday = [];
@@ -76,7 +76,7 @@ async function loadContent() {
     });
     sortInfoArrays();
     var actualDay = new Date().getDay();
-    screeningTable.createCaption().innerHTML = "Vorstellungen der nächsten 7 Tage:";
+    screeningTable.createCaption().innerHTML = "Performances for the next 7 days:";
     var rowheadings;
     var rowScreenings;
     var cell;

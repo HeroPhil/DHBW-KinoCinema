@@ -33,10 +33,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function OnLoad(){
     switchEditOption(1);
-    loadDropdown();
-    document.getElementById("Movie_Cover_URL").addEventListener('input', () => {
+    loadDropdownMovies();
+    //loadDropdownHalls();
+    addNeededEventListerns();
+}
+
+function addNeededEventListerns(){
+    document.getElementById("SearchInput").addEventListener('focusout', () => {
+        searchMovie();
+    });
+    document.getElementById("SearchInput").addEventListener("keyup", event => {
+        if(event.key === "Enter"){
+            document.getElementById("SearchButton").focus();
+        }
+    });
+    document.getElementById("Movie_Cover_URL").addEventListener('focusout', () => {
         document.getElementById("Movie_IMG").src = document.getElementById("Movie_Cover_URL").value;
     });
+    document.getElementById("EDIT_Movie_Cover_URL").addEventListener('input', () => {
+        showCoverEdit();
+    });
+}
+
+async function showCoverEdit(){
+    let url = await firebase.storage().refFromURL(document.getElementById("EDIT_Movie_Cover_URL").value).getDownloadURL()
+    document.getElementById("EDIT_Movie_IMG").src = url;
 }
 
 function switchEditOption(index){
@@ -195,13 +216,15 @@ async function loadDatabaseMovie(){
     const param = {id: id};
 
     let result = await functions.httpsCallable('database-getMovieByID')(param);
+    console.log(result);
     var movie = result.data.data;
     document.getElementById("EDIT_Movie_Title").value = movie.name;
     document.getElementById("EDIT_Movie_Description").value = movie.description;
     document.getElementById("EDIT_Movie_Duration").value = movie.duration;
     document.getElementById("EDIT_Movie_Category").value = movie.category;
     document.getElementById("EDIT_Movie_Rating").value = movie.priority;
-
+    document.getElementById("EDIT_Movie_Cover_URL").value = movie.cover;
+    showCoverEdit();
     loadScreenings(id);
 }
 
@@ -281,3 +304,26 @@ async function updateScreeningInformation(){
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
 
+async function updateInformationOfMovie(){
+    let id =  document.getElementById("MovieIDInput").value;
+    let title = document.getElementById("EDIT_Movie_Title").value;
+    let description = document.getElementById("EDIT_Movie_Description").value;
+    let duration = document.getElementById("EDIT_Movie_Duration").value;
+    let categories = document.getElementById("EDIT_Movie_Category").value;
+    let rating = Number(document.getElementById("EDIT_Movie_Rating").value);
+    let coverURL = document.getElementById("EDIT_Movie_IMG").src;
+
+    const param = {
+        id: id,
+        newData: {
+            name: title,
+            description: description,
+            duration: duration,
+            category: categories,
+            priority: rating
+        }
+    };
+
+    let movie = await firebase.functions().httpsCallable('database-updateMovie')(param);
+    console.log(movie);
+}

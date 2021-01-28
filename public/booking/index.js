@@ -270,37 +270,37 @@ function otherAdr() {
     vorname.setAttribute("id", "Vorname2");
     vorname.setAttribute("type", "text");
     vorname.classList.add("input");
-    vorname.setAttribute("placeholder", "Vorname");
+    vorname.setAttribute("placeholder", "First name");
     vorname.required = true;
     var name = document.createElement("input");
     name.setAttribute("id", "Nachname2");
     name.setAttribute("type", "text");
     name.classList.add("input");
-    name.setAttribute("placeholder", "Nachname");
+    name.setAttribute("placeholder", "Surname");
     name.required = true;
     var postleit = document.createElement("input");
     postleit.setAttribute("id", "Postleitzahl2");
     postleit.setAttribute("type", "number");
     postleit.classList.add("input");
-    postleit.setAttribute("placeholder", "Postleitzahl");
+    postleit.setAttribute("placeholder", "Post code");
     postleit.required = true;
     var stadt = document.createElement("input");
     stadt.setAttribute("id", "Stadt2");
     stadt.setAttribute("type", "text");
     stadt.classList.add("input");
-    stadt.setAttribute("placeholder", "Stadt");
+    stadt.setAttribute("placeholder", "City");
     stadt.required = true;
     var straße = document.createElement("input");
     straße.setAttribute("id", "Straße2");
     straße.setAttribute("type", "text");
     straße.classList.add("input");
-    straße.setAttribute("placeholder", "Straße");
+    straße.setAttribute("placeholder", "Street + House Number");
     straße.required = true;
     var zusatz = document.createElement("input");
     zusatz.setAttribute("id", "Adress-Zusatz2");
     zusatz.setAttribute("type", "text");
     zusatz.classList.add("input");
-    zusatz.setAttribute("placeholder", "Adress-Zusatz");
+    zusatz.setAttribute("placeholder", "Addition");
     zusatz.required = true;
 
 
@@ -311,14 +311,12 @@ function otherAdr() {
     element3.appendChild(postleit);
     element4.appendChild(stadt);
     element5.appendChild(straße);
-    element6.appendChild(nummer);
     element7.appendChild(zusatz);
     container.appendChild(element1);
     container.appendChild(element2);
     container.appendChild(element3);
     container.appendChild(element4);
     container.appendChild(element5);
-    container.appendChild(element6);
     container.appendChild(element7);
   }
 }
@@ -345,18 +343,18 @@ function pay(id) {
       kartennummer.setAttribute("id", "Kartennummer");
       kartennummer.setAttribute("type", "number");
       kartennummer.classList.add("input");
-      kartennummer.setAttribute("placeholder", "Kartennummer");
+      kartennummer.setAttribute("placeholder", "Card Number");
       kartennummer.required = true;
       var datum = document.createElement("input");
       datum.setAttribute("id", "Ablaufdatum");
       datum.setAttribute("type", "month");
       datum.classList.add("input");
-      datum.setAttribute("placeholder", "Ablaufdatum");
+      datum.setAttribute("placeholder", "Expiry Date");
       datum.required = true;
       var inhaber = document.createElement("input");
       inhaber.setAttribute("id", "Karteninhaber");
       inhaber.classList.add("input");
-      inhaber.setAttribute("placeholder", "Karteninhaber");
+      inhaber.setAttribute("placeholder", "Cardholder");
       inhaber.required = true;
       var num = document.createElement("input");
       num.setAttribute("id", "number");
@@ -453,7 +451,7 @@ function createTicket(title, hall, row, seat, date) {
         var detailsTable = document.createElement("table");
           var rowHall = document.createElement("tr");
           var tHall = document.createElement("td");
-          tHall.innerHTML = "Saal";
+          tHall.innerHTML = "Hall";
           var tHallValue = document.createElement("td");
           tHallValue.innerHTML = hall;
           rowHall.appendChild(tHall);
@@ -461,7 +459,7 @@ function createTicket(title, hall, row, seat, date) {
         detailsTable.appendChild(rowHall);
         var rowRow = document.createElement("tr");
           var tRow = document.createElement("td");
-          tRow.innerHTML = "Reihe";
+          tRow.innerHTML = "Row";
           var tRowValue = document.createElement("td");
           tRowValue.innerHTML = row;
           rowRow.appendChild(tRow);
@@ -469,7 +467,7 @@ function createTicket(title, hall, row, seat, date) {
         detailsTable.appendChild(rowRow);
         var rowSeat = document.createElement("tr");
           var tSeat = document.createElement("td");
-          tSeat.innerHTML = "Sitz";
+          tSeat.innerHTML = "Seat";
           var tSeatValue = document.createElement("td");
           tSeatValue.innerHTML = seat;
           rowSeat.appendChild(tSeat);
@@ -477,7 +475,7 @@ function createTicket(title, hall, row, seat, date) {
         detailsTable.appendChild(rowSeat);
         var rowDate = document.createElement("tr");
           var tDate = document.createElement("td");
-          tDate.innerHTML = "Datum";
+          tDate.innerHTML = "Date";
           var tDateValue = document.createElement("td");
           tDateValue.innerHTML = date;
           rowDate.appendChild(tDate);
