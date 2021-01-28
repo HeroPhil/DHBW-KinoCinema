@@ -1,5 +1,5 @@
 import * as basics from './basics';
-import {RowType} from './rowType';
+import {RowType, rowTypeCollectionPath} from './rowType';
 
 const hallCollectionPath = "/live/infastructure/halls";
 
@@ -52,4 +52,29 @@ export async function getAllHalls(sublevel = 0) {
     await Promise.all(promises);
 
     return halls;
+}
+
+export async function addHall(name: string, rows: { count: number; id: string; }[], width: number) {
+    const data: {name: string, rows: { count: number; type: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>; }[], width: number} = {
+        "name": name,
+        "width": width,
+        "rows": []
+    };
+    const rowsWithRef: { count: number; type: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>; }[] = [];
+
+    rows.forEach((row: { count: number; id: string; }) => {
+        rowsWithRef.push(
+            {
+                "count": row.count,
+                "type": basics.getDocumentRefByID(rowTypeCollectionPath + "/" + row.id)
+            }
+        );
+    });
+
+    data.rows = rowsWithRef;
+
+    const hallRef = await basics.addDocToCollectionByID(hallCollectionPath, data);
+    const hallDoc = await basics.getDocumentByRef(hallRef);
+
+    return new Hall(hallDoc.id, hallDoc.data()); 
 }
