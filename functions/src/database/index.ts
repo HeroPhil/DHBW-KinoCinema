@@ -5,6 +5,7 @@ import * as movies from './movies';
 import * as screenings from './screenings';
 import * as users from './users';
 import * as tickets from './tickets';
+import * as halls from './hall';
 
 // export const getDocumentByID = httpsOnCall((data, context) => {
 //     return databaseBasics.getDocumentByID(data.id);
@@ -97,3 +98,7 @@ export const checkIfCurrentUserIsAdmin = httpsOnCall((data, context) => {
 export const updateLabelToAdminOnAdminAddedOverDatabase = func().firestore.document('live/users/admins/{docId}').onWrite((change, context) => {
     return users.updateLabelToAdminOnAdminAddedOverDatabase(change, context);
 });
+
+export const getAllHalls = httpsOnCall((data, context) => {
+    return halls.getAllHalls(parseInt(data.sublevel) ??  0);
+})
