@@ -570,7 +570,6 @@ async function loadTicketInfoIntoLocalStorage() {
     for(var i = 0; i < parseInt(bookedTickets.length); i++) {
       var storageIdentifier = "Ticket(" + i + ")";
       var ticketPromise = bookedTickets[i];
-      console.log(ticketPromise);
       var arrayObjectAsString = JSON.stringify(ticketPromise.data.data);
       sessionStorage.setItem(storageIdentifier, arrayObjectAsString);
     } //end of for
@@ -604,11 +603,15 @@ async function requestSeats() {
         row : (parseInt(seatInfo.row) + 1),
         seat : (parseInt(seatInfo.seat) + 1)
       } //end of ticketParam
-      var ticket = await functions.httpsCallable('database-createTicket')(ticketParam);
-      bookedTickets.push(ticket);
+      await request(ticketParam);
     } //end of if
   } //end of for
 } //end of requestSeats
+
+async function request(ticketParam) {
+  var ticket = await functions.httpsCallable('database-createTicket')(ticketParam);
+  bookedTickets.push(ticket);
+} //end of requests
 
 async function loginWithGoogle() {
   const providerGoogle = new firebase.auth.GoogleAuthProvider();
