@@ -587,10 +587,8 @@ async function book() {
       console.log("Found error:");
       printError(2, "Seat is blocked");
     } else {
-      if(loggedIn) {
-        await requestSeats();
-        success = loadTicketInfoIntoLocalStorage();
-      } //end of if
+      await requestSeats();
+      success = loadTicketInfoIntoLocalStorage();
     } //end of if-else
     console.log(bookedTickets);
     if(success && loggedIn) {

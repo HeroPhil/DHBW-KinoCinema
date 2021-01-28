@@ -42,7 +42,7 @@ function home() {
 function loadQRCodes() {
   if(numberOfTickets > 0) {
     for(var i = 0; i < numberOfTickets; i++) {
-      var actualTicket = ticketsInfo[i];
+      var actualTicket = ticketsInfo[i].data.data;
       if(actualTicket !== null) {
         var ticketid = actualTicket.id;
         createQrCode(ticketid);
@@ -55,14 +55,14 @@ function loadQRCodes() {
 
 function loadTicketsWithQRCode() {
   for(var i = 0; i < ticketsInfo.length; i++) {
-    var actualTicket = ticketsInfo[i].data.data;
+    var actualTicket = ticketsInfo[i].data;
     if(actualTicket !== null) {
-      var movieTitle = actualTicket.screening.data.movie.data.name;
+      var movieTitle = actualTicket.data.screening.data.movie.data.name;
       var ticketId = actualTicket.id;
-      var hallId = actualTicket.screening.data.hall.data.name;
-      var dateOfScreening = new Date(parseInt(actualTicket.screening.data.startTime));
+      var hallId = actualTicket.data.screening.data.hall.data.name;
+      var dateOfScreening = new Date(parseInt(actualTicket.data.screening.data.startTime));
       var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear();
-      createTicket(movieTitle, hallId, actualTicket.row, actualTicket.seat, date, ticketId);
+      createTicket(movieTitle, hallId, actualTicket.data.row, actualTicket.data.seat, date, ticketId);
     } //end of if
   } //end of for
   
