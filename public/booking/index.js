@@ -419,11 +419,14 @@ function ausgabe() {
   }
   
 
-  document.getElementById("zusammenfassungDetails").open = true;
-  document.getElementById("ZahlungDetails").open = false;
-  document.getElementById("zusammenfassungDetails").hidden = false;
-  location.href = '#Zusammenfassung';
+  
   addTicketsToWebsite();
+  if(firebase.auth().currentUser !== null) {
+    document.getElementById("zusammenfassungDetails").open = true;
+    document.getElementById("ZahlungDetails").open = false;
+    document.getElementById("zusammenfassungDetails").hidden = false;
+    location.href = '#Zusammenfassung';
+  }
 }
 
 
@@ -718,6 +721,7 @@ async function loadCurrentUserData() {
     document.getElementById("guestLogin").hidden = true;
     document.getElementById("Information1").hidden = false;
     document.getElementById("Information2").hidden = false;
+    loggedIn = true;
   }else{
     document.getElementById("anmeldung").hidden = false;
     document.getElementById("guestLogin").hidden = false;
