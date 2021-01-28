@@ -431,8 +431,10 @@ function ausgabe() {
     document.getElementById("ausKartennummer").innerHTML = "<td>Kartennummer:</td><td>" + document.getElementById("Kartennummer").value + "</td>";
   }
   
+  if(document.getElementById("saveCeck").checked === true) {
+    updateUserDetails();
+  }
 
-  
   addTicketsToWebsite();
   if(firebase.auth().currentUser !== null) {
     loggedIn = true;
@@ -440,6 +442,45 @@ function ausgabe() {
     document.getElementById("ZahlungDetails").open = false;
     document.getElementById("zusammenfassungDetails").hidden = false;
     location.href = '#Zusammenfassung';
+  }
+}
+
+async function updateUserDetails() {
+  const pVorname = document.getElementById("Vorname").value;
+  const pNachname = document.getElementById("Nachname").value;
+  const pRufnummer = document.getElementById("Rufnummer").value;
+  const pPostleitzahl = document.getElementById("Postleitzahl").value;
+  const pStadt = document.getElementById("Stadt").value;
+  const pStraße = document.getElementById("Straße").value;
+  const pZusatz = document.getElementById("Zusatz").value;
+
+  const param = {
+      newData: {
+          firstName: pVorname,
+          lastName: pNachname,
+          phone: pRufnummer,
+          zipCode: pPostleitzahl,
+          city: pStadt,
+          primaryAddress: pStraße,
+          secondaryAddress: pZusatz
+      }
+  }
+
+  const result = await functions.httpsCallable('database-updateInformationOfCurrentUser')(param);
+  const userData = result.data.data;
+
+  var x = [];
+
+  userData.firstName === pVorname ? x[0] = true : alert('We could not save the First Name, please try again!');
+  userData.lastName === pNachname ? x[1] = true : alert('We could not save the Surname, please try again!');
+  userData.phone === pRufnummer ? x[3] = true : alert('We could not save the Phone Number, please try again!');
+  userData.zipCode === pPostleitzahl ? x[4] = true : alert('We could not save the Post Code, please try again!');
+  userData.city === pStadt ? x[5] = true : alert('We could not save the City, please try again!');
+  userData.primaryAddress === pStraße ? x[6] = true : alert('We could not save the Street + House Number, please try again!');
+  userData.secondaryAddress === pZusatz ? x[7] = true : alert('We could not save the Addition, please try again!');
+
+  if(x.every((e) => e === true)) {
+      alert('Saved all changes');
   }
 }
 
@@ -726,6 +767,7 @@ async function loginAsGuest() {
   document.getElementById("guestLogin").hidden = true;
   document.getElementById("Information1").hidden = false;
   document.getElementById("Information2").hidden = false;
+  document.getElementById("Information3").hidden = false;
   loggedIn = true;
 }
 
@@ -747,6 +789,7 @@ async function loadCurrentUserData() {
     document.getElementById("guestLogin").hidden = true;
     document.getElementById("Information1").hidden = false;
     document.getElementById("Information2").hidden = false;
+    document.getElementById("Information3").hidden = false;
     loggedIn = true;
   }else{
     document.getElementById("anmeldung").hidden = false;

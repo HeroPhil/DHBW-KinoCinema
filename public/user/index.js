@@ -33,6 +33,7 @@ async function loadUserDetails() {
     if(firebase.auth().currentUser !== null){
         const param = {};
         const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
+        const userInformation = await firebase.auth().currentUser.providerData;
         const userData = result.data.data;
         document.getElementById("Vorname").value = userData.firstName === undefined ? "" : userData.firstName;
         document.getElementById("Nachname").value = userData.lastName === undefined ? "" : userData.lastName;
@@ -43,10 +44,12 @@ async function loadUserDetails() {
         document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
 
-        document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName;
-        document.getElementById("fullEmail").innerHTML = userData.email;
-        document.getElementById("fullStraße").innerHTML = userData.primaryAddress;
-        document.getElementById("fullStadt").innerHTML = userData.city;
+        document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName; //=== undefined ? "" : userData.firstName + " "; ///userInformation[0].displayName; 
+        //document.getElementById("fullName").innerHTML += userData.lastName === undefined ? "" : userData.lastName;
+        document.getElementById("fullEmail").innerHTML = userData.email;// === undefined ? "" : userData.email;
+        document.getElementById("fullStraße").innerHTML = userData.primaryAddress; // === undefined ? "" : userData.primaryAddress;
+        document.getElementById("fullStadt").innerHTML = userData.city //=== undefined ? "" : userData.city;
+        
     }else {
         window.location = "../account"
         return ;
@@ -86,16 +89,16 @@ async function updateDetails() {
 
     var x = [];
 
-    userData.firstName === pVorname ? x[0] = true : alert('Vorname konnte nicht übernommen werden');
-    userData.lastName === pNachname ? x[1] = true : alert('Nachname konnte nicht übernommen werden');
-    userData.phone === pRufnummer ? x[3] = true : alert('Rufnummer konnte nicht übernommen werden');
-    userData.zipCode === pPostleitzahl ? x[4] = true : alert('Postleitzahl konnte nicht übernommen werden');
-    userData.city === pStadt ? x[5] = true : alert('Stadt konnte nicht übernommen werden');
-    userData.primaryAddress === pStraße ? x[6] = true : alert('Straßekonnte nicht übernommen werden');
-    userData.secondaryAddress === pZusatz ? x[7] = true : alert('Zusatz konnte nicht übernommen werden');
+    userData.firstName === pVorname ? x[0] = true : alert('We could not save the First Name, please try again!');
+  userData.lastName === pNachname ? x[1] = true : alert('We could not save the Surname, please try again!');
+  userData.phone === pRufnummer ? x[3] = true : alert('We could not save the Phone Number, please try again!');
+  userData.zipCode === pPostleitzahl ? x[4] = true : alert('We could not save the Post Code, please try again!');
+  userData.city === pStadt ? x[5] = true : alert('We could not save the City, please try again!');
+  userData.primaryAddress === pStraße ? x[6] = true : alert('We could not save the Street + House Number, please try again!');
+  userData.secondaryAddress === pZusatz ? x[7] = true : alert('We could not save the Addition, please try again!');
 
     if(x.every((e) => e === true)) {
-        alert('Ihr Update war erfolgreich');
+        alert('Your update was successful!');
     }
 }
 
