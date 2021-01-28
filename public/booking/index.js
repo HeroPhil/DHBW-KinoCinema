@@ -563,10 +563,15 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
 async function loadTicketInfoIntoLocalStorage() {
     sessionStorage.clear();
     console.log(bookedTickets);
+    while (bookedTickets.length === 0) {
+      //Waiting for backend to finish the reuest
+    }
     sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
     for(var i = 0; i < parseInt(bookedTickets.length); i++) {
       var storageIdentifier = "Ticket(" + i + ")";
-      var arrayObjectAsString = JSON.stringify(bookedTickets[i].value.data.data);
+      var ticketPromise = bookedTickets[i];
+      console.log(ticketPromise);
+      var arrayObjectAsString = JSON.stringify(ticketPromise.data.data);
       sessionStorage.setItem(storageIdentifier, arrayObjectAsString);
     } //end of for
 } //end of loadTicketInfoIntoLocalStorage
@@ -581,21 +586,8 @@ async function book() {
     if(bookingError) {
       bookingConflict = true;
     } else {
-      for(var i = 0; i < selectedSeats.length; i++) {
-        var seatInfo = selectedSeats[i];
-        if(seatInfo !== null) {
-          var ticketParam = {
-            screening : screeningReference,
-            row : (parseInt(seatInfo.row) + 1),
-            seat : (parseInt(seatInfo.seat) + 1)
-          } //end of ticketParam
-          bookedTickets.push(functions.httpsCallable('database-createTicket')(ticketParam));
-        } //end of if
-      } //end of for
+      await requestSeats();
     } //end of if-else
-
-    // TODO: need some loading animation
-    await Promise.all(bookedTickets);
     loadTicketInfoIntoLocalStorage();
     console.log(bookedTickets);// waits for all Ticket Promises to be resolved by the backend
     // TODO: error handling here
@@ -603,6 +595,20 @@ async function book() {
   } //end of if
 } //end of book
 
+async function requestSeats() {
+  for(var i = 0; i < selectedSeats.length; i++) {
+    var seatInfo = selectedSeats[i];
+    if(seatInfo !== null) {
+      var ticketParam = {
+        screening : screeningReference,
+        row : (parseInt(seatInfo.row) + 1),
+        seat : (parseInt(seatInfo.seat) + 1)
+      } //end of ticketParam
+      var ticket = await functions.httpsCallable('database-createTicket')(ticketParam);
+      bookedTickets.push(ticket);
+    } //end of if
+  } //end of for
+} //end of requestSeats
 
 async function loginWithGoogle() {
   const providerGoogle = new firebase.auth.GoogleAuthProvider();
