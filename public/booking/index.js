@@ -603,7 +603,7 @@ async function requestSeats() {
         row : (parseInt(seatInfo.row) + 1),
         seat : (parseInt(seatInfo.seat) + 1)
       } //end of ticketParam
-      await request(ticketParam);
+      request(ticketParam);
     } //end of if
   } //end of for
 } //end of requestSeats
