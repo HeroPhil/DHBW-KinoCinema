@@ -568,13 +568,9 @@ function loadTicketInfoIntoLocalStorage() {
     var errorExists = bookedTickets[0].data.error;
     if(typeof errorExists === 'undefined') {
       sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
-      for(var i = 0; i < parseInt(bookedTickets.length); i++) {
-        var storageIdentifier = "Ticket(" + i + ")";
-        var ticketPromise = bookedTickets[i];
-        var arrayObjectAsString = JSON.stringify(ticketPromise.data.data);
-        sessionStorage.setItem(storageIdentifier, arrayObjectAsString);
-        return true;
-      } //end of for
+      var arrayAsString = JSON.stringify(bookedTickets);
+      sessionStorage.setItem("Tickets", arrayAsString);
+      return true;
     } else {
       return false;
     }//end of if
