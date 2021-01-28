@@ -104,6 +104,10 @@ export const getAllHalls = httpsOnCall((data, context) => {
     return halls.getAllHalls(parseInt(data.sublevel) ??  0);
 });
 
+export const addHall = httpsOnCall((data, context) => {
+    return halls.addHall(data.name ?? "new Hall", data.rows, data.width ?? 1);
+})
+
 export const getAllRowTypes = httpsOnCall((data, context) => {
     return rowType.getAllRowTypes();
 });

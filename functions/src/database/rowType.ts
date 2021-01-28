@@ -1,5 +1,5 @@
 import * as basics from './basics';
-const rowTypeCollectionPath = "/live/infastructure/rowtypes";
+export const rowTypeCollectionPath = "/live/infastructure/rowtypes";
 
 export class RowType {
     id: string;
