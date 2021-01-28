@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", event => {
 
 let seatCounter = 0;
 let seatsMap = [];
+let selectedSeatCount = 0;
 let selectedSeats = [];
 let blockedSeats = [];
 let seatsWithBookingConflict = [];
@@ -64,6 +65,7 @@ populateUI();
 
 
 const updateSelectedSeatsCount = () => {
+  var button = document.getElementById("NextButtonSeatSelection");
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
   var sum = 0;
   for(var i = 0; i < selectedSeats.length; i++) {
@@ -73,6 +75,9 @@ const updateSelectedSeatsCount = () => {
   sum = sum / 100;
   count.innerText = selectedSeats.length;
   price.innerText = formatAsCurrency(sum);
+  if(selectedSeats.length !== 0) {
+    button.hidden = false;
+  } //end of if
 }; //end of lambda expression
 
 function formatAsCurrency(number) {
@@ -101,6 +106,7 @@ container.addEventListener('click', e => {
     var seat = e.target.getAttribute("id");
     if(e.target.classList.contains('selected')) {
       selectedSeats.push(seatsMap[seat]);
+      selectedSeatCount++;
     } else {
       if(e.target.classList.contains('lodge')) {
         e.target.innerHTML = "";
@@ -116,6 +122,7 @@ container.addEventListener('click', e => {
           } //end of if
         } //end of if
       } //end of for
+      selectedSeatCount--;
     } //end of if-else
     updateSelectedSeatsCount();
   } //end of if-else
@@ -123,6 +130,8 @@ container.addEventListener('click', e => {
 
 async function loadContent() {
   var information = sessionStorage.getItem('informationOfBooking');
+  var button = document.getElementById("NextButtonSeatSelection");
+  button.hidden = true;
   information = JSON.parse(information);
   console.log(information);
   screeningReference = information.screeningId;
@@ -240,10 +249,14 @@ async function blockAlreadyBookedSeats(seatInfo) {
  */
 
 function jumpToZahlung() {
+  if(selectedSeatCount !== 0) {  
   document.getElementById("ZahlungDetails").open = true;
   document.getElementById("selectionDetails").open = false;
   document.getElementById("ZahlungDetails").hidden = false;
   location.href = '#Zahlung';
+  } else {
+    printError(3, "Please select a seat!")
+  } //end of if
 }
 
 //Checkbox Rechnungsadresse
@@ -668,6 +681,13 @@ function printError(type, errorMessage) {
           errorPlaceholder.appendChild(paragraphSaver);
         } //end of for
       } //end of if
+      break;
+    case 3:
+      errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      errorParagraph = document.createElement("p");
+      errorText = document.createTextNode("FEHLER: " + errorMessage);
+      errorParagraph.appendChild(errorText);
+      errorPlaceholder.appendChild(errorParagraph);
       break;
     default:
       //Nothing todo
