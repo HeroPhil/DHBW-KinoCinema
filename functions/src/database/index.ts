@@ -6,6 +6,7 @@ import * as screenings from './screenings';
 import * as users from './users';
 import * as tickets from './tickets';
 import * as halls from './hall';
+import * as rowType from './rowType';
 
 // export const getDocumentByID = httpsOnCall((data, context) => {
 //     return databaseBasics.getDocumentByID(data.id);
@@ -101,4 +102,8 @@ export const updateLabelToAdminOnAdminAddedOverDatabase = func().firestore.docum
 
 export const getAllHalls = httpsOnCall((data, context) => {
     return halls.getAllHalls(parseInt(data.sublevel) ??  0);
-})
+});
+
+export const getAllRowTypes = httpsOnCall((data, context) => {
+    return rowType.getAllRowTypes();
+});
