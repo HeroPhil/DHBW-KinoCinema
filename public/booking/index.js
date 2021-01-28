@@ -551,7 +551,6 @@ function checkSeatsAreNotAlreadyBooked(hallInfo) {
       blocked = blocked.toString();
       if(blocked.localeCompare("true") === 0) {
         var seatWasBlocked = compareToSelectedSeats(blockedSeatId);
-        seatWasBlocked = seatWasBlocked;
         if(seatWasBlocked) {
           seatsWithBookingConflict.push(blockedSeatId);
           corrupedSeatExists = true;
@@ -631,6 +630,9 @@ async function request(ticketParam) {
 } //end of requests
 
 function printError(type, errorMessage) {
+  var errorPlaceholder;
+  var errorParagraph;
+  var errorText;
   switch(parseInt(type)) {
     case 1:
       document.getElementById("ZahlungDetails").open = true;
@@ -638,9 +640,9 @@ function printError(type, errorMessage) {
       document.getElementById("zusammenfassungDetails").open = false;
       document.getElementById("ZahlungDetails").hidden = false;
       location.href = '#Zahlung';
-      var errorPlaceholder = document.getElementById("ErrorContainerZahlung");
-      var errorParagraph = document.createElement("p");
-      var errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      errorPlaceholder = document.getElementById("ErrorContainerZahlung");
+      errorParagraph = document.createElement("p");
+      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
       errorParagraph.appendChild(errorText);
       errorPlaceholder.appendChild(errorParagraph);
       var tickets = document.getElementById("tickets");
@@ -651,9 +653,9 @@ function printError(type, errorMessage) {
       document.getElementById("selectionDetails").open = true;
       document.getElementById("ZahlungDetails").hidden = true;
       location.href = '#Platzauswahl';
-      var errorPlaceholder = document.getElementById("ErrorContainerSeats");
-      var errorParagraph = document.createElement("p");
-      var errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      errorParagraph = document.createElement("p");
+      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
       errorParagraph.appendChild(errorText);
       errorPlaceholder.appendChild(errorParagraph);
       if(corruptedSeats.length !== 0) {
