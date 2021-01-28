@@ -4,8 +4,8 @@ import {RowType} from './rowType';
 const hallCollectionPath = "/live/infastructure/halls";
 
 export class Hall {
-    id;
-    data;
+    id: string;
+    data: { [x: string]: any; rows?: { type: any; }[]; };
     constructor (id: string, data: { [x: string]: any; rows?: { type: any; }[]; }) {
         this.id = id;
         this.data = data;
