@@ -31,10 +31,7 @@ let ticketsInfo = [];
 
 function loadContent() {
   numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
-  for(var i = 0; i < numberOfTickets; i++) {
-    var identifier = "Ticket(" + i + ")";
-    ticketsInfo.push(JSON.parse(sessionStorage.getItem(identifier)));
-  } //end of for
+  ticketsInfo = JSON.parse(sessionStorage.getItem("Tickets"));
   console.log(ticketsInfo);
 } //end of loadContent
 
@@ -46,8 +43,10 @@ function loadQRCodes() {
   if(numberOfTickets > 0) {
     for(var i = 0; i < numberOfTickets; i++) {
       var actualTicket = ticketsInfo[i];
-      var ticketid = actualTicket.id;
-      createQrCode(ticketid);
+      if(actualTicket !== null) {
+        var ticketid = actualTicket.id;
+        createQrCode(ticketid);
+      } //end of if
     } //end of for
   } //end of if
 } //end of loadQRCodes
@@ -55,15 +54,16 @@ function loadQRCodes() {
 
 
 function loadTicketsWithQRCode() {
-  
-  for(var i = 0; i < numberOfTickets; i++) {
-    var actualTicket = ticketsInfo[i];
-    var movieTitle = actualTicket.screening.data.movie.data.name;
-    var ticketId = actualTicket.id;
-    var hallId = actualTicket.screening.data.hall.data.name;
-    var dateOfScreening = new Date(parseInt(actualTicket.screening.data.startTime));
-    var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear();
-    createTicket(movieTitle, hallId, actualTicket.row, actualTicket.seat, date, ticketId);
+  for(var i = 0; i < ticketsInfo.length; i++) {
+    var actualTicket = ticketsInfo[i].data.data;
+    if(actualTicket !== null) {
+      var movieTitle = actualTicket.screening.data.movie.data.name;
+      var ticketId = actualTicket.id;
+      var hallId = actualTicket.screening.data.hall.data.name;
+      var dateOfScreening = new Date(parseInt(actualTicket.screening.data.startTime));
+      var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear();
+      createTicket(movieTitle, hallId, actualTicket.row, actualTicket.seat, date, ticketId);
+    } //end of if
   } //end of for
   
   /*

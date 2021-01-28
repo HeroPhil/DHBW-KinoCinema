@@ -39,6 +39,8 @@ let movieName;
 let movieCoverReference;
 let normalTicketPrice = 0;
 let bookedTickets = [];
+let corruptedSeats = [];
+let loggedIn = false;
 
 const container = document.querySelector('.container');
 const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
@@ -516,7 +518,7 @@ function createQrCode(element, textValue) {
 
 /*______________________________________________________________________________________________*/
 
-async function compareToSelectedSeats(blockedSeatId) {
+function compareToSelectedSeats(blockedSeatId) {
   var selectedSeatInfo;
   var seatWasBlocked = false;
   for(var i = 0; i < selectedSeats.length; i++) {
@@ -526,6 +528,7 @@ async function compareToSelectedSeats(blockedSeatId) {
         if(parseInt(selectedSeatInfo.id) === parseInt(blockedSeatId)) {
           console.log("Blocked seat is " + blockedSeatId);
           seatWasBlocked = true;
+          corruptedSeats.push(selectedSeatInfo);
         } //end of if
       } //end of if
     } //end of if
@@ -533,7 +536,7 @@ async function compareToSelectedSeats(blockedSeatId) {
   return seatWasBlocked;
 } //end of compareToSelectedSeats
 
-async function checkSeatsAreNotAlreadyBooked(hallInfo) {
+function checkSeatsAreNotAlreadyBooked(hallInfo) {
   var blockedSeatsInfo = hallInfo.data;
   var rowInfo;
   var blocked;
@@ -546,7 +549,6 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
       blocked = blocked.toString();
       if(blocked.localeCompare("true") === 0) {
         var seatWasBlocked = compareToSelectedSeats(blockedSeatId);
-        seatWasBlocked = seatWasBlocked.value;
         if(seatWasBlocked) {
           seatsWithBookingConflict.push(blockedSeatId);
           corrupedSeatExists = true;
@@ -558,41 +560,50 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
   return corrupedSeatExists;
 } //end of checkSeatAreNotAlreadyBooked
 
-async function loadTicketInfoIntoLocalStorage() {
+function loadTicketInfoIntoLocalStorage() {
     sessionStorage.clear();
     console.log(bookedTickets);
-    while (bookedTickets.length === 0) {
-      //Waiting for backend to finish the reuest
-    }
-    sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
-    for(var i = 0; i < parseInt(bookedTickets.length); i++) {
-      var storageIdentifier = "Ticket(" + i + ")";
-      var ticketPromise = bookedTickets[i];
-      var arrayObjectAsString = JSON.stringify(ticketPromise.data.data);
-      sessionStorage.setItem(storageIdentifier, arrayObjectAsString);
-    } //end of for
+    var errorExists = bookedTickets[0].data.error;
+    if(typeof errorExists === 'undefined') {
+      sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
+      var arrayAsString = JSON.stringify(bookedTickets);
+      sessionStorage.setItem("Tickets", arrayAsString);
+      return true;
+    } else {
+      return false;
+    }//end of if
 } //end of loadTicketInfoIntoLocalStorage
 
 async function book() {
   var bookingConflict = false;
+  var success = false;
   if(seatCounter > 0) {
     var paramBlockedSeats = {id: screeningReference};
     var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(paramBlockedSeats);
     var corruptedSeats = checkSeatsAreNotAlreadyBooked(blockedSeats);
-    var bookingError = Boolean(corruptedSeats.value);
+    var bookingError = corruptedSeats;
     if(bookingError) {
       bookingConflict = true;
+      console.log("Found error:");
+      printError(2, "Seat is blocked");
     } else {
-      await requestSeats();
+      if(loggedIn) {
+        await requestSeats();
+        success = loadTicketInfoIntoLocalStorage();
+      } //end of if
     } //end of if-else
-    loadTicketInfoIntoLocalStorage();
-    console.log(bookedTickets);// waits for all Ticket Promises to be resolved by the backend
-    // TODO: error handling here
-    window.location.href = "../confirmation/"; // forward to next page
+    console.log(bookedTickets);
+    if(success && loggedIn) {
+      window.location.href = "../confirmation/"; // forward to next page
+    } else {
+      console.log("Error user not logged in!");
+      printError(1, "Not logged in");
+    }//end of if
   } //end of if
 } //end of book
 
 async function requestSeats() {
+  var saver = [];
   for(var i = 0; i < selectedSeats.length; i++) {
     var seatInfo = selectedSeats[i];
     if(seatInfo !== null) {
@@ -601,15 +612,61 @@ async function requestSeats() {
         row : (parseInt(seatInfo.row) + 1),
         seat : (parseInt(seatInfo.seat) + 1)
       } //end of ticketParam
-      request(ticketParam);
+      saver.push(request(ticketParam));
     } //end of if
   } //end of for
+  await Promise.all(saver);
 } //end of requestSeats
 
 async function request(ticketParam) {
   var ticket = await functions.httpsCallable('database-createTicket')(ticketParam);
   bookedTickets.push(ticket);
 } //end of requests
+
+function printError(type, errorMessage) {
+  var errorPlaceholder;
+  var errorParagraph;
+  var errorText;
+  switch(parseInt(type)) {
+    case 1:
+      document.getElementById("ZahlungDetails").open = true;
+      document.getElementById("selectionDetails").open = false;
+      document.getElementById("zusammenfassungDetails").open = false;
+      document.getElementById("ZahlungDetails").hidden = false;
+      location.href = '#Zahlung';
+      errorPlaceholder = document.getElementById("ErrorContainerZahlung");
+      errorParagraph = document.createElement("p");
+      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      errorParagraph.appendChild(errorText);
+      errorPlaceholder.appendChild(errorParagraph);
+      var tickets = document.getElementById("tickets");
+      tickets.innerHTML = "";
+      break;
+    case 2:
+      document.getElementById("ZahlungDetails").open = false;
+      document.getElementById("selectionDetails").open = true;
+      document.getElementById("ZahlungDetails").hidden = true;
+      location.href = '#Platzauswahl';
+      errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      errorParagraph = document.createElement("p");
+      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      errorParagraph.appendChild(errorText);
+      errorPlaceholder.appendChild(errorParagraph);
+      if(corruptedSeats.length !== 0) {
+        for(var i = 0; i < parseInt(corruptedSeats.length); i++) {
+          errorText = "Seat number " + (corruptedSeats[i].seat + 1) + " in row " + (corruptedSeats[i].row + 1) + " was already booked!";
+          var paragraphSaver = document.createElement("p");
+          var errorTextSaver = document.createTextNode(errorText);
+          paragraphSaver.appendChild(errorTextSaver);
+          errorPlaceholder.appendChild(paragraphSaver);
+        } //end of for
+      } //end of if
+      break;
+    default:
+      //Nothing todo
+      break;
+  } //end of switch-case
+} //end of printError
 
 async function loginWithGoogle() {
   const providerGoogle = new firebase.auth.GoogleAuthProvider();
@@ -619,6 +676,7 @@ async function loginWithGoogle() {
       console.log(user);
       console.log(credential);
       loadCurrentUserData();
+      loggedIn = true;
       return ;
   }).catch((error) => {console.error(error)});
 } //end of loginWithGoogle
@@ -628,6 +686,7 @@ async function loginWithUserCredentials() {
   var password = document.querySelector("#password").value;
   firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
       console.log(user);
+      loggedIn = true;
       return;
   }).catch((error) => {
       console.log(error);
@@ -640,6 +699,7 @@ async function loginAsGuest() {
   document.getElementById("guestLogin").hidden = true;
   document.getElementById("Information1").hidden = false;
   document.getElementById("Information2").hidden = false;
+  loggedIn = true;
 }
 
 
