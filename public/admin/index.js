@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function OnLoad(){
     switchEditOption(1);
     loadDropdownMovies();
-    //loadDropdownHalls();
+    loadDropdownHalls();
     addNeededEventListerns();
 }
 
@@ -193,7 +193,8 @@ async function loadDropdownHalls(){
     
     let halls = await functions.httpsCallable('database-getAllHalls')({});
     
-    var dropdown_content = document.getElementById("dropdownHalls-content");
+    var dropdown_contentEDIT = document.getElementById("dropdownHalls-content");
+    var dropdown_contentADD = document.getElementById("dropdownHallsADD-content");
 
     halls.data.forEach( hall => {
         let hall_content = hall.data;
@@ -202,12 +203,17 @@ async function loadDropdownHalls(){
             selectDropdownHall(hall.id);
         };
         entry.innerHTML = hall_content.name;
-        dropdown_content.appendChild(entry);
+        dropdown_contentEDIT.appendChild(entry);
+        dropdown_contentADD.appendChild(entry);
     });
 }
 
 function selectDropdownHall(id){
     document.getElementById("EDIT_Screening_Hall").value = id;
+}
+
+function selectDropdownIncrement(value){
+    document.getElementById("EDIT_ADD_Increment").value = value;
 }
 
 async function loadDatabaseMovie(){
