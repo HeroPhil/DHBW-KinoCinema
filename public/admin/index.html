@@ -112,7 +112,7 @@
                             </div>
                         </div>
 
-                        <div id="editMovieContent">
+                        <div id="editMovieContent" hidden>
                             <div class="field">
                                 <input id="EDIT_Movie_Title" type="text" class="input" placeholder="Title" required>
                             </div>
@@ -131,6 +131,7 @@
                             <div class="field">
                                 <input id="EDIT_Movie_Cover_URL" type="text" class="input" placeholder="Cover URL" required>
                             </div>
+                            <input id="EDIT_Movie_Cover_Upload" type="file" class="input" placeholder="Upload Cover">
                             <img src="" id="EDIT_Movie_IMG">
                         </div>
                         <button class="button" id="UpdateInformationButton" onclick = updateInformationOfMovie()>Update Information</button>
@@ -157,10 +158,10 @@
                                     <input id="EDIT_ADD_Repetitions" type="number" class="input" placeholder="Repetitions" required>
                                 </div>
                                 <div id="dropdownIncrements" class="dropdown">
-                                    <button class="dropdownButton">Halls</button>
+                                    <button class="dropdownButton">Increment</button>
                                     <div id="dropdownIncrements-content" class="dropdown-content">
-                                        <a onclick="selectDropdownIncrement(604800)">Weekly</a>
-                                        <a onclick="selectDropdownIncrement(86400)">Daily</a>
+                                        <a onclick="selectDropdownIncrement(604800000)">Weekly</a>
+                                        <a onclick="selectDropdownIncrement(86400000)">Daily</a>
                                     </div>
                                 </div>
                                 <div class="field">

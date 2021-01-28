@@ -47,11 +47,22 @@ function addNeededEventListerns(){
             document.getElementById("SearchButton").focus();
         }
     });
+    document.getElementById("MovieIDInput").addEventListener('focusout', () => {
+        loadDatabaseMovie();
+    });
+    document.getElementById("MovieIDInput").addEventListener("keyup", event => {
+        if(event.key === "Enter"){
+            document.getElementById("SearchButton").focus();
+        }
+    });
     document.getElementById("Movie_Cover_URL").addEventListener('focusout', () => {
         document.getElementById("Movie_IMG").src = document.getElementById("Movie_Cover_URL").value;
     });
     document.getElementById("EDIT_Movie_Cover_URL").addEventListener('input', () => {
         showCoverEdit();
+    });
+    document.getElementById("EDIT_Movie_Cover_Upload").addEventListener('input', () => {
+        uploadCover();
     });
 }
 
@@ -186,6 +197,7 @@ async function loadDropdownMovies(){
 
 function selectDropdownMovie(id){
     document.getElementById("MovieIDInput").value = id;
+    loadDatabaseMovie();
 }
 
 async function loadDropdownHalls(){
@@ -197,18 +209,27 @@ async function loadDropdownHalls(){
 
     halls.data.forEach( hall => {
         let hall_content = hall.data;
-        var entry = document.createElement("a");
-        entry.onclick = function() {
-            selectDropdownHall(hall.id);
+        var entryEDIT = document.createElement("a");
+        entryEDIT.onclick = function() {
+            selectDropdownHallEDIT(hall.id);
         };
-        entry.innerHTML = hall_content.name;
-        dropdown_contentEDIT.appendChild(entry);
-        dropdown_contentADD.appendChild(entry);
+        entryEDIT.innerHTML = hall_content.name;
+        dropdown_contentEDIT.appendChild(entryEDIT);
+
+        var entryADD = document.createElement("a");
+        entryADD.onclick = function() {
+            selectDropdownHallADD(hall.id);
+        };
+        entryADD.innerHTML = hall_content.name;
+        dropdown_contentADD.appendChild(entryADD);
     });
 }
 
-function selectDropdownHall(id){
+function selectDropdownHallEDIT(id){
     document.getElementById("EDIT_Screening_Hall").value = id;
+}
+function selectDropdownHallADD(id){
+    document.getElementById("EDIT_ADD_Screening_Hall").value = id;
 }
 
 function selectDropdownIncrement(value){
@@ -217,7 +238,7 @@ function selectDropdownIncrement(value){
 
 async function loadDatabaseMovie(){
     var id = document.getElementById("MovieIDInput").value;
-    
+    document.getElementById("MovieIDInput").hidden = false;
     const param = {id: id};
 
     let result = await functions.httpsCallable('database-getMovieByID')(param);
@@ -355,4 +376,11 @@ async function addScreenings(){
 
     console.log(screening);
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
+}
+
+async function uploadCover(){
+    let file = document.getElementById("EDIT_Movie_Cover_Upload").files[0];
+    var movieID = document.getElementById("MovieIDInput").value;
+    await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
+    loadDatabaseMovie();
 }
