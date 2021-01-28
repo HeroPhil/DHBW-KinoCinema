@@ -422,6 +422,7 @@ function ausgabe() {
   
   addTicketsToWebsite();
   if(firebase.auth().currentUser !== null) {
+    loggedIn = true;
     document.getElementById("zusammenfassungDetails").open = true;
     document.getElementById("ZahlungDetails").open = false;
     document.getElementById("zusammenfassungDetails").hidden = false;
@@ -573,6 +574,11 @@ function loadTicketInfoIntoLocalStorage() {
       sessionStorage.setItem("Tickets", arrayAsString);
       return true;
     } else {
+      if((errorExists.message !== null) && (errorExists.message.localeCompare("You are not logged in!") === 0)) {
+        printError(1, "Not logged in");
+      } else if((errorExists.message !== null) && (errorExists.message.localeCompare("Ticket was already booked!") === 0)) {
+        printError(2, "Seat is blocked");
+      } //end of if
       return false;
     }//end of if
 } //end of loadTicketInfoIntoLocalStorage
