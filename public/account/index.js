@@ -50,6 +50,7 @@ async function loginWithGoogle() {
         testForCurrentUser();
         return;
     }).catch((error) => {console.error(error)});
+    firebase.auth().currentUser.get
 } //end of loginWithGoogle
 
 async function loginWithUserCredentials() {

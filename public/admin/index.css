@@ -221,6 +221,35 @@
     margin: 0;
 }
 
+#rowsTable{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#rowsTable td{
+    border: 1px solid var(--layer8);
+    width: 14.25%;
+    text-align: left;
+    vertical-align: middle;
+    padding-left:  0.7rem;
+    font-size: 1.2rem;
+}
+
+#rowsTable th{
+    border: 1px solid var(--layer8);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.25rem;
+    text-align: center;
+    background-color: var(--layer3);
+    color: var(--accent);
+    font-size: 1.5rem;
+}
+
+#rowsTable tr:hover td{
+    background-color: var(--layer2);
+}
+
 .layer1-back{
     background-color: var(--layer1);
 }
@@ -238,4 +267,83 @@
 #EDIT_Movie_IMG {
     max-width: 50vw;
     max-height: 50vh;
+}
+
+
+
+/*----------------------------------------------------------------------*/
+
+#seat-selection{
+
+    background-color: var(--layer1);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 75rem;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    margin: 0;
+}
+
+.container {
+    width: 60vw;
+    margin-bottom: 2rem;
+}
+
+.seat {
+    background-color: var(--layer10);
+    height: 1.5rem;
+    width: 1.8rem;
+    margin: 0.25rem;
+    border-top-left-radius: 0.8rem;
+    border-top-right-radius: 0.8rem;
+}
+
+#seatDesign {
+    pointer-events: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.seat.selected {
+    background-color: var(--accent);
+}
+
+.seat.occupied {
+    background-color: var(--layer4);
+}
+
+.seat img {
+    width: 75%;
+    height: auto;
+}
+
+.seat:not(.occupied):hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.seat-row {
+    display: flex;
+    justify-content: center;
+}
+
+.screen {
+    background-color: #fff;
+    height: 10rem;
+    width: 35rem;
+    margin: 1rem 0;
+    box-shadow: 0 0.3rem 1rem rgba(255, 255, 255, 0.7);
+    margin-bottom: 3rem;
+}
+
+p.text {
+    color: var(--textPrimary);
+    margin: 0.5rem 0;
+}
+
+p.text span {
+    color: var(--accent);
 }

@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", event => {
 });
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
+let rows = [];
 let activeMovieID;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -82,11 +82,19 @@ function switchEditOption(index){
             listItems[0].classList.add("checked");
             document.getElementById("editMovie").hidden = true;
             document.getElementById("movieInformation").hidden = false;
+            document.getElementById("addHall").hidden = true;
             break;
         case 2:
             listItems[1].classList.add("checked");
             document.getElementById("editMovie").hidden = false;
             document.getElementById("movieInformation").hidden = true;
+            document.getElementById("addHall").hidden = true;
+            break;
+        case 3:
+            listItems[2].classList.add("checked");
+            document.getElementById("editMovie").hidden = true;
+            document.getElementById("movieInformation").hidden = true;
+            document.getElementById("addHall").hidden = false;
             break;
     }
 }
@@ -238,7 +246,9 @@ function selectDropdownIncrement(value){
 
 async function loadDatabaseMovie(){
     var id = document.getElementById("MovieIDInput").value;
-    document.getElementById("MovieIDInput").hidden = false;
+    document.getElementById("editMovieContent").hidden = false;
+    document.getElementById("editScreenings").hidden = false;
+    document.getElementById("UpdateInformationButton").hidden = false;
     const param = {id: id};
 
     let result = await functions.httpsCallable('database-getMovieByID')(param);
@@ -281,7 +291,8 @@ async function loadScreenings(pID) {
         tHall.innerHTML = screening.data.hall.data.name;
         tHall.setAttribute("hallID", screening.data.hall.id);
         tPrice.innerHTML = screening.data.price;
-        tStartTime.innerHTML = new Date(screening.data.startTime).toLocaleString();
+        var options = { weekday: 'short', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', second: '2-digit'};
+        tStartTime.innerHTML = new Date(screening.data.startTime).toLocaleString("en-DE", options);
         tStartTime.setAttribute("timeInMS", screening.data.startTime);
         row.appendChild(tID);
         row.appendChild(tHall);
@@ -291,6 +302,7 @@ async function loadScreenings(pID) {
         row.onclick = function() {loadScreeningRow(screening.id);}
         console.log(screening.data.startTime);
     });
+    sortTable(3);
 }
 
 function loadScreeningRow(id){
@@ -383,4 +395,167 @@ async function uploadCover(){
     var movieID = document.getElementById("MovieIDInput").value;
     await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
     loadDatabaseMovie();
+}
+
+function sortTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("screeningsTable");
+    switching = true;
+    // Set the sorting direction to ascending:
+    dir = "asc";
+    /* Make a loop that will continue until
+    no switching has been done: */
+    while (switching) {
+      // Start by saying: no switching is done:
+      switching = false;
+      rows = table.rows;
+      /* Loop through all table rows (except the
+      first, which contains table headers): */
+      for (i = 1; i < (rows.length - 1); i++) {
+        // Start by saying there should be no switching:
+        shouldSwitch = false;
+        /* Get the two elements you want to compare,
+        one from current row and one from the next: */
+        x = rows[i].getElementsByTagName("TD")[n];
+        y = rows[i + 1].getElementsByTagName("TD")[n];
+        /* Check if the two rows should switch place,
+        based on the direction, asc or desc: */
+        if (dir == "asc") {
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            // If so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        } else if (dir == "desc") {
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            // If so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        }
+      }
+      if (shouldSwitch) {
+        /* If a switch has been marked, make the switch
+        and mark that a switch has been done: */
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        // Each time a switch is done, increase this count by 1:
+        switchcount ++;
+      } else {
+        /* If no switching has been done AND the direction is "asc",
+        set the direction to "desc" and run the while loop again. */
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+}
+
+function selectDropdownRowType(type){
+    document.getElementById("ADD_Row_Type").value = type;
+}
+
+async function addHall(){
+
+    var hallName = document.getElementById("ADD_Hall_Name").value;
+    var hallRows = rows;
+    var hallWidth = document.getElementById("ADD_Hall_Width").value;
+
+    const param = {
+        name: hallName,
+        rows: hallRows,
+        width: hallWidth
+    };
+
+    let hall = await firebase.functions().httpsCallable('database-addHall')(param);
+    console.log(hall);
+}
+
+function addRow(){
+    var pType = document.getElementById("ADD_Row_Type").value;
+    var pCount = document.getElementById("ADD_Row_Count").value;
+    const row = {
+        type: pType,
+        count: pCount
+    }
+    rows.push(row);
+    displayRows();
+}
+
+function displayRows(){
+    var table = document.getElementById("rowsTable");
+
+    while(table.rows.length > 1){
+        table.deleteRow(-1);
+    }
+    console.log(rows);
+    rows.forEach(row => {
+        var tRow = document.createElement("tr");
+        var tType = document.createElement("td");
+        tType.innerHTML = row.type;
+        var tCount = document.createElement("td");
+        tCount.innerHTML = row.count;
+        tRow.appendChild(tType);
+        tRow.appendChild(tCount);
+        table.appendChild(tRow);
+    });
+}
+
+
+async function seatGeneration() {
+    
+    var seatContainer = document.getElementById("seatContainer");
+    while(seatContainer.firstChild){
+        seatContainer.removeChild(seatContainer.lastChild);
+    }
+
+    var rowScreen = document.createElement("div");
+    var numberOfSeats = document.getElementById("ADD_Hall_Width").value === "" ? 0 : parseInt(document.getElementById("ADD_Hall_Width").value);
+    console.log(numberOfSeats);
+    var rowCounter = 0;
+    rowScreen.classList.add("seat-row");
+    var screen = document.createElement("div");
+    screen.classList.add("screen");
+    rowScreen.appendChild(screen);
+    seatContainer.appendChild(rowScreen);
+    for(var i = 0; i < rows.length; i++) {
+      var rowAmount = rows[i].count;
+      var seatType = rows[i].type;
+      seatType = seatType.replace("\"", "");
+      seatType = seatType.trim();
+  
+      for(var k = 0; k < rowAmount; k++) {
+        var row = document.createElement("div");
+        row.classList.add("seat-row");
+        for(var j = 0; j < numberOfSeats; j++) {
+          var seat = document.createElement("div");
+          seat.classList.add("seat");
+          seatType = seatType.replace(/\s/g, '');
+          seat.classList.add(seatType);
+          
+          if(seat.classList.contains('withspecialneeds')) {
+            var design = document.createElement("img");
+            design.setAttribute("id", "seatDesign");
+            design.setAttribute("src", "../icons/png/special.png");
+            seat.appendChild(design);
+          }
+          if(seat.classList.contains('lodge')) {
+            var lodgDesin = document.createElement("img");
+            lodgDesin.setAttribute("id", "seatDesign");
+            lodgDesin.setAttribute("src", "../icons/png/krone1.png");
+            seat.appendChild(lodgDesin);
+          }
+          
+          row.appendChild(seat);
+        } //end of for
+        seatContainer.appendChild(row);
+        rowCounter++;
+      } //end of for
+    } //end of for
+  } //end of seatGeneration
+
+function removeLastRow(){
+    rows.pop();
+    displayRows();
 }

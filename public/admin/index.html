@@ -11,7 +11,7 @@
         <title> KinoCinema </title>
 
         <link rel="stylesheet" href="index.css">
-        
+
         <link rel="stylesheet" href="../global.css">
 
         <!-- update the version number as needed -->
@@ -51,6 +51,7 @@
             <ul id="editOptions">
                 <li><a onclick=switchEditOption(1)>Add Movie</a></li>
                 <li><a onclick=switchEditOption(2)>Edit Movie</a></li>
+                <li><a onclick=switchEditOption(3)>Add Hall</a></li>
             </ul>
             
             <div class="row">
@@ -134,8 +135,8 @@
                             <input id="EDIT_Movie_Cover_Upload" type="file" class="input" placeholder="Upload Cover">
                             <img src="" id="EDIT_Movie_IMG">
                         </div>
-                        <button class="button" id="UpdateInformationButton" onclick = updateInformationOfMovie()>Update Information</button>
-                        <div id="editScreenings">
+                        <button class="button" id="UpdateInformationButton" onclick = updateInformationOfMovie() hidden>Update Information</button>
+                        <div id="editScreenings" hidden>
                             <h1>Screenings</h1>
 
                             <div class="flex">
@@ -193,14 +194,56 @@
                             
                             <table id="screeningsTable">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Hall</th>
-                                    <th>Price</th>
-                                    <th>Start Time</th>
+                                    <th onclick="sortTable(0)">ID</th>
+                                    <th onclick="sortTable(1)">Hall</th>
+                                    <th onclick="sortTable(2)">Price</th>
+                                    <th onclick="sortTable(3)">Start Time</th>
                                 </tr>
                             </table>
                         </div>
 
+                    </div>
+                    <div id="addHall" hidden>
+                        <div class="row">
+                            <div class="col-8">
+                                <button class="button" id="addHallButton" onclick = addHall()>ADD Hall</button>
+                                <div class="field">
+                                    <input id="ADD_Hall_Name" type="text" class="input" placeholder="Name" required>
+                                </div>
+                                <div class="field">
+                                    <input id="ADD_Hall_Width" type="number" class="input" placeholder="Width" required>
+                                </div>
+                                <div id="dropdownRowTypes" class="dropdown">
+                                    <button class="dropdownButton">Row Types</button>
+                                    <div id="dropdownRowTypes-content" class="dropdown-content">
+                                        <a onclick="selectDropdownRowType('normal')">Normal</a>
+                                        <a onclick="selectDropdownRowType('lodge')">Loge</a>
+                                        <a onclick="selectDropdownRowType('withspecialneeds')">Special</a>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <input id="ADD_Row_Type" type="text" class="input" placeholder="Row Type" required>
+                                </div>
+                                <div class="field">
+                                    <input id="ADD_Row_Count" type="number" class="input" placeholder="Row Count" required>
+                                </div>
+                                <button class="button" id="addRowButton" onclick = addRow()>ADD Row</button>
+                                <button class="button" id="previewButton" onclick = seatGeneration()>Preview</button>
+                            </div>
+                            <div class="col-8">
+                                <table id="rowsTable">
+                                    <tr>
+                                        <th>Row Type</th>
+                                        <th>Count</th>
+                                    </tr>
+                                </table>
+                                <button class="button" id="removeLastRowButton" onclick = removeLastRow()>Remove Last Row</button>
+                            </div>
+                        </div>
+                        
+                        <div id="seatContainer">
+
+                        </div>
                     </div>
                 </div>
             </div>

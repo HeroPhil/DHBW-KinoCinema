@@ -33,6 +33,7 @@ async function loadUserDetails() {
     if(firebase.auth().currentUser !== null){
         const param = {};
         const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
+        const userInformation = await firebase.auth().currentUser.providerData;
         const userData = result.data.data;
         document.getElementById("Vorname").value = userData.firstName === undefined ? "" : userData.firstName;
         document.getElementById("Nachname").value = userData.lastName === undefined ? "" : userData.lastName;
@@ -43,11 +44,12 @@ async function loadUserDetails() {
         document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
 
-        document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName; //=== undefined ? "" : userData.firstName + " ";
+        document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName; //=== undefined ? "" : userData.firstName + " "; ///userInformation[0].displayName; 
         //document.getElementById("fullName").innerHTML += userData.lastName === undefined ? "" : userData.lastName;
         document.getElementById("fullEmail").innerHTML = userData.email;// === undefined ? "" : userData.email;
         document.getElementById("fullStraße").innerHTML = userData.primaryAddress; // === undefined ? "" : userData.primaryAddress;
         document.getElementById("fullStadt").innerHTML = userData.city //=== undefined ? "" : userData.city;
+        
     }else {
         window.location = "../account"
         return ;
