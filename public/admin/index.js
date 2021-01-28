@@ -167,7 +167,6 @@ async function addMovie(){
 }
 
 
-
 async function loadDropdownMovies(){
     
     let movies = await functions.httpsCallable('database-getAllMovies')({});
@@ -332,4 +331,28 @@ async function updateInformationOfMovie(){
 
     let movie = await firebase.functions().httpsCallable('database-updateMovie')(param);
     console.log(movie);
+}
+
+async function addScreenings(){
+    var movieID = document.getElementById("MovieIDInput").value;
+    var sHall = document.getElementById("EDIT_ADD_Screening_Hall").value;
+    var sPrice = document.getElementById("EDIT_ADD_Screening_Price").value;
+    var timeString = document.getElementById("EDIT_ADD_Screening_StartTime").value;
+    var sTime = new Date(timeString).getTime();
+    var sRep = document.getElementById("EDIT_ADD_Repetitions").value;
+    var sInc = document.getElementById("EDIT_ADD_Increment").value;
+
+    const param = {
+        movie: movieID,
+        hall: sHall,
+        price: sPrice,
+        startTime: sTime,
+        repetitions: sRep,
+        increments: sInc
+    };
+
+    let screening = await firebase.functions().httpsCallable('database-addScreening')(param);
+
+    console.log(screening);
+    loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }

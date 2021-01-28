@@ -43,10 +43,11 @@ async function loadUserDetails() {
         document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
 
-        document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName;
-        document.getElementById("fullEmail").innerHTML = userData.email;
-        document.getElementById("fullStraße").innerHTML = userData.primaryAddress;
-        document.getElementById("fullStadt").innerHTML = userData.city;
+        document.getElementById("fullName").innerHTML = userData.firstName === undefined ? "" : userData.firstName + " ";
+        document.getElementById("fullName").innerHTML += userData.lastName === undefined ? "" : userData.lastName;
+        document.getElementById("fullEmail").innerHTML = userData.email === undefined ? "" : userData.email;
+        document.getElementById("fullStraße").innerHTML = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
+        document.getElementById("fullStadt").innerHTML = userData.city === undefined ? "" : userData.city;
     }else {
         window.location = "../account"
         return ;

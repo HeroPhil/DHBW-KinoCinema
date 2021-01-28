@@ -228,6 +228,12 @@
 #dropdownHalls {
     margin-right: 2.5%;
 }
+#dropdownHallsADD {
+    margin-right: 1.5%;
+}
+#dropdownIncrements {
+    margin-right: 0.5%;
+}
 
 #EDIT_Movie_IMG {
     max-width: 50vw;
