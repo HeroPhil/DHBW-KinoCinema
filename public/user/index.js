@@ -44,6 +44,13 @@ async function loadUserDetails() {
         document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
 
+        /*--------------Profil-Picture----------------*/
+        var profilPicture = document.getElementById("profile-picture");
+        var image = document.createElement("img");
+        image.setAttribute("src" , userInformation[0].photoURL);
+        profilPicture.appendChild(image)
+
+        /* --------------------------- User-Card-----------------*/
         document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName; //=== undefined ? "" : userData.firstName + " "; ///userInformation[0].displayName; 
         //document.getElementById("fullName").innerHTML += userData.lastName === undefined ? "" : userData.lastName;
         document.getElementById("fullEmail").innerHTML = userData.email;// === undefined ? "" : userData.email;
@@ -102,14 +109,19 @@ async function updateDetails() {
     }
 }
 
-function loadLastTickets(count) {
+async function loadLastTickets(count) {
     document.getElementById("tickets").innerHTML = "";
     //getTickets
-    var tickets = ["", "", "", "", "", "", "", "", "", "", "", ""];
-    var displayCount = count;
-    if(count === -1 || count > tickets.length){
-        displayCount = tickets.length;
-    }
+    const param = {
+        amount: count
+    };
+
+    let tickets = await functions.httpsCallable('database-getTicketsOfCurrentUser')(param);
+
+    console.log(tickets);
+    
+    var displayCount = count > tickets.length ? tickets.length : count;
+    
     for (let index = 0; index < displayCount; index++) {
         const element = tickets[index];
         createTicket("Geiler Film", "7", "4", (index+1), "22.10.2021", "www.google.de")
@@ -120,46 +132,46 @@ function createTicket(title, hall, row, seat, date, value) {
     var tickets = document.getElementById("tickets");
     var ticket = document.createElement("div");
     ticket.classList.add("ticket");
-    var ticketInformation = document.createElement("div");
-    ticketInformation.classList.add("ticketInformation");
+      var ticketInformation = document.createElement("div");
+      ticketInformation.classList.add("ticketInformation");
         var movieTitle = document.createElement("div");
         movieTitle.classList.add("ticketMovieTitle");
         movieTitle.innerHTML = title;
-    ticketInformation.appendChild(movieTitle);
+      ticketInformation.appendChild(movieTitle);
         var detailsTable = document.createElement("table");
-        var rowHall = document.createElement("tr");
-        var tHall = document.createElement("td");
-        tHall.innerHTML = "Saal";
-        var tHallValue = document.createElement("td");
-        tHallValue.innerHTML = hall;
-        rowHall.appendChild(tHall);
-        rowHall.appendChild(tHallValue);
+          var rowHall = document.createElement("tr");
+          var tHall = document.createElement("td");
+          tHall.innerHTML = "Saal";
+          var tHallValue = document.createElement("td");
+          tHallValue.innerHTML = hall;
+          rowHall.appendChild(tHall);
+          rowHall.appendChild(tHallValue);
         detailsTable.appendChild(rowHall);
         var rowRow = document.createElement("tr");
-        var tRow = document.createElement("td");
-        tRow.innerHTML = "Reihe";
-        var tRowValue = document.createElement("td");
-        tRowValue.innerHTML = row;
-        rowRow.appendChild(tRow);
-        rowRow.appendChild(tRowValue);
+          var tRow = document.createElement("td");
+          tRow.innerHTML = "Reihe";
+          var tRowValue = document.createElement("td");
+          tRowValue.innerHTML = row;
+          rowRow.appendChild(tRow);
+          rowRow.appendChild(tRowValue);
         detailsTable.appendChild(rowRow);
         var rowSeat = document.createElement("tr");
-        var tSeat = document.createElement("td");
-        tSeat.innerHTML = "Sitz";
-        var tSeatValue = document.createElement("td");
-        tSeatValue.innerHTML = seat;
-        rowSeat.appendChild(tSeat);
-        rowSeat.appendChild(tSeatValue);
+          var tSeat = document.createElement("td");
+          tSeat.innerHTML = "Sitz";
+          var tSeatValue = document.createElement("td");
+          tSeatValue.innerHTML = seat;
+          rowSeat.appendChild(tSeat);
+          rowSeat.appendChild(tSeatValue);
         detailsTable.appendChild(rowSeat);
         var rowDate = document.createElement("tr");
-        var tDate = document.createElement("td");
-        tDate.innerHTML = "Datum";
-        var tDateValue = document.createElement("td");
-        tDateValue.innerHTML = date;
-        rowDate.appendChild(tDate);
-        rowDate.appendChild(tDateValue);
+          var tDate = document.createElement("td");
+          tDate.innerHTML = "Datum";
+          var tDateValue = document.createElement("td");
+          tDateValue.innerHTML = date;
+          rowDate.appendChild(tDate);
+          rowDate.appendChild(tDateValue);
         detailsTable.appendChild(rowDate);
-    ticketInformation.appendChild(detailsTable);
+      ticketInformation.appendChild(detailsTable);
     ticket.appendChild(ticketInformation);
     tickets.appendChild(ticket);
     createQrCode(ticket, value);
