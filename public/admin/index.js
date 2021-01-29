@@ -75,7 +75,7 @@ function switchEditOption(index){
             document.getElementById("editMovie").hidden = true;
             document.getElementById("movieInformation").hidden = false;
             document.getElementById("addHall").hidden = true;
-            document.getElementById("editUserPermissions").hidden = false;
+            document.getElementById("editUserPermissions").hidden = true;
             break;
         case 2:
             listItems[1].classList.add("checked");
