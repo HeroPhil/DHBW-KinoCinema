@@ -267,7 +267,7 @@ async function addScreeningToList(dataArray, row) {
                 screenings++;
                 inputScreening.setAttribute("name", "time-slot");
                 var labelScreening = document.createElement("label");
-                labelScreening.setAttribute("for", information.screeningId)
+                labelScreening.setAttribute("for", information.screeningId);
                 var dateOfScreening = new Date(information.time);
                 var minutes = String(checkForCorrectMinuteWriting(dateOfScreening.getMinutes()));
                 var time = dateOfScreening.getHours() + ":" + minutes;

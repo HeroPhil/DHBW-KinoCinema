@@ -33,6 +33,7 @@ function loadContent() {
   numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
   ticketsInfo = JSON.parse(sessionStorage.getItem("Tickets"));
   console.log(ticketsInfo);
+  loadTicketsWithQRCode();
 } //end of loadContent
 
 function home() {
