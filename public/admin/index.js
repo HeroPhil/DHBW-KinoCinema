@@ -179,7 +179,7 @@ async function addMovie(){
         priority: rating
     };
 
-    let movie = await firebase.functions().httpsCallable('database-addMovie')(param);
+    let movie = await functions.httpsCallable('database-addMovie')(param);
     console.log(movie);
     let movieID = movie.data.id;
     await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
@@ -338,7 +338,7 @@ async function updateScreeningInformation(){
         }
     };
 
-    let screening = await firebase.functions().httpsCallable('database-updateScreening')(param);
+    let screening = await functions.httpsCallable('database-updateScreening')(param);
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
 
@@ -362,7 +362,7 @@ async function updateInformationOfMovie(){
         }
     };
 
-    let movie = await firebase.functions().httpsCallable('database-updateMovie')(param);
+    let movie = await functions.httpsCallable('database-updateMovie')(param);
     console.log(movie);
 }
 
@@ -384,7 +384,7 @@ async function addScreenings(){
         increments: sInc
     };
 
-    let screening = await firebase.functions().httpsCallable('database-addScreening')(param);
+    let screening = await functions.httpsCallable('database-addScreening')(param);
 
     console.log(screening);
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
@@ -468,7 +468,7 @@ async function addHall(){
         width: hallWidth
     };
 
-    let hall = await firebase.functions().httpsCallable('database-addHall')(param);
+    let hall = await functions.httpsCallable('database-addHall')(param);
     console.log(hall);
 }
 

@@ -200,7 +200,7 @@
                                                 <input id ="Vorname" class="input" placeholder="First Name" required>
                                             </div>
                                             <div class="field">
-                                                <input id ="Nachname" class="input" placeholder="Surname" required><br>
+                                                <input id ="Nachname" class="input" placeholder="Last Name" required><br>
                                             </div>
                                             <div class="field">
                                                 <input id ="Email" type="email" class="input" placeholder="E-Mail" required>
@@ -244,11 +244,7 @@
                                         <label>Pay On Site</label>
                                         <input type="radio" name="paymethod" value="Kreditkarte" onclick = pay(1)>
                                         <label>Credit Card</label>
-                                        <input type="radio" name="paymethod" value="GooglePay" onclick = pay(2)>
-                                        <label>Google Pay</label>
-                                        <input type="radio" name="paymethod" value="ApplePay" onclick = pay(3)>
-                                        <label>Apple Pay</label>
-                                        <input type="radio" name="paymethod" value="PayPal" onclick = pay(4)>
+                                        <input type="radio" name="paymethod" value="PayPal" onclick = pay(2)>
                                         <label>PayPal</label>
                                         <br>
                                         <div id="radioAus"></div>
@@ -300,7 +296,7 @@
                                                     <th colspan="2">Personal Information</th>
                                                 </tr>
                                                 <tr>
-                                                    <td>Surname:</td>
+                                                    <td>Last Name:</td>
                                                     <td id="ausNachname"></td>
                                                 </tr>
                                                 <tr>

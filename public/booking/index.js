@@ -376,22 +376,6 @@ function pay(id) {
       break;
     case 2:
       ausgabe.innerHTML = "";
-      var button1 = document.createElement("button");
-      button1.classList.add("button");
-      button1.setAttribute("id","GooglePay");
-      button1.innerHTML = "Google Pay";
-      ausgabe.appendChild(button1);
-      break;
-    case 3:
-      ausgabe.innerHTML = "";
-      var button2 = document.createElement("button");
-      button2.classList.add("button");
-      button2.setAttribute("id","ApplePay");
-      button2.innerHTML = "Apple Pay";
-      ausgabe.appendChild(button2);
-      break;
-    case 4:
-      ausgabe.innerHTML = "";
       var button3 = document.createElement("button");
       button3.classList.add("button");
       button3.setAttribute("id","PayPal");
