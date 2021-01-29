@@ -46,6 +46,7 @@ async function loadUserDetails() {
 
         /*--------------Profil-Picture----------------*/
         var profilPicture = document.getElementById("profile-picture");
+        profilPicture.innerHTML = "";
         var image = document.createElement("img");
         image.setAttribute("src" , userInformation[0].photoURL);
         profilPicture.appendChild(image);
