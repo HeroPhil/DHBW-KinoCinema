@@ -51,7 +51,7 @@ async function loadUserDetails() {
         profilPicture.appendChild(image);
 
         /* --------------------------- User-Card-----------------*/
-        if(userData.firstName === undefined && userData.lastName === undefined) {
+        if(userData.firstName === undefined && userData.lastName === undefined || userData.firstName === "" && userData.lastName === "") {
             document.getElementById("fullName").innerHTML = userData.displayName;
         }else {
             document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName;
