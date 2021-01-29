@@ -52,6 +52,7 @@
                 <li><a onclick=switchEditOption(1)>Add Movie</a></li>
                 <li><a onclick=switchEditOption(2)>Edit Movie</a></li>
                 <li><a onclick=switchEditOption(3)>Add Hall</a></li>
+                <li><a onclick=switchEditOption(4)>Edit User Permissions</a></li>
             </ul>
             
             <div class="row">
@@ -244,6 +245,23 @@
                         
                         <div id="seatContainer">
 
+                        </div>
+                    </div>
+
+                    <div id="editUserPermissions" hidden>
+                        <div class="flex">
+                            <div class="flex">
+                                <h1>Edit User Permissions</h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <button class="button" id="promoteToAdmin" onclick = promoteToAdmin()>Promote User to Admin</button>
+                                <button class="button" id="degradeToUser" onclick = degradeToUser()>Degrade Admin to User</button>
+                                <div class="field">
+                                    <input id="EDIT_PERMISSION_UID" type="text" class="input" placeholder="userID" required>
+                                </div>   
+                            </div>
                         </div>
                     </div>
                 </div>

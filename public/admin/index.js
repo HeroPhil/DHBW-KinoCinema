@@ -75,12 +75,14 @@ function switchEditOption(index){
             document.getElementById("editMovie").hidden = true;
             document.getElementById("movieInformation").hidden = false;
             document.getElementById("addHall").hidden = true;
+            document.getElementById("editUserPermissions").hidden = false;
             break;
         case 2:
             listItems[1].classList.add("checked");
             document.getElementById("editMovie").hidden = false;
             document.getElementById("movieInformation").hidden = true;
             document.getElementById("addHall").hidden = true;
+            document.getElementById("editUserPermissions").hidden = true;
             loadDropdownMovies();
             break;
         case 3:
@@ -88,6 +90,14 @@ function switchEditOption(index){
             document.getElementById("editMovie").hidden = true;
             document.getElementById("movieInformation").hidden = true;
             document.getElementById("addHall").hidden = false;
+            document.getElementById("editUserPermissions").hidden = true;
+            break;
+        case 4:
+            listItems[3].classList.add("checked");
+            document.getElementById("editMovie").hidden = true;
+            document.getElementById("movieInformation").hidden = true;
+            document.getElementById("addHall").hidden = true;
+            document.getElementById("editUserPermissions").hidden = false;
             break;
     }
 }
@@ -583,4 +593,32 @@ async function seatGeneration() {
 function removeLastRow(){
     rows.pop();
     displayRows();
+}
+
+async function promoteToAdmin() {
+    var uid = document.getElementById("EDIT_PERMISSION_UID").value;
+
+    const param = {
+        id: uid
+    };
+
+    let user = await functions.httpsCallable('database-promoteUserToAdminByID')(param);
+    console.log(user);
+    if(user.data.error) {
+        alert(user.data.error.message);
+    }
+}
+
+async function degradeToUser() {
+    var uid = document.getElementById("EDIT_PERMISSION_UID").value;
+
+    const param = {
+        id: uid
+    };
+
+    let user = await functions.httpsCallable('database-degradeAdminToUserByID')(param);
+    console.log(user);
+    if(user.data.error) {
+        alert(user.data.error.message);
+    }
 }
