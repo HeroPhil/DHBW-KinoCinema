@@ -399,13 +399,13 @@ async function addScreenings(){
 }
 
 function setCoverFile(){
-    if(document.getElementById("EDIT_Movie_Cover_Upload").files[0] != null){
+    if(document.getElementById("EDIT_Movie_Cover_Upload").files[0] !== null){
         file = document.getElementById("EDIT_Movie_Cover_Upload").files[0];
     }
 }
 
 async function uploadCover(){
-    if(file != null){
+    if(file !== null){
         var movieID = document.getElementById("MovieIDInput").value;
         let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
         console.log(newCoverUrl);
