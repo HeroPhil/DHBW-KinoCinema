@@ -92,12 +92,20 @@ export const promoteUserToAdminByID = httpsOnCall((data, context) => {
     return users.promoteUserToAdminByID(context, data.id || undefined);
 });
 
+export const degradeAdminToUserByID = httpsOnCall((data, context) => {
+    return users.degradeAdminToUserByID(context, data.id || undefined);
+});
+
 export const checkIfCurrentUserIsAdmin = httpsOnCall((data, context) => {
     return users.checkIfCurrentUserIsAdmin(context);
 });
 
-export const updateLabelToAdminOnAdminAddedOverDatabase = func().firestore.document('live/users/admins/{docId}').onWrite((change, context) => {
-    return users.updateLabelToAdminOnAdminAddedOverDatabase(change, context);
+export const updateLabelToAdminOnAdminAddedOverDatabase = func().firestore.document('live/users/admins/{docId}').onCreate((snap, context) => {
+    return users.updateLabelToAdminOnAdminAddedOverDatabase(snap, context);
+});
+
+export const updateLabelToUserOnAdminRemovedOverDatabase = func().firestore.document('live/users/admins/{docId}').onDelete((snap, context) => {
+    return users.updateLabelToUserOnAdminRemovedOverDatabase(snap, context);
 });
 
 export const getAllHalls = httpsOnCall((data, context) => {
