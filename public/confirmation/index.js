@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", event => {
 //loadQRCodes();
 let numberOfTickets;
 let ticketsInfo = [];
+let qrcodesAsImg = [];
+let writtenPixels;
+const spaceBetweenText = 15;
 
 function loadContent() {
   numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
@@ -52,8 +55,6 @@ function loadQRCodes() {
   } //end of if
 } //end of loadQRCodes
 
-
-
 function loadTicketsWithQRCode() {
   for(var i = 0; i < ticketsInfo.length; i++) {
     var actualTicket = ticketsInfo[i].data;
@@ -66,17 +67,6 @@ function loadTicketsWithQRCode() {
       createTicket(movieTitle, hallId, actualTicket.data.row, actualTicket.data.seat, date, ticketId);
     } //end of if
   } //end of for
-  
-  /*
-  for(var i = 0; i < 5; i++) {
-    //var actualTicket = ticketsInfo[i];
-    var movieTitle = "Title"+i;
-    var ticketId = "www.google.de/"+i+".html";
-    var hallId = "Hall"+i;
-    var dateOfScreening = new Date(Date.now());
-    var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear();
-    createTicket(movieTitle, hallId, i, i, date, ticketId);
-  }*/
 } //end of loadTicketsWithQRCode
 
 function createTicket(title, hall, row, seat, date, value) {
@@ -126,7 +116,7 @@ function createTicket(title, hall, row, seat, date, value) {
     ticket.appendChild(ticketInformation);
     tickets.appendChild(ticket);
     createQrCode(ticket, value);
-}
+} //end of createTicket
 
 function createQrCode(element, textValue) {
   var qrContainer = element.appendChild(document.createElement("div"));
@@ -140,4 +130,41 @@ function createQrCode(element, textValue) {
     correctLevel : QRCode.CorrectLevel.H
   });
   qrcode.makeCode(textValue);
-}
+  html2canvas(qrContainer).then(function(canvas) {
+    var imgBase64Coded = canvas.toDataURL("image/jpeg");
+    qrcodesAsImg.push(imgBase64Coded);
+  });
+} //end of createQrCode
+
+async function printAndSaveTickets() {
+  var downloadablePDF = createPDF();
+  downloadablePDF.save("kinocinema_order_list");
+} //end of printAndSaveTickets
+
+function initializePDF(pdfDocument) {
+  pdfDocument-setFont("arial");
+  writtenPixels = 0;
+  pdfDocument.setFontSize(12);
+  pdfDocument.setDrawColor(1120, 120, 82);
+  pdfDocument.setLineWidth(2);
+} //end of initializePDF
+
+function createPDF() {
+  var pdf = new jsPDF("p", "mm", "a4");
+  addLine(pdf, 19.5, 19.5);
+  addHeadline(pdf, "KinoCinema");
+  addLine(pdf, 36, 36);
+} //end of createPDF
+
+function addHeadline(pdfDocument, contentOfHeadline) {
+  const centralHeadlinePosition = 105;
+  var startWritingPosition = 105 - (Math.round(parseFloat(contentOfHeadline.length) / 2));
+  pdfDocument.setFontSize(20);
+  pdfDocument.text(contentOfHeadline, startWritingPosition, 30);
+  writtenPixels = writtenPixels + 50 + spaceBetweenText;
+  pdfDocument.setFontSize(12);
+} //end of addHeadline
+
+function addLine(pdfDocument, positionX, positionY) {
+  pdfDocument.line(10, positionX, 200, positionY);
+} //end of addLine
