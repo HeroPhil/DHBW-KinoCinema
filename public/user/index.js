@@ -48,7 +48,7 @@ async function loadUserDetails() {
         var profilPicture = document.getElementById("profile-picture");
         var image = document.createElement("img");
         image.setAttribute("src" , userInformation[0].photoURL);
-        profilPicture.appendChild(image)
+        profilPicture.appendChild(image);
 
         /* --------------------------- User-Card-----------------*/
         document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName; //=== undefined ? "" : userData.firstName + " "; ///userInformation[0].displayName; 
@@ -116,14 +116,15 @@ async function loadLastTickets(count) {
         amount: count
     };
 
-    let tickets = await functions.httpsCallable('database-getTicketsOfCurrentUser')(param);
-
+    let result = await functions.httpsCallable('database-getTicketsOfCurrentUser')(param);
+    let tickets = result.data;
     console.log(tickets);
     
     var displayCount = count > tickets.length ? tickets.length : count;
     
     for (let index = 0; index < displayCount; index++) {
-        const element = tickets[index];
+        const ticket = tickets[index];
+        let title = ticket.data;
         createTicket("Geiler Film", "7", "4", (index+1), "22.10.2021", "www.google.de")
     }
 }
