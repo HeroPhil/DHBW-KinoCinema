@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", event => {
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 let rows = [];
+let file;
 let activeMovieID;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function OnLoad(){
     switchEditOption(1);
-    loadDropdownMovies();
     loadDropdownHalls();
     addNeededEventListerns();
 }
@@ -58,17 +58,9 @@ function addNeededEventListerns(){
     document.getElementById("Movie_Cover_URL").addEventListener('focusout', () => {
         document.getElementById("Movie_IMG").src = document.getElementById("Movie_Cover_URL").value;
     });
-    document.getElementById("EDIT_Movie_Cover_URL").addEventListener('input', () => {
-        showCoverEdit();
-    });
     document.getElementById("EDIT_Movie_Cover_Upload").addEventListener('input', () => {
-        uploadCover();
+        setCoverFile();
     });
-}
-
-async function showCoverEdit(){
-    let url = await firebase.storage().refFromURL(document.getElementById("EDIT_Movie_Cover_URL").value).getDownloadURL()
-    document.getElementById("EDIT_Movie_IMG").src = url;
 }
 
 function switchEditOption(index){
@@ -89,6 +81,7 @@ function switchEditOption(index){
             document.getElementById("editMovie").hidden = false;
             document.getElementById("movieInformation").hidden = true;
             document.getElementById("addHall").hidden = true;
+            loadDropdownMovies();
             break;
         case 3:
             listItems[2].classList.add("checked");
@@ -192,6 +185,10 @@ async function loadDropdownMovies(){
     
     var dropdown_content = document.getElementById("dropdown-content");
 
+    while(dropdown_content.firstChild){
+        dropdown_content.removeChild(dropdown_content.lastChild);
+    }
+
     movies.data.forEach( movie => {
         let content = movie.data;
         var entry = document.createElement("a");
@@ -259,9 +256,8 @@ async function loadDatabaseMovie(){
     document.getElementById("EDIT_Movie_Duration").value = movie.duration;
     document.getElementById("EDIT_Movie_Category").value = movie.category;
     document.getElementById("EDIT_Movie_Rating").value = movie.priority;
-    document.getElementById("EDIT_Movie_Cover_URL").value = movie.cover;
-    showCoverEdit();
     loadScreenings(id);
+    document.getElementById("EDIT_Movie_IMG").src = await firebase.storage().refFromURL(movie.cover).getDownloadURL();
 }
 
 async function loadScreenings(pID) {
@@ -390,11 +386,19 @@ async function addScreenings(){
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
 
+function setCoverFile(){
+    if(document.getElementById("EDIT_Movie_Cover_Upload").files[0] != null){
+        file = document.getElementById("EDIT_Movie_Cover_Upload").files[0];
+    }
+}
+
 async function uploadCover(){
-    let file = document.getElementById("EDIT_Movie_Cover_Upload").files[0];
-    var movieID = document.getElementById("MovieIDInput").value;
-    await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
-    loadDatabaseMovie();
+    if(file != null){
+        var movieID = document.getElementById("MovieIDInput").value;
+        let result = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
+        console.log(result);
+        loadDatabaseMovie();
+    }
 }
 
 function sortTable(n) {

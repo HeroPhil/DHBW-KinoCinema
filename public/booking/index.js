@@ -291,7 +291,7 @@ function otherAdr() {
     name.setAttribute("id", "Nachname2");
     name.setAttribute("type", "text");
     name.classList.add("input");
-    name.setAttribute("placeholder", "Surname");
+    name.setAttribute("placeholder", "Last Name");
     name.required = true;
     var postleit = document.createElement("input");
     postleit.setAttribute("id", "Postleitzahl2");
@@ -721,6 +721,9 @@ function printError(type, errorMessage) {
 } //end of printError
 
 async function loginWithGoogle() {
+  //document.getElementById("anmeldung").hidden = true;
+  //document.getElementById("guestLogin").hidden = true;
+  //loadWhileLogin();
   const providerGoogle = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(providerGoogle).then(result => {
       var user = result.user;
@@ -732,6 +735,28 @@ async function loginWithGoogle() {
       return ;
   }).catch((error) => {console.error(error)});
 } //end of loginWithGoogle
+
+/*function loadWhileLogin() {
+  var animation = document.getElementById("loadWhileLogin");
+  var carrots = document.createElement("div");
+  carrots.classList.add("loadingio-spinner-pulse-utrg899k0nk");
+    var innerField = document.createElement("div");
+    innerField.classList.add("ldio-t32oece7z3");
+      var carrot1 = document.createElement("img");
+      carrot1.classList.add("carrotAnimation");
+      carrot1.setAttribute("src", "../icons/png/karotte.png");
+      innerField.appendChild(carrot1);
+      var carrot2 = document.createElement("img");
+      carrot2.classList.add("carrotAnimation");
+      carrot2.setAttribute("src", "../icons/png/karotte.png");
+      innerField.appendChild(carrot2);
+      var carrot3 = document.createElement("img");
+      carrot3.classList.add("carrotAnimation");
+      carrot3.setAttribute("src", "../icons/png/karotte.png");
+      innerField.appendChild(carrot3);
+    carrots.appendChild(innerField);
+  animation.appendChild(carrots)
+}*/
 
 async function loginWithUserCredentials() {
   var email = document.querySelector("#username").value;
@@ -771,6 +796,7 @@ async function loadCurrentUserData() {
     document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
     document.getElementById("anmeldung").hidden = true;
     document.getElementById("guestLogin").hidden = true;
+    document.getElementById("loadWhileLogin").hidden = true;
     document.getElementById("Information1").hidden = false;
     document.getElementById("Information2").hidden = false;
     document.getElementById("Information3").hidden = false;
