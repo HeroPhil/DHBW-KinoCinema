@@ -100,16 +100,17 @@ async function updateDetails() {
     var x = [];
 
     userData.firstName === pVorname ? x[0] = true : alert('We could not save the First Name, please try again!');
-  userData.lastName === pNachname ? x[1] = true : alert('We could not save the Surname, please try again!');
-  userData.phone === pRufnummer ? x[3] = true : alert('We could not save the Phone Number, please try again!');
-  userData.zipCode === pPostleitzahl ? x[4] = true : alert('We could not save the Post Code, please try again!');
-  userData.city === pStadt ? x[5] = true : alert('We could not save the City, please try again!');
-  userData.primaryAddress === pStraße ? x[6] = true : alert('We could not save the Street + House Number, please try again!');
-  userData.secondaryAddress === pZusatz ? x[7] = true : alert('We could not save the Addition, please try again!');
+    userData.lastName === pNachname ? x[1] = true : alert('We could not save the Surname, please try again!');
+    userData.phone === pRufnummer ? x[3] = true : alert('We could not save the Phone Number, please try again!');
+    userData.zipCode === pPostleitzahl ? x[4] = true : alert('We could not save the Post Code, please try again!');
+    userData.city === pStadt ? x[5] = true : alert('We could not save the City, please try again!');
+    userData.primaryAddress === pStraße ? x[6] = true : alert('We could not save the Street + House Number, please try again!');
+    userData.secondaryAddress === pZusatz ? x[7] = true : alert('We could not save the Addition, please try again!');
 
     if(x.every((e) => e === true)) {
         alert('Your update was successful!');
     }
+    loadUserDetails();
 }
 
 async function loadLastTickets(count) {
