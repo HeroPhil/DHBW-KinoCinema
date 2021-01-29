@@ -65,7 +65,7 @@ export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
 });
 
 export const addMovie = httpsOnCall((data, context) => {
-    return movies.addMovie(data.category, data.cover||"gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/Coming-soon.png", data.description, parseInt(data.duration), data.name, parseInt(data.priority));
+    return movies.addMovie(data.category, data.description, parseInt(data.duration), data.name, parseInt(data.priority));
 });
 
 export const updateMovie = httpsOnCall((data, context) => {
