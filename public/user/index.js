@@ -51,14 +51,14 @@ async function loadUserDetails() {
         profilPicture.appendChild(image);
 
         /* --------------------------- User-Card-----------------*/
-        if(userData.firstName && userData.lastName === undefined) {
+        if(userData.firstName === undefined && userData.lastName === undefined) {
             document.getElementById("fullName").innerHTML = userData.displayName;
         }else {
             document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName;
         }
-        document.getElementById("fullEmail").innerHTML = userData.email;// === undefined ? "" : userData.email;
-        document.getElementById("fullStraße").innerHTML = userData.primaryAddress; // === undefined ? "" : userData.primaryAddress;
-        document.getElementById("fullStadt").innerHTML = userData.city //=== undefined ? "" : userData.city;
+        document.getElementById("fullEmail").innerHTML = userData.email === undefined ? "" : userData.email;
+        document.getElementById("fullStraße").innerHTML = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
+        document.getElementById("fullStadt").innerHTML = userData.city === undefined ? "" : userData.city;
         
     }else {
         window.location = "../account"
