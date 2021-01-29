@@ -51,8 +51,11 @@ async function loadUserDetails() {
         profilPicture.appendChild(image);
 
         /* --------------------------- User-Card-----------------*/
-        document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName; //=== undefined ? "" : userData.firstName + " "; ///userInformation[0].displayName; 
-        //document.getElementById("fullName").innerHTML += userData.lastName === undefined ? "" : userData.lastName;
+        if(userData.firstName && userData.lastName === undefined) {
+            document.getElementById("fullName").innerHTML = userData.displayName;
+        }else {
+            document.getElementById("fullName").innerHTML = userData.firstName + " " + userData.lastName;
+        }
         document.getElementById("fullEmail").innerHTML = userData.email;// === undefined ? "" : userData.email;
         document.getElementById("fullStraße").innerHTML = userData.primaryAddress; // === undefined ? "" : userData.primaryAddress;
         document.getElementById("fullStadt").innerHTML = userData.city //=== undefined ? "" : userData.city;
@@ -124,8 +127,15 @@ async function loadLastTickets(count) {
     
     for (let index = 0; index < displayCount; index++) {
         const ticket = tickets[index];
-        let title = ticket.data;
-        createTicket("Geiler Film", "7", "4", (index+1), "22.10.2021", "www.google.de")
+        let title = ticket.data.screening.data.movie.data.name;
+        let hall = ticket.data.screening.data.hall.data.name;
+        let row = ticket.data.row;
+        let seat = ticket.data.seat;
+        let date = ticket.data.screening.data.startTime;
+        let options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit'};
+        date = new Date(date).toLocaleString("en-DE", options);
+        let ticketID = ticket.id;
+        createTicket(title, hall, row, seat, date, ticketID);
     }
 }
 
