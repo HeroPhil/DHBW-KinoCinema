@@ -21,6 +21,9 @@ export function getDocumentRefByID(documentPath: string) {
     return admin.firestore().doc(documentPath);
 }
 
+export function deleteDocumentByID(documentPath: string) {
+    return admin.firestore().doc(documentPath).delete()
+}
 
 //Collections
 export function getCollectionByID(collectionPath: string) {

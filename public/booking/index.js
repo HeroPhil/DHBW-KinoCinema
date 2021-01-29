@@ -453,19 +453,14 @@ async function updateUserDetails() {
   const result = await functions.httpsCallable('database-updateInformationOfCurrentUser')(param);
   const userData = result.data.data;
 
-  var x = [];
+  userData.firstName === pVorname ? "" : alert('We could not save the First Name, please try again!');
+  userData.lastName === pNachname ? "" : alert('We could not save the Surname, please try again!');
+  userData.phone === pRufnummer ? "" : alert('We could not save the Phone Number, please try again!');
+  userData.zipCode === pPostleitzahl ? "" : alert('We could not save the Post Code, please try again!');
+  userData.city === pStadt ? "" : alert('We could not save the City, please try again!');
+  userData.primaryAddress === pStraße ? "" : alert('We could not save the Street + House Number, please try again!');
+  userData.secondaryAddress === pZusatz ? "": alert('We could not save the Addition, please try again!');
 
-  userData.firstName === pVorname ? x[0] = true : alert('We could not save the First Name, please try again!');
-  userData.lastName === pNachname ? x[1] = true : alert('We could not save the Surname, please try again!');
-  userData.phone === pRufnummer ? x[3] = true : alert('We could not save the Phone Number, please try again!');
-  userData.zipCode === pPostleitzahl ? x[4] = true : alert('We could not save the Post Code, please try again!');
-  userData.city === pStadt ? x[5] = true : alert('We could not save the City, please try again!');
-  userData.primaryAddress === pStraße ? x[6] = true : alert('We could not save the Street + House Number, please try again!');
-  userData.secondaryAddress === pZusatz ? x[7] = true : alert('We could not save the Addition, please try again!');
-
-  if(x.every((e) => e === true)) {
-      alert('Saved all changes');
-  }
 }
 
 
@@ -622,6 +617,8 @@ function loadTicketInfoIntoLocalStorage() {
 } //end of loadTicketInfoIntoLocalStorage
 
 async function book() {
+  document.getElementById("loading").hidden = false;
+  document.getElementById("main").hidden = true;
   var bookingConflict = false;
   var success = false;
   if(seatCounter > 0) {
