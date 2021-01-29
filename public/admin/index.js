@@ -175,7 +175,17 @@ async function addMovie(){
     let movie = await functions.httpsCallable('database-addMovie')(param);
     console.log(movie);
     let movieID = movie.data.id;
-    await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
+    let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
+    console.log(newCoverUrl);
+    const param2 = {
+        id: movieID,
+        newData: {
+            cover: newCoverUrl
+        }
+    };
+
+    let movieWithCover = await functions.httpsCallable('database-updateMovie')(param2);
+    console.log(movieWithCover);
 }
 
 
@@ -256,6 +266,7 @@ async function loadDatabaseMovie(){
     document.getElementById("EDIT_Movie_Duration").value = movie.duration;
     document.getElementById("EDIT_Movie_Category").value = movie.category;
     document.getElementById("EDIT_Movie_Rating").value = movie.priority;
+    document.getElementById("EDIT_Movie_Cover_URL").value = movie.cover;
     loadScreenings(id);
     document.getElementById("EDIT_Movie_IMG").src = await firebase.storage().refFromURL(movie.cover).getDownloadURL();
 }
@@ -345,7 +356,7 @@ async function updateInformationOfMovie(){
     let duration = document.getElementById("EDIT_Movie_Duration").value;
     let categories = document.getElementById("EDIT_Movie_Category").value;
     let rating = Number(document.getElementById("EDIT_Movie_Rating").value);
-    let coverURL = document.getElementById("EDIT_Movie_IMG").src;
+    let coverURL = document.getElementById("EDIT_Movie_Cover_URL").value;
 
     const param = {
         id: id,
@@ -354,7 +365,8 @@ async function updateInformationOfMovie(){
             description: description,
             duration: duration,
             category: categories,
-            priority: rating
+            priority: rating,
+            cover: coverURL
         }
     };
 
@@ -395,8 +407,17 @@ function setCoverFile(){
 async function uploadCover(){
     if(file != null){
         var movieID = document.getElementById("MovieIDInput").value;
-        let result = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
-        console.log(result);
+        let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
+        console.log(newCoverUrl);
+        document.getElementById("EDIT_Movie_Rating").value = newCoverUrl;
+        const param2 = {
+            id: movieID,
+            newData: {
+                cover: newCoverUrl
+            }
+        };
+        let movieWithCover = await functions.httpsCallable('database-updateMovie')(param2);
+        console.log(movieWithCover);
         loadDatabaseMovie();
     }
 }
