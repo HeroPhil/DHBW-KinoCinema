@@ -65,7 +65,7 @@ export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
 });
 
 export const addMovie = httpsOnCall((data, context) => {
-    return movies.addMovie(data.category, data.cover||"gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/Coming-soon.png", data.description, parseInt(data.duration), data.name, parseInt(data.priority));
+    return movies.addMovie(data.category, data.description, parseInt(data.duration), data.name, parseInt(data.priority));
 });
 
 export const updateMovie = httpsOnCall((data, context) => {
@@ -92,12 +92,20 @@ export const promoteUserToAdminByID = httpsOnCall((data, context) => {
     return users.promoteUserToAdminByID(context, data.id || undefined);
 });
 
+export const degradeAdminToUserByID = httpsOnCall((data, context) => {
+    return users.degradeAdminToUserByID(context, data.id || undefined);
+});
+
 export const checkIfCurrentUserIsAdmin = httpsOnCall((data, context) => {
     return users.checkIfCurrentUserIsAdmin(context);
 });
 
-export const updateLabelToAdminOnAdminAddedOverDatabase = func().firestore.document('live/users/admins/{docId}').onWrite((change, context) => {
-    return users.updateLabelToAdminOnAdminAddedOverDatabase(change, context);
+export const updateLabelToAdminOnAdminAddedOverDatabase = func().firestore.document('live/users/admins/{docId}').onCreate((snap, context) => {
+    return users.updateLabelToAdminOnAdminAddedOverDatabase(snap, context);
+});
+
+export const updateLabelToUserOnAdminRemovedOverDatabase = func().firestore.document('live/users/admins/{docId}').onDelete((snap, context) => {
+    return users.updateLabelToUserOnAdminRemovedOverDatabase(snap, context);
 });
 
 export const getAllHalls = httpsOnCall((data, context) => {

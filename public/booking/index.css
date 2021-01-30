@@ -223,7 +223,35 @@ summary:focus {
     font-weight: bold;
     transition: border 500ms;
 }
-
+.specialField {
+    width: 100%;
+    border-bottom: 2px dashed var(--layer9);
+    margin: 1.5rem 2.5% 1rem 0;
+    transition: 500ms;
+}
+.readonly {
+    color: var(--layer9);
+}
+.readonly::after {
+    content: "";
+    position: relative;
+    display: block;
+    height: 4px;
+    width: 100%;
+    background: var(--layer9);
+    transform: scaleX(0);
+    transform-origin: 0%;
+    opacity: 0;
+    transition: all 500ms ease;
+    top: 2px;
+}
+.readonly:focus-within{
+    border-color: transparent;
+}
+.readonly:focus-within::after {
+    transform: scaleX(1);
+    opacity: 1;
+}
 .field::after{
     content: "";
     position: relative;

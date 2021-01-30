@@ -42,6 +42,8 @@ let normalTicketPrice = 0;
 let bookedTickets = [];
 let corruptedSeats = [];
 let loggedIn = false;
+let infoCurrentUser;
+let userDataMissing = true;
 
 const container = document.querySelector('.container');
 const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
@@ -291,7 +293,7 @@ function otherAdr() {
     name.setAttribute("id", "Nachname2");
     name.setAttribute("type", "text");
     name.classList.add("input");
-    name.setAttribute("placeholder", "Surname");
+    name.setAttribute("placeholder", "Last Name");
     name.required = true;
     var postleit = document.createElement("input");
     postleit.setAttribute("id", "Postleitzahl2");
@@ -389,22 +391,6 @@ function pay(id) {
       break;
     case 2:
       ausgabe.innerHTML = "";
-      var button1 = document.createElement("button");
-      button1.classList.add("button");
-      button1.setAttribute("id","GooglePay");
-      button1.innerHTML = "Google Pay";
-      ausgabe.appendChild(button1);
-      break;
-    case 3:
-      ausgabe.innerHTML = "";
-      var button2 = document.createElement("button");
-      button2.classList.add("button");
-      button2.setAttribute("id","ApplePay");
-      button2.innerHTML = "Apple Pay";
-      ausgabe.appendChild(button2);
-      break;
-    case 4:
-      ausgabe.innerHTML = "";
       var button3 = document.createElement("button");
       button3.classList.add("button");
       button3.setAttribute("id","PayPal");
@@ -415,7 +401,7 @@ function pay(id) {
 }
  
 //weiter Button click event zur Zusammenfassung
-function ausgabe() {
+async function ausgabe() {
   document.getElementById("ausVorname").innerHTML = document.getElementById("Vorname").value;
   document.getElementById("ausNachname").innerHTML = document.getElementById("Nachname").value;
   document.getElementById("ausEmail").innerHTML = document.getElementById("Email").value;
@@ -435,15 +421,28 @@ function ausgabe() {
     updateUserDetails();
   }
 
-  addTicketsToWebsite();
   if(firebase.auth().currentUser !== null) {
-    loggedIn = true;
-    document.getElementById("zusammenfassungDetails").open = true;
-    document.getElementById("ZahlungDetails").open = false;
-    document.getElementById("zusammenfassungDetails").hidden = false;
-    location.href = '#Zusammenfassung';
-  }
-}
+    var userInfo = await functions.httpsCallable('database-getInformationOfCurrentUser')({});
+    console.log("User-Information:");
+    console.log(userInfo);
+    console.log(userDataMissing);
+    if((!userDataMissing) || (userInfo.data.data !== null)) {
+      addTicketsToWebsite();
+      loggedIn = true;
+      document.getElementById("zusammenfassungDetails").open = true;
+      document.getElementById("ZahlungDetails").open = false;
+      document.getElementById("zusammenfassungDetails").hidden = false;
+      location.href = '#Zusammenfassung';
+    } else {
+      document.getElementById("anmeldung").hidden = true;
+      document.getElementById("guestLogin").hidden = true;
+      document.getElementById("Information1").hidden = false;
+      document.getElementById("Information2").hidden = false;
+      document.getElementById("Information3").hidden = false;
+      userDataMissing = false;
+    } //end of if-else
+  } //end of if
+} //end of ausgabe
 
 async function updateUserDetails() {
   const pVorname = document.getElementById("Vorname").value;
@@ -469,19 +468,14 @@ async function updateUserDetails() {
   const result = await functions.httpsCallable('database-updateInformationOfCurrentUser')(param);
   const userData = result.data.data;
 
-  var x = [];
+  userData.firstName === pVorname ? "" : alert('We could not save the First Name, please try again!');
+  userData.lastName === pNachname ? "" : alert('We could not save the Surname, please try again!');
+  userData.phone === pRufnummer ? "" : alert('We could not save the Phone Number, please try again!');
+  userData.zipCode === pPostleitzahl ? "" : alert('We could not save the Post Code, please try again!');
+  userData.city === pStadt ? "" : alert('We could not save the City, please try again!');
+  userData.primaryAddress === pStraße ? "" : alert('We could not save the Street + House Number, please try again!');
+  userData.secondaryAddress === pZusatz ? "": alert('We could not save the Addition, please try again!');
 
-  userData.firstName === pVorname ? x[0] = true : alert('We could not save the First Name, please try again!');
-  userData.lastName === pNachname ? x[1] = true : alert('We could not save the Surname, please try again!');
-  userData.phone === pRufnummer ? x[3] = true : alert('We could not save the Phone Number, please try again!');
-  userData.zipCode === pPostleitzahl ? x[4] = true : alert('We could not save the Post Code, please try again!');
-  userData.city === pStadt ? x[5] = true : alert('We could not save the City, please try again!');
-  userData.primaryAddress === pStraße ? x[6] = true : alert('We could not save the Street + House Number, please try again!');
-  userData.secondaryAddress === pZusatz ? x[7] = true : alert('We could not save the Addition, please try again!');
-
-  if(x.every((e) => e === true)) {
-      alert('Saved all changes');
-  }
 }
 
 
@@ -620,10 +614,24 @@ function checkSeatsAreNotAlreadyBooked(hallInfo) {
 
 function loadTicketInfoIntoLocalStorage() {
     sessionStorage.clear();
+    var pSurname = document.getElementById("ausVorname").value;
+    var pName = document.getElementById("ausNachname").value;
+    var pPostalCode = document.getElementById("ausPLZ").value;
+    var pAddress = document.getElementById("ausStraße").value;
+    var pPaying = document.getElementById("ausKartennummer").value;
+    var billInfo = {
+      surname : pSurname,
+      name : pName,
+      postalCode : pPostalCode,
+      address : pAddress,
+      paying : pPaying
+    };
+    var billInfoAsString = JSON.stringify(billInfo);
     console.log(bookedTickets);
     var errorExists = bookedTickets[0].data.error;
     if(typeof errorExists === 'undefined') {
       sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
+      sessionStorage.setItem("BillInfo", billInfoAsString);
       var arrayAsString = JSON.stringify(bookedTickets);
       sessionStorage.setItem("Tickets", arrayAsString);
       return true;
@@ -638,6 +646,8 @@ function loadTicketInfoIntoLocalStorage() {
 } //end of loadTicketInfoIntoLocalStorage
 
 async function book() {
+  document.getElementById("loading").hidden = false;
+  document.getElementById("main").hidden = true;
   var bookingConflict = false;
   var success = false;
   if(seatCounter > 0) {
@@ -737,6 +747,9 @@ function printError(type, errorMessage) {
 } //end of printError
 
 async function loginWithGoogle() {
+  //document.getElementById("anmeldung").hidden = true;
+  //document.getElementById("guestLogin").hidden = true;
+  //loadWhileLogin();
   const providerGoogle = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(providerGoogle).then(result => {
       var user = result.user;
@@ -748,6 +761,28 @@ async function loginWithGoogle() {
       return ;
   }).catch((error) => {console.error(error)});
 } //end of loginWithGoogle
+
+/*function loadWhileLogin() {
+  var animation = document.getElementById("loadWhileLogin");
+  var carrots = document.createElement("div");
+  carrots.classList.add("loadingio-spinner-pulse-utrg899k0nk");
+    var innerField = document.createElement("div");
+    innerField.classList.add("ldio-t32oece7z3");
+      var carrot1 = document.createElement("img");
+      carrot1.classList.add("carrotAnimation");
+      carrot1.setAttribute("src", "../icons/png/karotte.png");
+      innerField.appendChild(carrot1);
+      var carrot2 = document.createElement("img");
+      carrot2.classList.add("carrotAnimation");
+      carrot2.setAttribute("src", "../icons/png/karotte.png");
+      innerField.appendChild(carrot2);
+      var carrot3 = document.createElement("img");
+      carrot3.classList.add("carrotAnimation");
+      carrot3.setAttribute("src", "../icons/png/karotte.png");
+      innerField.appendChild(carrot3);
+    carrots.appendChild(innerField);
+  animation.appendChild(carrots)
+}*/
 
 async function loginWithUserCredentials() {
   var email = document.querySelector("#username").value;
@@ -787,6 +822,7 @@ async function loadCurrentUserData() {
     document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
     document.getElementById("anmeldung").hidden = true;
     document.getElementById("guestLogin").hidden = true;
+    document.getElementById("loadWhileLogin").hidden = true;
     document.getElementById("Information1").hidden = false;
     document.getElementById("Information2").hidden = false;
     document.getElementById("Information3").hidden = false;

@@ -29,14 +29,18 @@ document.addEventListener("DOMContentLoaded", event => {
 let numberOfTickets;
 let ticketsInfo = [];
 let qrcodesAsImg = [];
+let billInfo;
 let writtenPixels;
 const spaceBetweenText = 15;
 
 function loadContent() {
   numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
+  billInfo = JSON.parse(sessionStorage.getItem("BillInfo"));
   ticketsInfo = JSON.parse(sessionStorage.getItem("Tickets"));
+  console.log(billInfo);
   console.log(ticketsInfo);
   loadTicketsWithQRCode();
+  endLoading();
 } //end of loadContent
 
 function home() {
@@ -116,6 +120,18 @@ function createTicket(title, hall, row, seat, date, value) {
     ticket.appendChild(ticketInformation);
     tickets.appendChild(ticket);
     createQrCode(ticket, value);
+    html2canvas(ticket).then(function(canvas) {
+      var imgBase64Coded = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+      var imgPNG = canvas.toDataURL("image/png");
+      var imgJPG = canvas.toDataURL("image/jpeg");
+      qrcodesAsImg.push(imgPNG);
+      console.log(imgBase64Coded);
+      console.log(imgPNG);
+      console.log(imgJPG);
+      return;
+    }).catch((error) => {
+      console.log(error);
+    });
 } //end of createTicket
 
 function createQrCode(element, textValue) {
@@ -130,10 +146,6 @@ function createQrCode(element, textValue) {
     correctLevel : QRCode.CorrectLevel.H
   });
   qrcode.makeCode(textValue);
-  html2canvas(qrContainer).then(function(canvas) {
-    var imgBase64Coded = canvas.toDataURL("image/jpeg");
-    qrcodesAsImg.push(imgBase64Coded);
-  });
 } //end of createQrCode
 
 async function printAndSaveTickets() {
@@ -145,22 +157,29 @@ function initializePDF(pdfDocument) {
   pdfDocument-setFont("arial");
   writtenPixels = 0;
   pdfDocument.setFontSize(12);
-  pdfDocument.setDrawColor(1120, 120, 82);
+  pdfDocument.setDrawColor(120, 120, 82);
   pdfDocument.setLineWidth(2);
 } //end of initializePDF
 
 function createPDF() {
   var pdf = new jsPDF("p", "mm", "a4");
-  addLine(pdf, 19.5, 19.5);
-  addHeadline(pdf, "KinoCinema");
-  addLine(pdf, 36, 36);
+  addLine(pdf, 9.5, 9.5);
+  addTicketsHeadline(pdf, "Tickets");
+  addLine(pdf, 26, 26);
+  addTicketsToPDF(pdf);
+  return pdf;
 } //end of createPDF
 
-function addHeadline(pdfDocument, contentOfHeadline) {
-  const centralHeadlinePosition = 105;
-  var startWritingPosition = 105 - (Math.round(parseFloat(contentOfHeadline.length) / 2));
+function addMayorHeadline(pdfDocument, contentOfHeadline) {
   pdfDocument.setFontSize(20);
-  pdfDocument.text(contentOfHeadline, startWritingPosition, 30);
+  pdfDocument.text(contentOfHeadline, 90, 20);
+  writtenPixels = writtenPixels + 50 + spaceBetweenText;
+  pdfDocument.setFontSize(12);
+} //end of addHeadline
+
+function addTicketsHeadline(pdfDocument, contentOfHeadline) {
+  pdfDocument.setFontSize(20);
+  pdfDocument.text(contentOfHeadline, 95, 20);
   writtenPixels = writtenPixels + 50 + spaceBetweenText;
   pdfDocument.setFontSize(12);
 } //end of addHeadline
@@ -168,3 +187,31 @@ function addHeadline(pdfDocument, contentOfHeadline) {
 function addLine(pdfDocument, positionX, positionY) {
   pdfDocument.line(10, positionX, 200, positionY);
 } //end of addLine
+
+function addTicketsToPDF(pdfDocument) {
+  var x = 25;
+  var y = 40;
+  var width = 160;
+  var height = 55;
+  var firstPageFinished = false;
+  var pictureAddedCounter = 0;
+  var pictureAddedBySideCounter = 0;
+  for(var i = 0; i < qrcodesAsImg.length; i++) {
+    if(!firstPageFinished && pictureAddedBySideCounter === 3) {
+      firstPageFinished = true;
+      pictureAddedBySideCounter = 0;
+      pdfDocument.addPage();
+      y = 10;
+    } //end of if
+    if(firstPageFinished && pictureAddedBySideCounter === 4) {
+      pdfDocument.addPage();
+      pictureAddedBySideCounter = 0;
+      y = 10;
+    } //end of if
+    var img = qrcodesAsImg[i];
+    pdfDocument.addImage(img, "png", x, y, width, height);
+    y = y + height + 10;
+    pictureAddedBySideCounter++;
+    pictureAddedCounter++;
+  } //end of for
+} //end of addImageToPDF

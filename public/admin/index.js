@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", event => {
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 let rows = [];
+let file;
 let activeMovieID;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function OnLoad(){
     switchEditOption(1);
-    loadDropdownMovies();
     loadDropdownHalls();
     addNeededEventListerns();
 }
@@ -58,17 +58,9 @@ function addNeededEventListerns(){
     document.getElementById("Movie_Cover_URL").addEventListener('focusout', () => {
         document.getElementById("Movie_IMG").src = document.getElementById("Movie_Cover_URL").value;
     });
-    document.getElementById("EDIT_Movie_Cover_URL").addEventListener('input', () => {
-        showCoverEdit();
-    });
     document.getElementById("EDIT_Movie_Cover_Upload").addEventListener('input', () => {
-        uploadCover();
+        setCoverFile();
     });
-}
-
-async function showCoverEdit(){
-    let url = await firebase.storage().refFromURL(document.getElementById("EDIT_Movie_Cover_URL").value).getDownloadURL()
-    document.getElementById("EDIT_Movie_IMG").src = url;
 }
 
 function switchEditOption(index){
@@ -83,18 +75,29 @@ function switchEditOption(index){
             document.getElementById("editMovie").hidden = true;
             document.getElementById("movieInformation").hidden = false;
             document.getElementById("addHall").hidden = true;
+            document.getElementById("editUserPermissions").hidden = false;
             break;
         case 2:
             listItems[1].classList.add("checked");
             document.getElementById("editMovie").hidden = false;
             document.getElementById("movieInformation").hidden = true;
             document.getElementById("addHall").hidden = true;
+            document.getElementById("editUserPermissions").hidden = true;
+            loadDropdownMovies();
             break;
         case 3:
             listItems[2].classList.add("checked");
             document.getElementById("editMovie").hidden = true;
             document.getElementById("movieInformation").hidden = true;
             document.getElementById("addHall").hidden = false;
+            document.getElementById("editUserPermissions").hidden = true;
+            break;
+        case 4:
+            listItems[3].classList.add("checked");
+            document.getElementById("editMovie").hidden = true;
+            document.getElementById("movieInformation").hidden = true;
+            document.getElementById("addHall").hidden = true;
+            document.getElementById("editUserPermissions").hidden = false;
             break;
     }
 }
@@ -179,10 +182,20 @@ async function addMovie(){
         priority: rating
     };
 
-    let movie = await firebase.functions().httpsCallable('database-addMovie')(param);
+    let movie = await functions.httpsCallable('database-addMovie')(param);
     console.log(movie);
     let movieID = movie.data.id;
-    await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
+    let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
+    console.log(newCoverUrl);
+    const param2 = {
+        id: movieID,
+        newData: {
+            cover: newCoverUrl
+        }
+    };
+
+    let movieWithCover = await functions.httpsCallable('database-updateMovie')(param2);
+    console.log(movieWithCover);
 }
 
 
@@ -191,6 +204,10 @@ async function loadDropdownMovies(){
     let movies = await functions.httpsCallable('database-getAllMovies')({});
     
     var dropdown_content = document.getElementById("dropdown-content");
+
+    while(dropdown_content.firstChild){
+        dropdown_content.removeChild(dropdown_content.lastChild);
+    }
 
     movies.data.forEach( movie => {
         let content = movie.data;
@@ -260,8 +277,8 @@ async function loadDatabaseMovie(){
     document.getElementById("EDIT_Movie_Category").value = movie.category;
     document.getElementById("EDIT_Movie_Rating").value = movie.priority;
     document.getElementById("EDIT_Movie_Cover_URL").value = movie.cover;
-    showCoverEdit();
     loadScreenings(id);
+    document.getElementById("EDIT_Movie_IMG").src = await firebase.storage().refFromURL(movie.cover).getDownloadURL();
 }
 
 async function loadScreenings(pID) {
@@ -338,7 +355,7 @@ async function updateScreeningInformation(){
         }
     };
 
-    let screening = await firebase.functions().httpsCallable('database-updateScreening')(param);
+    let screening = await functions.httpsCallable('database-updateScreening')(param);
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
 
@@ -349,7 +366,7 @@ async function updateInformationOfMovie(){
     let duration = document.getElementById("EDIT_Movie_Duration").value;
     let categories = document.getElementById("EDIT_Movie_Category").value;
     let rating = Number(document.getElementById("EDIT_Movie_Rating").value);
-    let coverURL = document.getElementById("EDIT_Movie_IMG").src;
+    let coverURL = document.getElementById("EDIT_Movie_Cover_URL").value;
 
     const param = {
         id: id,
@@ -358,11 +375,12 @@ async function updateInformationOfMovie(){
             description: description,
             duration: duration,
             category: categories,
-            priority: rating
+            priority: rating,
+            cover: coverURL
         }
     };
 
-    let movie = await firebase.functions().httpsCallable('database-updateMovie')(param);
+    let movie = await functions.httpsCallable('database-updateMovie')(param);
     console.log(movie);
 }
 
@@ -384,17 +402,34 @@ async function addScreenings(){
         increments: sInc
     };
 
-    let screening = await firebase.functions().httpsCallable('database-addScreening')(param);
+    let screening = await functions.httpsCallable('database-addScreening')(param);
 
     console.log(screening);
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
 
+function setCoverFile(){
+    if(document.getElementById("EDIT_Movie_Cover_Upload").files[0] !== null){
+        file = document.getElementById("EDIT_Movie_Cover_Upload").files[0];
+    }
+}
+
 async function uploadCover(){
-    let file = document.getElementById("EDIT_Movie_Cover_Upload").files[0];
-    var movieID = document.getElementById("MovieIDInput").value;
-    await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
-    loadDatabaseMovie();
+    if(file !== null){
+        var movieID = document.getElementById("MovieIDInput").value;
+        let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
+        console.log(newCoverUrl);
+        document.getElementById("EDIT_Movie_Rating").value = newCoverUrl;
+        const param2 = {
+            id: movieID,
+            newData: {
+                cover: newCoverUrl
+            }
+        };
+        let movieWithCover = await functions.httpsCallable('database-updateMovie')(param2);
+        console.log(movieWithCover);
+        loadDatabaseMovie();
+    }
 }
 
 function sortTable(n) {
@@ -468,7 +503,7 @@ async function addHall(){
         width: hallWidth
     };
 
-    let hall = await firebase.functions().httpsCallable('database-addHall')(param);
+    let hall = await functions.httpsCallable('database-addHall')(param);
     console.log(hall);
 }
 
@@ -558,4 +593,32 @@ async function seatGeneration() {
 function removeLastRow(){
     rows.pop();
     displayRows();
+}
+
+async function promoteToAdmin() {
+    var uid = document.getElementById("EDIT_PERMISSION_UID").value;
+
+    const param = {
+        id: uid
+    };
+
+    let user = await functions.httpsCallable('database-promoteUserToAdminByID')(param);
+    console.log(user);
+    if(user.data.error) {
+        alert(user.data.error.message);
+    }
+}
+
+async function degradeToUser() {
+    var uid = document.getElementById("EDIT_PERMISSION_UID").value;
+
+    const param = {
+        id: uid
+    };
+
+    let user = await functions.httpsCallable('database-degradeAdminToUserByID')(param);
+    console.log(user);
+    if(user.data.error) {
+        alert(user.data.error.message);
+    }
 }

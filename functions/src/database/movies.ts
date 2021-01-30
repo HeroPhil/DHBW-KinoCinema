@@ -13,9 +13,17 @@ export class Movie {
     }
 }
 
-interface validChangesInterface {
-    [key: string]: any
-}
+const allowedKeys = [
+    "city",
+    "displayName",
+    "firstName",
+    "lastName",
+    "phone",
+    "primaryAddress",
+    "secondaryAddress",
+    "zipCode"
+];
+
 
 export async function getAllMovies() {
     const movies: Movie[] = [];
@@ -62,10 +70,9 @@ export async function getMoviesByCategory(category: string, amount: number) {
     return movies;
 }
 
-export async function addMovie(category: string, cover: string, description: string, duration: number, name: string, priority: number) {
+export async function addMovie(category: string, description: string, duration: number, name: string, priority: number) {
     const data = {
         category: category,
-        cover: cover,
         description: description,
         duration: duration,
         name: name,
@@ -73,14 +80,14 @@ export async function addMovie(category: string, cover: string, description: str
     };
 
     const movieRef = await basics.addDocToCollectionByID(moviesCollectionPath, data);
-    const movie = await basics.getDocumentByRef(movieRef);
 
-    return new Movie(movie.id, movie.data()); 
+    const gsCoverLink = "gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/" + movieRef.id;
+
+    return await updateMovie(movieRef.id, {cover: gsCoverLink});
 }
 
-export async function updateMovie(id: string, newData: {category: string, cover: string, name: string, priority: number, duration: number, description: string}) {
+export async function updateMovie(id: string, changes: { [x: string]: any}) {
     const error: {message: string} = { message: "" };
-    const validChanges: validChangesInterface = {};
     
     //check if movie is passed as parameter (defaulted to undefined) and check if movie exists in database
     if(id !== undefined) {
@@ -98,32 +105,15 @@ export async function updateMovie(id: string, newData: {category: string, cover:
     }
 
     //add only valid changes to the object
-    if("category" in newData) {
-        validChanges.category = newData.category;
-    }
-
-    if("cover" in newData) {
-        validChanges.cover = newData.cover;
-    }
-
-    if("description" in newData) {
-        validChanges.description = newData.description;
-    }
-
-    if("duration" in newData) {
-        validChanges.duration = newData.duration;
-    }
-
-    if("name" in newData) {
-        validChanges.name = newData.name;
-    }
-
-    if("priority" in newData) {
-        validChanges.priority = newData.priority;
-    }
+    const newData: any = {};
+    allowedKeys.forEach((key) => {
+        if (key in changes) {
+            newData[key] = changes[key];
+        }
+    });
     
     //write valid changes to database
-    const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, validChanges);
+    const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, newData);
     console.log(movie);
-    return new Movie(id, validChanges); 
+    return await getMovieByID(id);
 }

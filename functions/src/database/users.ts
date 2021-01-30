@@ -3,8 +3,8 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as basics from './basics';
 import { checkIfAnyLogin } from '../logic/auth';
 import { admin } from './admin';
-import { Change, EventContext } from 'firebase-functions';
-import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
+import { EventContext } from 'firebase-functions';
+import { QueryDocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 
 const userCollectionPath = "live/users";
 const customersCollectionPath = userCollectionPath + "/customers";
@@ -110,14 +110,39 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
 
     const updateToAdmin = await basics.setDocumentByID(adminsCollectionPath + '/' + id, {});
     console.log(updateToAdmin);
+    return await getInformationOfUserByID(id);
+}
 
-    admin
-    .auth()
-    .setCustomUserClaims(id, { admin: true }).then(() => {
-        console.log("SUCCESS!");
-      })
-      .catch((err) => console.log(err));
+export async function degradeAdminToUserByID(context: CallableContext, id: string) {
+    let error: {message: string} = { message: "" };
+    if (id === undefined) {
+        console.log("No user was passed to the function!");
+        error = {message : "No user was passed to the function!"};
+        return {error};
+    }
 
+    const checkLogin = checkIfAnyLogin(context);
+    if (checkLogin.error) {
+        error = checkLogin.error;
+        return {error};
+    }
+
+    const checkAdmin = await checkIfAdminLogin(context)
+    if (checkAdmin.error) {
+        error = checkAdmin.error;
+        return {error};
+    }
+
+    const user = await basics.getDocumentByID(customersCollectionPath + '/' + id);
+    console.log(customersCollectionPath + '/' + id);
+    if(!user.exists) {
+        console.log("This user does not exist!");
+        error = {message : "This user does not exist!"};
+        return {error};
+    }
+
+    const degradeToUser = await basics.deleteDocumentByID(adminsCollectionPath + '/' + id);
+    console.log(degradeToUser);
     return await getInformationOfUserByID(id);
 }
 
@@ -148,10 +173,18 @@ export const checkIfAdminLogin = async (context: CallableContext) => {
     return {};
 }
 
-export const updateLabelToAdminOnAdminAddedOverDatabase = async (change: Change<DocumentSnapshot>, context: EventContext) => {
+export const updateLabelToAdminOnAdminAddedOverDatabase = async (snap: QueryDocumentSnapshot, context: EventContext) => {
     return await admin.auth()
-        .setCustomUserClaims(change.after.id, { admin: true }).then(() => {
-            console.log("Promote to admin: "+ change.after.id);
+        .setCustomUserClaims(snap.id, { admin: true }).then(() => {
+            console.log("Promote to admin: "+ snap.id);
+        })
+        .catch((err) => console.log(err));
+}
+
+export const updateLabelToUserOnAdminRemovedOverDatabase = async (snap: QueryDocumentSnapshot, context: EventContext) => {
+    return await admin.auth()
+        .setCustomUserClaims(snap.id, { admin: false }).then(() => {
+            console.log("Degrade to admin: "+ snap.id);
         })
         .catch((err) => console.log(err));
 }
