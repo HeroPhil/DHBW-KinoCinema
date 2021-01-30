@@ -149,7 +149,7 @@
                                     You have selected <span id="count">0</span> seats for a price of <span id="price">0</span> €
                                 </p>
     
-                                <button id="NextButtonSeatSelection" class="button" type="button" onclick = jumpToZahlung()>Next</button> <!--jumpToZahlung()-->
+                                <button id="NextButtonSeatSelection" class="button" type="button" onclick = jumpToZahlung() >Next</button> <!--jumpToZahlung()-->
                             
                                 <script src="index.js" type="text/javascript"></script>
                         </details>
@@ -162,8 +162,18 @@
                     <details id="ZahlungDetails" hidden = true>
                         <summary id="Zahlung" class="expand">Payment</summary>
                         <form id="formStyle">
-                            <div id="loadWhileLogin"></div>
                             <div id="ErrorContainerZahlung"></div>
+                            <div class="row" id="loadWhile" hidden>
+                                <div class="col-16">
+                                    <div id="loadingWhileLogin">
+                                        <div class="loadingio-spinner-pulse-utrg899k0nk">
+                                            <div class="ldio-t32oece7z3">
+                                                <img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png">
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-7" id="anmeldung">
                                     <br>
@@ -184,89 +194,92 @@
                                         </div>
                                     </fieldset>
                                 </div>
-                                <div class="col-4">&nbsp;</div>
-                                <div class="col-1">
+                                <div class="col-9">&nbsp;</div>
+
+<!-- Future Guest Login         <div class="col-1">
                                     <button onclick="loginAsGuest()" class="SignUp" id="guestLogin">Guest</button>
                                 </div>
                                 <div class="col-4">&nbsp;</div>
-                            </div>
+-->                             </div>
 
-                            <div class="row" id="Information1" hidden>
-                                <div class="col-10">
-                                    <br>
-                                    <fieldset>
-                                        <legend>Billing address</legend>
-                                        <div class="fieldContainer">
-                                            <div class="field">
-                                                <input id ="Vorname" class="input" placeholder="First Name" required>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Nachname" class="input" placeholder="Last Name" required><br>
-                                            </div>
-                                            <div class="specialField">
-                                                <input id ="Email" type="email" class="readonly input" placeholder="E-Mail" required readonly>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Rufnummer" type="tel" class="input" placeholder="Phone Number" required><br>
-                                            </div>
-                                            <div class="field" style="width: 25%;">
-                                                <input id ="Postleitzahl" type="number" class="input" placeholder="Post Code" required>
-                                            </div>
-                                            <div class="field" style="width: 70%;">
-                                                <input id ="Stadt" class="input" placeholder="City" required><br>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Straße" class="input" placeholder="Street + House Number" required>
-                                            </div>
-                                            <div class="field">
-                                                <input id ="Zusatz" class="input" placeholder="Addition"><br>                           
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    <br>
-                                </div>
-                                <div class="col-6">
-                                    <br>
-                                    <fieldset>
-                                        <legend>Delivery Address</legend>
-                                        <input type="checkbox" id="check" onclick = otherAdr() checked>
-                                        <label>Delivery Address identical to Billing Address</label><br>
-                                        <div id="Rechnungsadresse"></div>
-                                    </fieldset>
-                                    <br>                               
-                                </div>
-                            </div>
-    
-                            <div class="row" id="Information2" hidden>
-                                <div class="col-16">
-                                    <fieldset>
-                                        <legend>Payment Method</legend>
-                                        <input type="radio" name="paymethod" value="vorOrt" id="Zahlungsmethode" onclick = pay(0) checked>
-                                        <label>Pay On Site</label>
-                                        <input type="radio" name="paymethod" value="Kreditkarte" onclick = pay(1)>
-                                        <label>Credit Card</label>
-                                        <input type="radio" name="paymethod" value="PayPal" onclick = pay(2)>
-                                        <label>PayPal</label>
+                            <div id="hiddenInfo" hidden>
+                                <div class="row">
+                                    <div class="col-10">
                                         <br>
-                                        <div id="radioAus"></div>
-                                    </fieldset>
-                                    <br>
+                                        <fieldset>
+                                            <legend>Billing address</legend>
+                                            <div class="fieldContainer">
+                                                <div class="field">
+                                                    <input id ="Vorname" class="input" placeholder="First Name" required>
+                                                </div>
+                                                <div class="field">
+                                                    <input id ="Nachname" class="input" placeholder="Last Name" required><br>
+                                                </div>
+                                                <div class="specialField">
+                                                    <input id ="Email" type="email" class="readonly input" placeholder="E-Mail" required readonly>
+                                                </div>
+                                                <div class="field">
+                                                    <input id ="Rufnummer" type="tel" class="input" placeholder="Phone Number" required><br>
+                                                </div>
+                                                <div class="field" style="width: 25%;">
+                                                    <input id ="Postleitzahl" type="number" class="input" placeholder="Post Code" required>
+                                                </div>
+                                                <div class="field" style="width: 70%;">
+                                                    <input id ="Stadt" class="input" placeholder="City" required><br>
+                                                </div>
+                                                <div class="field">
+                                                    <input id ="Straße" class="input" placeholder="Street + House Number" required>
+                                                </div>
+                                                <div class="field">
+                                                    <input id ="Zusatz" class="input" placeholder="Addition"><br>                           
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <br>
+                                    </div>
+                                    <div class="col-6">
+                                        <br>
+                                        <fieldset>
+                                            <legend>Delivery Address</legend>
+                                            <input type="checkbox" id="check" onclick = otherAdr() checked>
+                                            <label>Delivery Address identical to Billing Address</label><br>
+                                            <div id="Rechnungsadresse"></div>
+                                        </fieldset>
+                                        <br>                               
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row" id="information3">
-                                <div class="col-2">
-                                    <input type="checkbox" id="saveCeck" onclick = otherAdr() checked>
-                                    <label>Save changes</label>
-                                </div>
-                                <div class="col-14"></div>
-                            </div>
     
-                            <div class="row">
-                                <div class="col-14">&nbsp;</div>
-                                <div class="col-2">
-                                    <button class="button" type="button" id="weiter" onclick = ausgabe()>Next</button>
+                                <div class="row">
+                                    <div class="col-16">
+                                        <fieldset>
+                                            <legend>Payment Method</legend>
+                                            <input type="radio" name="paymethod" value="vorOrt" id="Zahlungsmethode" onclick = pay(0) checked>
+                                            <label>Pay On Site</label>
+                                            <input type="radio" name="paymethod" value="Kreditkarte" onclick = pay(1)>
+                                            <label>Credit Card</label>
+                                            <input type="radio" name="paymethod" value="PayPal" onclick = pay(2)>
+                                            <label>PayPal</label>
+                                            <br>
+                                            <div id="radioAus"></div>
+                                        </fieldset>
+                                        <br>
+                                    </div>
                                 </div>
-                              </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <input type="checkbox" id="saveCeck" onclick = otherAdr() checked>
+                                        <label>Save changes</label>
+                                    </div>
+                                    <div class="col-14"></div>
+                                </div>
+        
+                                <div class="row">
+                                    <div class="col-14">&nbsp;</div>
+                                    <div class="col-2">
+                                        <button class="button" type="button" id="weiter" onclick = ausgabe()>Next</button>
+                                    </div>
+                                </div>
+                            </div>
                         </form>                  
                     </details>
                   </div>
@@ -335,7 +348,7 @@
                               <div class="row">
                                 <div class="col-14">&nbsp;</div>
                                 <div class="col-2">
-                                    <button class="button" type="button" onclick=book()>Book</button>
+                                    <button class="button" type="button" id="buchen" onclick=book()>Book</button>
                                 </div>
                               </div>
                               

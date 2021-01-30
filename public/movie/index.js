@@ -36,6 +36,13 @@ let screeningsFriday = [];
 let screeningsSaturday = [];
 let screeningsSunday = [];
 
+document.addEventListener('click', e => {
+    if (e.target.matches("input[name='time-slot']")) {
+        changeStateOfBookingButton();
+        return ;
+    }
+}); //end of eventhandler
+
 async function loadContent() {
     var id = location.search;
     id = id.replace("?id=", "");
@@ -247,8 +254,10 @@ function changeStateOfBookingButton() {
     var button = document.getElementById("book-button");
     var selectedButtons = document.querySelector('input[name="time-slot"]:checked');
     if(selectedButtons !== null) {
+        button.style.display = "flex";
         button.disabled = false;
     } else {
+        button.style.display = "flex";
         button.disabled = true;
     } //end of if-else
 } //end of changeStateOfBookingButton
@@ -292,5 +301,5 @@ async function analyzeRadioInput() {
         sessionStorage.setItem('informationOfBooking', information);
         var reference = "../booking/";
         window.location = reference;
-    } //end of if
+    }//end of if
 } //end of analyzeRadioInput
