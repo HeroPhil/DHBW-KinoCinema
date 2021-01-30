@@ -78,8 +78,10 @@ const updateSelectedSeatsCount = () => {
   count.innerText = selectedSeats.length;
   price.innerText = formatAsCurrency(sum);
   if(selectedSeats.length !== 0) {
-    button.hidden = false;
-  } //end of if
+    button.style.display = "flex";
+  } else {
+    button.style.display = "none";
+  }//end of if
 }; //end of lambda expression
 
 function formatAsCurrency(number) {
@@ -482,6 +484,7 @@ async function updateUserDetails() {
 /*__________________________________Ticket-Preview_____________________________________________________*/
 
 function addTicketsToWebsite() {
+  document.getElementById("tickets").innerHTML = "";
   if(selectedSeats.length > 0) {
     var date = new Date(screeningTime);
     var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
@@ -747,9 +750,9 @@ function printError(type, errorMessage) {
 } //end of printError
 
 async function loginWithGoogle() {
-  //document.getElementById("anmeldung").hidden = true;
+  document.getElementById("anmeldung").hidden = true;
   //document.getElementById("guestLogin").hidden = true;
-  //loadWhileLogin();
+  document.getElementById("loadWhile").hidden = false;
   const providerGoogle = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(providerGoogle).then(result => {
       var user = result.user;
@@ -761,28 +764,6 @@ async function loginWithGoogle() {
       return ;
   }).catch((error) => {console.error(error)});
 } //end of loginWithGoogle
-
-/*function loadWhileLogin() {
-  var animation = document.getElementById("loadWhileLogin");
-  var carrots = document.createElement("div");
-  carrots.classList.add("loadingio-spinner-pulse-utrg899k0nk");
-    var innerField = document.createElement("div");
-    innerField.classList.add("ldio-t32oece7z3");
-      var carrot1 = document.createElement("img");
-      carrot1.classList.add("carrotAnimation");
-      carrot1.setAttribute("src", "../icons/png/karotte.png");
-      innerField.appendChild(carrot1);
-      var carrot2 = document.createElement("img");
-      carrot2.classList.add("carrotAnimation");
-      carrot2.setAttribute("src", "../icons/png/karotte.png");
-      innerField.appendChild(carrot2);
-      var carrot3 = document.createElement("img");
-      carrot3.classList.add("carrotAnimation");
-      carrot3.setAttribute("src", "../icons/png/karotte.png");
-      innerField.appendChild(carrot3);
-    carrots.appendChild(innerField);
-  animation.appendChild(carrots)
-}*/
 
 async function loginWithUserCredentials() {
   var email = document.querySelector("#username").value;
@@ -797,14 +778,12 @@ async function loginWithUserCredentials() {
   });   
 } //end of loginWithUserCredentials
 
-async function loginAsGuest() {
+/*async function loginAsGuest() {
   document.getElementById("anmeldung").hidden = true;
-  document.getElementById("guestLogin").hidden = true;
-  document.getElementById("Information1").hidden = false;
-  document.getElementById("Information2").hidden = false;
-  document.getElementById("Information3").hidden = false;
+  //document.getElementById("guestLogin").hidden = true;
+  document.getElementById("hiddenInfo").hidden = false;
   loggedIn = true;
-}
+}*/
 
 
 async function loadCurrentUserData() {
@@ -821,14 +800,14 @@ async function loadCurrentUserData() {
     document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
     document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
     document.getElementById("anmeldung").hidden = true;
-    document.getElementById("guestLogin").hidden = true;
-    document.getElementById("loadWhileLogin").hidden = true;
-    document.getElementById("Information1").hidden = false;
-    document.getElementById("Information2").hidden = false;
-    document.getElementById("Information3").hidden = false;
+    //document.getElementById("guestLogin").hidden = true;
+    document.getElementById("loadWhile").hidden = true;
+    document.getElementById("hiddenInfo").hidden = false;
+    document.getElementById("weiter").style.display = "flex";
+    document.getElementById("buchen").style.display = "flex";
     loggedIn = true;
   }else{
     document.getElementById("anmeldung").hidden = false;
-    document.getElementById("guestLogin").hidden = false;
+    //document.getElementById("guestLogin").hidden = false;
   }
 }

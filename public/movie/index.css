@@ -74,7 +74,7 @@
     border: 0.2rem solid var(--accent);
     border-radius: 1rem;
     padding: 10px 50px;
-    display: flex;
+    display: none;
     align-items: center;
     cursor: pointer;
     background-color: var(--layer1);
