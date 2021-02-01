@@ -18,7 +18,8 @@ const allowedKeys = [
     "description",
     "duration",
     "name",
-    "priority"
+    "priority",
+    "cover"
 ];
 
 
@@ -67,7 +68,7 @@ export async function getMoviesByCategory(category: string, amount: number) {
     return movies;
 }
 
-export async function addMovie(category: string, description: string, duration: number, name: string, priority: number) {
+export async function addMovie(category: string[], description: string, duration: number, name: string, priority: number) {
     const data = {
         category: category,
         description: description,
