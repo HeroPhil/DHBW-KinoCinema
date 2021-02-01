@@ -18,7 +18,8 @@ const allowedKeys = [
     "description",
     "duration",
     "name",
-    "priority"
+    "priority",
+    "cover"
 ];
 
 
