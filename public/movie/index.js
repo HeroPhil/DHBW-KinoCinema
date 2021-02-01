@@ -295,6 +295,7 @@ async function addScreeningToList(dataArray, row) {
 } //end of addScreeningToList
 
 async function analyzeRadioInput() {
+    try {
     var screening = document.querySelector('input[name="time-slot"]:checked');
     if(screening !== null) {
         var information = sessionStorage.getItem(screening.value);
@@ -302,4 +303,7 @@ async function analyzeRadioInput() {
         var reference = "../booking/";
         window.location = reference;
     }//end of if
+    } catch(err) {
+        console.log(err);
+    } //end of try-catch
 } //end of analyzeRadioInput

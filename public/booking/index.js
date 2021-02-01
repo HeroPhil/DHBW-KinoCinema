@@ -133,17 +133,21 @@ container.addEventListener('click', e => {
 }); //end of eventhandler
 
 async function loadContent() {
-  var information = sessionStorage.getItem('informationOfBooking');
-  var button = document.getElementById("NextButtonSeatSelection");
-  button.hidden = true;
-  information = JSON.parse(information);
-  console.log(information);
-  screeningReference = information.screeningId;
-  screeningTime = information.time;
-  var screeningDate = new Date(screeningTime);
-  screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + "<br>" + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
-  var movieTitle = sessionStorage.getItem('movieTitle');
-  movieName = sessionStorage.getItem('movieTitle');
+  try {
+    var information = sessionStorage.getItem('informationOfBooking');
+    var button = document.getElementById("NextButtonSeatSelection");
+    button.hidden = true;
+    information = JSON.parse(information);
+    console.log(information);
+    screeningReference = information.screeningId;
+    screeningTime = information.time;
+    var screeningDate = new Date(screeningTime);
+    screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + "<br>" + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
+    var movieTitle = sessionStorage.getItem('movieTitle');
+    movieName = sessionStorage.getItem('movieTitle');
+  } catch(err) {
+    console.log(err);
+  } //end of try-catch
   var titlePlaceHolder = document.getElementById("movie-title");
   titlePlaceHolder.innerHTML = movieTitle + "<br>" + screeningDate;
   var hallInfo = information.hall.data;
@@ -632,20 +636,24 @@ function loadTicketInfoIntoLocalStorage() {
     var billInfoAsString = JSON.stringify(billInfo);
     console.log(bookedTickets);
     var errorExists = bookedTickets[0].data.error;
-    if(typeof errorExists === 'undefined') {
-      sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
-      sessionStorage.setItem("BillInfo", billInfoAsString);
-      var arrayAsString = JSON.stringify(bookedTickets);
-      sessionStorage.setItem("Tickets", arrayAsString);
-      return true;
-    } else {
-      if((errorExists.message !== null) && (errorExists.message.localeCompare("You are not logged in!") === 0)) {
-        printError(1, "Not logged in");
-      } else if((errorExists.message !== null) && (errorExists.message.localeCompare("Ticket was already booked!") === 0)) {
-        printError(2, "Seat is blocked");
-      } //end of if
-      return false;
-    }//end of if
+    try {
+      if(typeof errorExists === 'undefined') {
+        sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
+        sessionStorage.setItem("BillInfo", billInfoAsString);
+        var arrayAsString = JSON.stringify(bookedTickets);
+        sessionStorage.setItem("Tickets", arrayAsString);
+        return true;
+      } else {
+        if((errorExists.message !== null) && (errorExists.message.localeCompare("You are not logged in!") === 0)) {
+          printError(1, "Not logged in");
+        } else if((errorExists.message !== null) && (errorExists.message.localeCompare("Ticket was already booked!") === 0)) {
+          printError(2, "Seat is blocked");
+        } //end of if
+        return false;
+      }//end of if
+    } catch(err) {
+      console.log(err);
+    } //end of try-catch
 } //end of loadTicketInfoIntoLocalStorage
 
 async function book() {
@@ -715,6 +723,7 @@ function printError(type, errorMessage) {
       errorPlaceholder.appendChild(errorParagraph);
       var tickets = document.getElementById("tickets");
       tickets.innerHTML = "";
+      alert('You are not looged in, please log in or select guest loggin!');
       break;
     case 2:
       document.getElementById("ZahlungDetails").open = false;
@@ -735,6 +744,7 @@ function printError(type, errorMessage) {
           errorPlaceholder.appendChild(paragraphSaver);
         } //end of for
       } //end of if
+      alert('One of your selected seats was booked by another costumer please select a new one!')
       break;
     case 3:
       errorPlaceholder = document.getElementById("ErrorContainerSeats");
@@ -742,6 +752,7 @@ function printError(type, errorMessage) {
       errorText = document.createTextNode("FEHLER: " + errorMessage);
       errorParagraph.appendChild(errorText);
       errorPlaceholder.appendChild(errorParagraph);
+      alert('You forgot to select a seat, please select a seat!')
       break;
     default:
       //Nothing todo
