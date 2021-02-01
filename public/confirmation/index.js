@@ -124,7 +124,7 @@ function createTicket(title, hall, row, seat, date, value) {
     ticket.appendChild(ticketInformation);
     tickets.appendChild(ticket);
     createQrCode(ticket, value);
-    html2canvas(ticket).then(function(canvas) {
+    html2canvas(ticket).then(canvas => {
       var imgBase64Coded = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
       var imgPNG = canvas.toDataURL("image/png");
       var imgJPG = canvas.toDataURL("image/jpeg");

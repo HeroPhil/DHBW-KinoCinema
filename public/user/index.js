@@ -54,6 +54,7 @@ async function loadUserDetails() {
         if(userInformation[0].photoURL === null){            
             await storage.refFromURL("gs://dhbw-kk-kino.appspot.com/live/users/default.png").getDownloadURL().then( url => {
                 image.src = url;
+                return;
             }).catch((error) => {console.error(error)});
         }else{
             URL = userInformation[0].photoURL;
