@@ -371,3 +371,14 @@ async function stressTestCreateTicket() {
         //}
     }
 } 
+
+async function uploadImageFromURL() {
+
+    let coverURL = document.getElementById('eingabeID').value
+    let movieID = Math.random(1234567); // should be real movieID
+
+    await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
+    
+    console.log("gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/"+movieID); // link to added to database.
+
+}

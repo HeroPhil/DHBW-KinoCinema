@@ -28,10 +28,15 @@ document.addEventListener("DOMContentLoaded", event => {
 
 
 async function testForCurrentUser() {
+    document.getElementById("loading").hidden = false;
+    document.getElementById("main").hidden = true;
+
     await new Promise(resolve => setTimeout(resolve, 2500));
     if(firebase.auth().currentUser !== null){
         window.location = "../user";
+        return ;
     }
+    endLoading();
 }
 
 
@@ -45,6 +50,7 @@ async function loginWithGoogle() {
         testForCurrentUser();
         return;
     }).catch((error) => {console.error(error)});
+    firebase.auth().currentUser.get
 } //end of loginWithGoogle
 
 async function loginWithUserCredentials() {

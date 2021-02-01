@@ -13,6 +13,16 @@ export class Movie {
     }
 }
 
+const allowedKeys = [
+    "category",
+    "description",
+    "duration",
+    "name",
+    "priority",
+    "cover"
+];
+
+
 export async function getAllMovies() {
     const movies: Movie[] = [];
 
@@ -58,10 +68,9 @@ export async function getMoviesByCategory(category: string, amount: number) {
     return movies;
 }
 
-export async function addMovie(category: string, cover: string, description: string, duration: number, name: string, priority: number) {
+export async function addMovie(category: string[], description: string, duration: number, name: string, priority: number) {
     const data = {
         category: category,
-        cover: cover,
         description: description,
         duration: duration,
         name: name,
@@ -69,13 +78,16 @@ export async function addMovie(category: string, cover: string, description: str
     };
 
     const movieRef = await basics.addDocToCollectionByID(moviesCollectionPath, data);
-    const movie = await basics.getDocumentByRef(movieRef);
 
-    return new Movie(movie.id, movie.data()); 
+    const gsCoverLink = "gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/" + movieRef.id;
+
+    return await updateMovie(movieRef.id, {cover: gsCoverLink});
 }
 
-export async function updateMovie(id: string, newData: {}) {
+export async function updateMovie(id: string, changes: { [x: string]: any}) {
     const error: {message: string} = { message: "" };
+    
+    //check if movie is passed as parameter (defaulted to undefined) and check if movie exists in database
     if(id !== undefined) {
         const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + id);
         const movieDoc = await basics.getDocumentByRef(movieRef);
@@ -84,8 +96,22 @@ export async function updateMovie(id: string, newData: {}) {
             error.message = "This movie does not exist!";
             return {error};
         }
+    } else {
+        console.log("No movie was passed to the function!");
+        error.message = "No movie was passed to the function!";
+        return {error};
     }
+
+    //add only valid changes to the object
+    const newData: any = {};
+    allowedKeys.forEach((key) => {
+        if (key in changes) {
+            newData[key] = changes[key];
+        }
+    });
+    
+    //write valid changes to database
     const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, newData);
     console.log(movie);
-    return new Movie(id, newData); 
+    return await getMovieByID(id);
 }

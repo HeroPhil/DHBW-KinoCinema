@@ -1,10 +1,12 @@
-import { httpsOnCall, auth} from '../functions';
+import { httpsOnCall, auth, func} from '../functions';
 
 // import * as basics from './basics';
 import * as movies from './movies';
 import * as screenings from './screenings';
 import * as users from './users';
 import * as tickets from './tickets';
+import * as halls from './hall';
+import * as rowType from './rowType';
 
 // export const getDocumentByID = httpsOnCall((data, context) => {
 //     return databaseBasics.getDocumentByID(data.id);
@@ -63,11 +65,11 @@ export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
 });
 
 export const addMovie = httpsOnCall((data, context) => {
-    return movies.addMovie(data.category, data.cover, data.description, parseInt(data.duration), data.name, parseInt(data.priority));
+    return movies.addMovie(data.category, data.description, parseInt(data.duration), data.name, parseInt(data.priority));
 });
 
 export const updateMovie = httpsOnCall((data, context) => {
-    return movies.updateMovie(data.id, data.newData);
+    return movies.updateMovie(data.id || undefined, data.newData);
 });
 
 export const addScreening = httpsOnCall((data, context) => {
@@ -75,7 +77,7 @@ export const addScreening = httpsOnCall((data, context) => {
 });
 
 export const updateScreening = httpsOnCall((data, context) => {
-    return screenings.updateScreening(data.id, data.newData);
+    return screenings.updateScreening(data.id || undefined, data.newData);
 });
 
 export const getInformationOfCurrentUser = httpsOnCall((data, context) => {
@@ -84,4 +86,36 @@ export const getInformationOfCurrentUser = httpsOnCall((data, context) => {
 
 export const updateInformationOfCurrentUser = httpsOnCall((data, context) => {
     return users.updateInformationOfCurrentUser(context, data.newData);
+});
+
+export const promoteUserToAdminByID = httpsOnCall((data, context) => {
+    return users.promoteUserToAdminByID(context, data.id || undefined);
+});
+
+export const degradeAdminToUserByID = httpsOnCall((data, context) => {
+    return users.degradeAdminToUserByID(context, data.id || undefined);
+});
+
+export const checkIfCurrentUserIsAdmin = httpsOnCall((data, context) => {
+    return users.checkIfCurrentUserIsAdmin(context);
+});
+
+export const updateLabelToAdminOnAdminAddedOverDatabase = func().firestore.document('live/users/admins/{docId}').onCreate((snap, context) => {
+    return users.updateLabelToAdminOnAdminAddedOverDatabase(snap, context);
+});
+
+export const updateLabelToUserOnAdminRemovedOverDatabase = func().firestore.document('live/users/admins/{docId}').onDelete((snap, context) => {
+    return users.updateLabelToUserOnAdminRemovedOverDatabase(snap, context);
+});
+
+export const getAllHalls = httpsOnCall((data, context) => {
+    return halls.getAllHalls(parseInt(data.sublevel) ??  0);
+});
+
+export const addHall = httpsOnCall((data, context) => {
+    return halls.addHall(data.name ?? "new Hall", data.rows, data.width ?? 1);
+})
+
+export const getAllRowTypes = httpsOnCall((data, context) => {
+    return rowType.getAllRowTypes();
 });

@@ -26,15 +26,14 @@
         <script defer src="/__/firebase/8.0.2/firebase-analytics.js"></script>
         <script defer src="/__/firebase/8.0.2/firebase-remote-config.js"></script>
         <script defer src="/__/firebase/8.0.2/firebase-performance.js"></script>
-        <!-- 
-        initialize the SDK after all desired features are loaded, set useEmulator to false
-        to avoid connecting the SDK to running emulators.
-        -->
         <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
         <script src="./QRcode/qrcode.js"></script>
+        <script src="./HTML2CANVAS/html2canvas.min.js"></script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src = "../global.js"></script>
         
         
     </head>
@@ -43,32 +42,37 @@
 
 
 
-    <body class="dark">
+    <body class="dark" onload="loadContent()">
 
         <div class="navbar"></div>
 
         <main>
             <div id="headerX"></div>
 
-            <div id="danke">♫ Vielen Dank für die Blumen, vielen Dank, wie lieb von dir ♫<br>
-                ♫ Manchmal spielt das Leben mit dir gern Katz und Maus ♫<br>
-                ♫ Immer wird's das geben, einer der trickst dich aus ♫<br>
-                ♫ Vielen Dank für die Blumen, vielen Dank, wie lieb von dir ♫
-                <br>
-                <br>
-                Beehren Sie uns bald wieder
-                <button class="button" type="button" onclick = home()>Zurück zum Shop</button>
+            <div id="loading">
+                <div class="loadingio-spinner-pulse-utrg899k0nk">
+                    <div class="ldio-t32oece7z3">
+                        <img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png">
+                    </div>
+                </div> 
             </div>
-            <button class="button" type="button" onclick = test()>Load QR</button>
-            <div id="tickets"></div>
-            <button class="button" type="button">Print/Save</button>
-            
-            
 
+            <div id="main" hidden>
+                
+                <div id="danke">♫ Vielen Dank für die Blumen, vielen Dank, wie lieb von dir ♫<br>
+                    ♫ Manchmal spielt das Leben mit dir gern Katz und Maus ♫<br>
+                    ♫ Immer wird's das geben, einer der trickst dich aus ♫<br>
+                    ♫ Vielen Dank für die Blumen, vielen Dank, wie lieb von dir ♫
+                    <br>
+                    <br>
+                    Beehren Sie uns bald wieder
+                    <button class="button" type="button" onclick ="home()">Back to Shop</button>
+                </div>
+                <div id="tickets"></div>
+                <button class="button" type="button" onclick ="printAndSaveTickets()">Print/Save</button>
+            
+            </div>
 
-            
-            
-            
 
         </main>
 

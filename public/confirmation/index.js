@@ -26,22 +26,56 @@ document.addEventListener("DOMContentLoaded", event => {
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 //loadQRCodes();
+let numberOfTickets;
+let ticketsInfo = [];
+let qrcodesAsImg = [];
+let billInfo;
+let writtenPixels;
+const spaceBetweenText = 15;
+
+function loadContent() {
+  try {
+  numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
+  billInfo = JSON.parse(sessionStorage.getItem("BillInfo"));
+  ticketsInfo = JSON.parse(sessionStorage.getItem("Tickets"));
+  console.log(billInfo);
+  console.log(ticketsInfo);
+  } catch(err) {
+    console.log(err);
+  } //end of try-catch
+  loadTicketsWithQRCode();
+  endLoading();
+} //end of loadContent
 
 function home() {
   window.location.href = "../index/";
 }
 
 function loadQRCodes() {
-  //var arr = ['test1', 'http://jindo.dev.naver.com/collie', 'placeholderText111223445356365'];
-  var arr = ['placeholderText111223445356365'];
-  arr.forEach(value => {
-    createQrCode(value);
-  });
-}
+  if(numberOfTickets > 0) {
+    for(var i = 0; i < numberOfTickets; i++) {
+      var actualTicket = ticketsInfo[i].data.data;
+      if(actualTicket !== null) {
+        var ticketid = actualTicket.id;
+        createQrCode(ticketid);
+      } //end of if
+    } //end of for
+  } //end of if
+} //end of loadQRCodes
 
-function test() {
-  createTicket("Geiler Film", "7", "4", "8", "22.10.2021", "www.google.de")
-}
+function loadTicketsWithQRCode() {
+  for(var i = 0; i < ticketsInfo.length; i++) {
+    var actualTicket = ticketsInfo[i].data;
+    if(actualTicket !== null) {
+      var movieTitle = actualTicket.data.screening.data.movie.data.name;
+      var ticketId = actualTicket.id;
+      var hallId = actualTicket.data.screening.data.hall.data.name;
+      var dateOfScreening = new Date(parseInt(actualTicket.data.screening.data.startTime));
+      var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear();
+      createTicket(movieTitle, hallId, actualTicket.data.row, actualTicket.data.seat, date, ticketId);
+    } //end of if
+  } //end of for
+} //end of loadTicketsWithQRCode
 
 function createTicket(title, hall, row, seat, date, value) {
     var tickets = document.getElementById("tickets");
@@ -90,7 +124,19 @@ function createTicket(title, hall, row, seat, date, value) {
     ticket.appendChild(ticketInformation);
     tickets.appendChild(ticket);
     createQrCode(ticket, value);
-}
+    html2canvas(ticket).then(function(canvas) {
+      var imgBase64Coded = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+      var imgPNG = canvas.toDataURL("image/png");
+      var imgJPG = canvas.toDataURL("image/jpeg");
+      qrcodesAsImg.push(imgPNG);
+      console.log(imgBase64Coded);
+      console.log(imgPNG);
+      console.log(imgJPG);
+      return;
+    }).catch((error) => {
+      console.log(error);
+    });
+} //end of createTicket
 
 function createQrCode(element, textValue) {
   var qrContainer = element.appendChild(document.createElement("div"));
@@ -104,4 +150,72 @@ function createQrCode(element, textValue) {
     correctLevel : QRCode.CorrectLevel.H
   });
   qrcode.makeCode(textValue);
-}
+} //end of createQrCode
+
+async function printAndSaveTickets() {
+  var downloadablePDF = createPDF();
+  downloadablePDF.save("kinocinema_order_list");
+} //end of printAndSaveTickets
+
+function initializePDF(pdfDocument) {
+  pdfDocument-setFont("arial");
+  writtenPixels = 0;
+  pdfDocument.setFontSize(12);
+  pdfDocument.setDrawColor(120, 120, 82);
+  pdfDocument.setLineWidth(2);
+} //end of initializePDF
+
+function createPDF() {
+  var pdf = new jsPDF("p", "mm", "a4");
+  addLine(pdf, 9.5, 9.5);
+  addTicketsHeadline(pdf, "Tickets");
+  addLine(pdf, 26, 26);
+  addTicketsToPDF(pdf);
+  return pdf;
+} //end of createPDF
+
+function addMayorHeadline(pdfDocument, contentOfHeadline) {
+  pdfDocument.setFontSize(20);
+  pdfDocument.text(contentOfHeadline, 90, 20);
+  writtenPixels = writtenPixels + 50 + spaceBetweenText;
+  pdfDocument.setFontSize(12);
+} //end of addHeadline
+
+function addTicketsHeadline(pdfDocument, contentOfHeadline) {
+  pdfDocument.setFontSize(20);
+  pdfDocument.text(contentOfHeadline, 95, 20);
+  writtenPixels = writtenPixels + 50 + spaceBetweenText;
+  pdfDocument.setFontSize(12);
+} //end of addHeadline
+
+function addLine(pdfDocument, positionX, positionY) {
+  pdfDocument.line(10, positionX, 200, positionY);
+} //end of addLine
+
+function addTicketsToPDF(pdfDocument) {
+  var x = 25;
+  var y = 40;
+  var width = 160;
+  var height = 55;
+  var firstPageFinished = false;
+  var pictureAddedCounter = 0;
+  var pictureAddedBySideCounter = 0;
+  for(var i = 0; i < qrcodesAsImg.length; i++) {
+    if(!firstPageFinished && pictureAddedBySideCounter === 3) {
+      firstPageFinished = true;
+      pictureAddedBySideCounter = 0;
+      pdfDocument.addPage();
+      y = 10;
+    } //end of if
+    if(firstPageFinished && pictureAddedBySideCounter === 4) {
+      pdfDocument.addPage();
+      pictureAddedBySideCounter = 0;
+      y = 10;
+    } //end of if
+    var img = qrcodesAsImg[i];
+    pdfDocument.addImage(img, "png", x, y, width, height);
+    y = y + height + 10;
+    pictureAddedBySideCounter++;
+    pictureAddedCounter++;
+  } //end of for
+} //end of addImageToPDF

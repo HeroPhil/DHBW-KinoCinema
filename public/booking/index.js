@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", event => {
 
 let seatCounter = 0;
 let seatsMap = [];
+let selectedSeatCount = 0;
 let selectedSeats = [];
 let blockedSeats = [];
 let seatsWithBookingConflict = [];
@@ -39,6 +40,10 @@ let movieName;
 let movieCoverReference;
 let normalTicketPrice = 0;
 let bookedTickets = [];
+let corruptedSeats = [];
+let loggedIn = false;
+let infoCurrentUser;
+let userDataMissing = true;
 
 const container = document.querySelector('.container');
 const seats = document.querySelectorAll('.seat-row .seat:not(.occupied)');
@@ -62,6 +67,7 @@ populateUI();
 
 
 const updateSelectedSeatsCount = () => {
+  var button = document.getElementById("NextButtonSeatSelection");
   const selectedSeats = document.querySelectorAll('.seat-row .selected');
   var sum = 0;
   for(var i = 0; i < selectedSeats.length; i++) {
@@ -71,6 +77,11 @@ const updateSelectedSeatsCount = () => {
   sum = sum / 100;
   count.innerText = selectedSeats.length;
   price.innerText = formatAsCurrency(sum);
+  if(selectedSeats.length !== 0) {
+    button.style.display = "flex";
+  } else {
+    button.style.display = "none";
+  }//end of if
 }; //end of lambda expression
 
 function formatAsCurrency(number) {
@@ -99,6 +110,7 @@ container.addEventListener('click', e => {
     var seat = e.target.getAttribute("id");
     if(e.target.classList.contains('selected')) {
       selectedSeats.push(seatsMap[seat]);
+      selectedSeatCount++;
     } else {
       if(e.target.classList.contains('lodge')) {
         e.target.innerHTML = "";
@@ -114,21 +126,28 @@ container.addEventListener('click', e => {
           } //end of if
         } //end of if
       } //end of for
+      selectedSeatCount--;
     } //end of if-else
     updateSelectedSeatsCount();
   } //end of if-else
 }); //end of eventhandler
 
 async function loadContent() {
-  var information = sessionStorage.getItem('informationOfBooking');
-  information = JSON.parse(information);
-  console.log(information);
-  screeningReference = information.screeningId;
-  screeningTime = information.time;
-  var screeningDate = new Date(screeningTime);
-  screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + "<br>" + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
-  var movieTitle = sessionStorage.getItem('movieTitle');
-  movieName = sessionStorage.getItem('movieTitle');
+  try {
+    var information = sessionStorage.getItem('informationOfBooking');
+    var button = document.getElementById("NextButtonSeatSelection");
+    button.hidden = true;
+    information = JSON.parse(information);
+    console.log(information);
+    screeningReference = information.screeningId;
+    screeningTime = information.time;
+    var screeningDate = new Date(screeningTime);
+    screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + "<br>" + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
+    var movieTitle = sessionStorage.getItem('movieTitle');
+    movieName = sessionStorage.getItem('movieTitle');
+  } catch(err) {
+    console.log(err);
+  } //end of try-catch
   var titlePlaceHolder = document.getElementById("movie-title");
   titlePlaceHolder.innerHTML = movieTitle + "<br>" + screeningDate;
   var hallInfo = information.hall.data;
@@ -181,16 +200,21 @@ async function seatGeneration(hallInfo) {
         seat.classList.add(seatType);
         
         if(seat.classList.contains('withspecialneeds')) {
+          document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
           var design = document.createElement("img");
           design.setAttribute("id", "seatDesign");
           design.setAttribute("src", "../icons/png/special.png");
           seat.appendChild(design);
         }
         if(seat.classList.contains('lodge')) {
+          document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
           var lodgDesin = document.createElement("img");
           lodgDesin.setAttribute("id", "seatDesign");
           lodgDesin.setAttribute("src", "../icons/png/krone1.png");
           seat.appendChild(lodgDesin);
+        }
+        if(seat.classList.contains('normal')) {
+          document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
         }
         
         row.appendChild(seat);
@@ -233,10 +257,14 @@ async function blockAlreadyBookedSeats(seatInfo) {
  */
 
 function jumpToZahlung() {
-   document.getElementById("ZahlungDetails").open = true;
-   document.getElementById("selectionDetails").open = false;
-   document.getElementById("ZahlungDetails").hidden = false;
-   location.href = '#Zahlung';
+  if(selectedSeatCount !== 0) {  
+  document.getElementById("ZahlungDetails").open = true;
+  document.getElementById("selectionDetails").open = false;
+  document.getElementById("ZahlungDetails").hidden = false;
+  location.href = '#Zahlung';
+  } else {
+    printError(3, "Please select a seat!")
+  } //end of if
 }
 
 //Checkbox Rechnungsadresse
@@ -265,43 +293,37 @@ function otherAdr() {
     vorname.setAttribute("id", "Vorname2");
     vorname.setAttribute("type", "text");
     vorname.classList.add("input");
-    vorname.setAttribute("placeholder", "Vorname");
+    vorname.setAttribute("placeholder", "First name");
     vorname.required = true;
     var name = document.createElement("input");
     name.setAttribute("id", "Nachname2");
     name.setAttribute("type", "text");
     name.classList.add("input");
-    name.setAttribute("placeholder", "Nachname");
+    name.setAttribute("placeholder", "Last Name");
     name.required = true;
     var postleit = document.createElement("input");
     postleit.setAttribute("id", "Postleitzahl2");
     postleit.setAttribute("type", "number");
     postleit.classList.add("input");
-    postleit.setAttribute("placeholder", "Postleitzahl");
+    postleit.setAttribute("placeholder", "Post code");
     postleit.required = true;
     var stadt = document.createElement("input");
     stadt.setAttribute("id", "Stadt2");
     stadt.setAttribute("type", "text");
     stadt.classList.add("input");
-    stadt.setAttribute("placeholder", "Stadt");
+    stadt.setAttribute("placeholder", "City");
     stadt.required = true;
     var straße = document.createElement("input");
     straße.setAttribute("id", "Straße2");
     straße.setAttribute("type", "text");
     straße.classList.add("input");
-    straße.setAttribute("placeholder", "Straße");
+    straße.setAttribute("placeholder", "Street + House Number");
     straße.required = true;
-    var nummer = document.createElement("input");
-    nummer.setAttribute("id", "Hausnummer2");
-    nummer.setAttribute("type", "number");
-    nummer.classList.add("input");
-    nummer.setAttribute("placeholder", "Hausnummer");
-    nummer.required = true;
     var zusatz = document.createElement("input");
     zusatz.setAttribute("id", "Adress-Zusatz2");
     zusatz.setAttribute("type", "text");
     zusatz.classList.add("input");
-    zusatz.setAttribute("placeholder", "Adress-Zusatz");
+    zusatz.setAttribute("placeholder", "Addition");
     zusatz.required = true;
 
 
@@ -312,14 +334,12 @@ function otherAdr() {
     element3.appendChild(postleit);
     element4.appendChild(stadt);
     element5.appendChild(straße);
-    element6.appendChild(nummer);
     element7.appendChild(zusatz);
     container.appendChild(element1);
     container.appendChild(element2);
     container.appendChild(element3);
     container.appendChild(element4);
     container.appendChild(element5);
-    container.appendChild(element6);
     container.appendChild(element7);
   }
 }
@@ -346,18 +366,18 @@ function pay(id) {
       kartennummer.setAttribute("id", "Kartennummer");
       kartennummer.setAttribute("type", "number");
       kartennummer.classList.add("input");
-      kartennummer.setAttribute("placeholder", "Kartennummer");
+      kartennummer.setAttribute("placeholder", "Card Number");
       kartennummer.required = true;
       var datum = document.createElement("input");
       datum.setAttribute("id", "Ablaufdatum");
       datum.setAttribute("type", "month");
       datum.classList.add("input");
-      datum.setAttribute("placeholder", "Ablaufdatum");
+      datum.setAttribute("placeholder", "Expiry Date");
       datum.required = true;
       var inhaber = document.createElement("input");
       inhaber.setAttribute("id", "Karteninhaber");
       inhaber.classList.add("input");
-      inhaber.setAttribute("placeholder", "Karteninhaber");
+      inhaber.setAttribute("placeholder", "Cardholder");
       inhaber.required = true;
       var num = document.createElement("input");
       num.setAttribute("id", "number");
@@ -377,22 +397,6 @@ function pay(id) {
       break;
     case 2:
       ausgabe.innerHTML = "";
-      var button1 = document.createElement("button");
-      button1.classList.add("button");
-      button1.setAttribute("id","GooglePay");
-      button1.innerHTML = "Google Pay";
-      ausgabe.appendChild(button1);
-      break;
-    case 3:
-      ausgabe.innerHTML = "";
-      var button2 = document.createElement("button");
-      button2.classList.add("button");
-      button2.setAttribute("id","ApplePay");
-      button2.innerHTML = "Apple Pay";
-      ausgabe.appendChild(button2);
-      break;
-    case 4:
-      ausgabe.innerHTML = "";
       var button3 = document.createElement("button");
       button3.classList.add("button");
       button3.setAttribute("id","PayPal");
@@ -403,13 +407,13 @@ function pay(id) {
 }
  
 //weiter Button click event zur Zusammenfassung
-function ausgabe() {
+async function ausgabe() {
   document.getElementById("ausVorname").innerHTML = document.getElementById("Vorname").value;
   document.getElementById("ausNachname").innerHTML = document.getElementById("Nachname").value;
   document.getElementById("ausEmail").innerHTML = document.getElementById("Email").value;
   document.getElementById("ausRufnummer").innerHTML = document.getElementById("Rufnummer").value;
   document.getElementById("ausPLZ").innerHTML = document.getElementById("Postleitzahl").value + " " + document.getElementById("Stadt").value;
-  document.getElementById("ausStraße").innerHTML = document.getElementById("Straße").value + " " + document.getElementById("Hausnummer").value;
+  document.getElementById("ausStraße").innerHTML = document.getElementById("Straße").value;
 
   var payment = document.getElementById("Zahlungsmethode");
   var ausPayment = document.getElementById("ausKartennummer");
@@ -419,18 +423,72 @@ function ausgabe() {
     document.getElementById("ausKartennummer").innerHTML = "<td>Kartennummer:</td><td>" + document.getElementById("Kartennummer").value + "</td>";
   }
   
+  if(document.getElementById("saveCeck").checked === true) {
+    updateUserDetails();
+  }
 
-  document.getElementById("zusammenfassungDetails").open = true;
-  document.getElementById("ZahlungDetails").open = false;
-  document.getElementById("zusammenfassungDetails").hidden = false;
-  location.href = '#Zusammenfassung';
-  addTicketsToWebsite();
+  if(firebase.auth().currentUser !== null) {
+    var userInfo = await functions.httpsCallable('database-getInformationOfCurrentUser')({});
+    console.log("User-Information:");
+    console.log(userInfo);
+    console.log(userDataMissing);
+    if((!userDataMissing) || (userInfo.data.data !== null)) {
+      addTicketsToWebsite();
+      loggedIn = true;
+      document.getElementById("zusammenfassungDetails").open = true;
+      document.getElementById("ZahlungDetails").open = false;
+      document.getElementById("zusammenfassungDetails").hidden = false;
+      location.href = '#Zusammenfassung';
+    } else {
+      document.getElementById("anmeldung").hidden = true;
+      document.getElementById("guestLogin").hidden = true;
+      document.getElementById("Information1").hidden = false;
+      document.getElementById("Information2").hidden = false;
+      document.getElementById("Information3").hidden = false;
+      userDataMissing = false;
+    } //end of if-else
+  } //end of if
+} //end of ausgabe
+
+async function updateUserDetails() {
+  const pVorname = document.getElementById("Vorname").value;
+  const pNachname = document.getElementById("Nachname").value;
+  const pRufnummer = document.getElementById("Rufnummer").value;
+  const pPostleitzahl = document.getElementById("Postleitzahl").value;
+  const pStadt = document.getElementById("Stadt").value;
+  const pStraße = document.getElementById("Straße").value;
+  const pZusatz = document.getElementById("Zusatz").value;
+
+  const param = {
+      newData: {
+          firstName: pVorname,
+          lastName: pNachname,
+          phone: pRufnummer,
+          zipCode: pPostleitzahl,
+          city: pStadt,
+          primaryAddress: pStraße,
+          secondaryAddress: pZusatz
+      }
+  }
+
+  const result = await functions.httpsCallable('database-updateInformationOfCurrentUser')(param);
+  const userData = result.data.data;
+
+  userData.firstName === pVorname ? "" : alert('We could not save the First Name, please try again!');
+  userData.lastName === pNachname ? "" : alert('We could not save the Surname, please try again!');
+  userData.phone === pRufnummer ? "" : alert('We could not save the Phone Number, please try again!');
+  userData.zipCode === pPostleitzahl ? "" : alert('We could not save the Post Code, please try again!');
+  userData.city === pStadt ? "" : alert('We could not save the City, please try again!');
+  userData.primaryAddress === pStraße ? "" : alert('We could not save the Street + House Number, please try again!');
+  userData.secondaryAddress === pZusatz ? "": alert('We could not save the Addition, please try again!');
+
 }
 
 
 /*__________________________________Ticket-Preview_____________________________________________________*/
 
 function addTicketsToWebsite() {
+  document.getElementById("tickets").innerHTML = "";
   if(selectedSeats.length > 0) {
     var date = new Date(screeningTime);
     var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
@@ -454,7 +512,7 @@ function createTicket(title, hall, row, seat, date) {
         var detailsTable = document.createElement("table");
           var rowHall = document.createElement("tr");
           var tHall = document.createElement("td");
-          tHall.innerHTML = "Saal";
+          tHall.innerHTML = "Hall";
           var tHallValue = document.createElement("td");
           tHallValue.innerHTML = hall;
           rowHall.appendChild(tHall);
@@ -462,7 +520,7 @@ function createTicket(title, hall, row, seat, date) {
         detailsTable.appendChild(rowHall);
         var rowRow = document.createElement("tr");
           var tRow = document.createElement("td");
-          tRow.innerHTML = "Reihe";
+          tRow.innerHTML = "Row";
           var tRowValue = document.createElement("td");
           tRowValue.innerHTML = row;
           rowRow.appendChild(tRow);
@@ -470,7 +528,7 @@ function createTicket(title, hall, row, seat, date) {
         detailsTable.appendChild(rowRow);
         var rowSeat = document.createElement("tr");
           var tSeat = document.createElement("td");
-          tSeat.innerHTML = "Sitz";
+          tSeat.innerHTML = "Seat";
           var tSeatValue = document.createElement("td");
           tSeatValue.innerHTML = seat;
           rowSeat.appendChild(tSeat);
@@ -478,7 +536,7 @@ function createTicket(title, hall, row, seat, date) {
         detailsTable.appendChild(rowSeat);
         var rowDate = document.createElement("tr");
           var tDate = document.createElement("td");
-          tDate.innerHTML = "Datum";
+          tDate.innerHTML = "Date";
           var tDateValue = document.createElement("td");
           tDateValue.innerHTML = date;
           rowDate.appendChild(tDate);
@@ -519,7 +577,7 @@ function createQrCode(element, textValue) {
 
 /*______________________________________________________________________________________________*/
 
-async function compareToSelectedSeats(blockedSeatId) {
+function compareToSelectedSeats(blockedSeatId) {
   var selectedSeatInfo;
   var seatWasBlocked = false;
   for(var i = 0; i < selectedSeats.length; i++) {
@@ -529,6 +587,7 @@ async function compareToSelectedSeats(blockedSeatId) {
         if(parseInt(selectedSeatInfo.id) === parseInt(blockedSeatId)) {
           console.log("Blocked seat is " + blockedSeatId);
           seatWasBlocked = true;
+          corruptedSeats.push(selectedSeatInfo);
         } //end of if
       } //end of if
     } //end of if
@@ -536,7 +595,7 @@ async function compareToSelectedSeats(blockedSeatId) {
   return seatWasBlocked;
 } //end of compareToSelectedSeats
 
-async function checkSeatsAreNotAlreadyBooked(hallInfo) {
+function checkSeatsAreNotAlreadyBooked(hallInfo) {
   var blockedSeatsInfo = hallInfo.data;
   var rowInfo;
   var blocked;
@@ -549,7 +608,6 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
       blocked = blocked.toString();
       if(blocked.localeCompare("true") === 0) {
         var seatWasBlocked = compareToSelectedSeats(blockedSeatId);
-        seatWasBlocked = seatWasBlocked.value;
         if(seatWasBlocked) {
           seatsWithBookingConflict.push(blockedSeatId);
           corrupedSeatExists = true;
@@ -561,49 +619,160 @@ async function checkSeatsAreNotAlreadyBooked(hallInfo) {
   return corrupedSeatExists;
 } //end of checkSeatAreNotAlreadyBooked
 
+function loadTicketInfoIntoLocalStorage() {
+    sessionStorage.clear();
+    var pSurname = document.getElementById("ausVorname").value;
+    var pName = document.getElementById("ausNachname").value;
+    var pPostalCode = document.getElementById("ausPLZ").value;
+    var pAddress = document.getElementById("ausStraße").value;
+    var pPaying = document.getElementById("ausKartennummer").value;
+    var billInfo = {
+      surname : pSurname,
+      name : pName,
+      postalCode : pPostalCode,
+      address : pAddress,
+      paying : pPaying
+    };
+    var billInfoAsString = JSON.stringify(billInfo);
+    console.log(bookedTickets);
+    var errorExists = bookedTickets[0].data.error;
+    try {
+      if(typeof errorExists === 'undefined') {
+        sessionStorage.setItem("NumberOfTickets", bookedTickets.length);
+        sessionStorage.setItem("BillInfo", billInfoAsString);
+        var arrayAsString = JSON.stringify(bookedTickets);
+        sessionStorage.setItem("Tickets", arrayAsString);
+        return true;
+      } else {
+        if((errorExists.message !== null) && (errorExists.message.localeCompare("You are not logged in!") === 0)) {
+          printError(1, "Not logged in");
+        } else if((errorExists.message !== null) && (errorExists.message.localeCompare("Ticket was already booked!") === 0)) {
+          printError(2, "Seat is blocked");
+        } //end of if
+        return false;
+      }//end of if
+    } catch(err) {
+      console.log(err);
+    } //end of try-catch
+} //end of loadTicketInfoIntoLocalStorage
+
 async function book() {
+  document.getElementById("loading").hidden = false;
+  document.getElementById("main").hidden = true;
   var bookingConflict = false;
+  var success = false;
   if(seatCounter > 0) {
     var paramBlockedSeats = {id: screeningReference};
     var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(paramBlockedSeats);
     var corruptedSeats = checkSeatsAreNotAlreadyBooked(blockedSeats);
-    var bookingError = Boolean(corruptedSeats.value);
+    var bookingError = corruptedSeats;
     if(bookingError) {
       bookingConflict = true;
+      console.log("Found error:");
+      printError(2, "Seat is blocked");
     } else {
-      for(var i = 0; i < selectedSeats.length; i++) {
-        var seatInfo = selectedSeats[i];
-        if(seatInfo !== null) {
-          var ticketParam = {
-            screening : screeningReference,
-            row : (parseInt(seatInfo.row) + 1),
-            seat : (parseInt(seatInfo.seat) + 1)
-          } //end of ticketParam
-          bookedTickets.push(functions.httpsCallable('database-createTicket')(ticketParam));
-        } //end of if
-      } //end of for
+      await requestSeats();
+      success = loadTicketInfoIntoLocalStorage();
     } //end of if-else
-
-    // TODO: need some loading animation
-    await Promise.all(bookedTickets); // waits for all Ticket Promises to be resolved by the backend
-
-    // TODO: error handling here
     console.log(bookedTickets);
-
-    window.location.href = "../confirmation/"; // forward to next page
+    if(success && loggedIn) {
+      window.location.href = "../confirmation/"; // forward to next page
+    } else {
+      console.log("Error user not logged in!");
+      printError(1, "Not logged in");
+    }//end of if
   } //end of if
 } //end of book
 
+async function requestSeats() {
+  var saver = [];
+  for(var i = 0; i < selectedSeats.length; i++) {
+    var seatInfo = selectedSeats[i];
+    if(seatInfo !== null) {
+      var ticketParam = {
+        screening : screeningReference,
+        row : (parseInt(seatInfo.row) + 1),
+        seat : (parseInt(seatInfo.seat) + 1)
+      } //end of ticketParam
+      saver.push(request(ticketParam));
+    } //end of if
+  } //end of for
+  await Promise.all(saver);
+} //end of requestSeats
 
+async function request(ticketParam) {
+  var ticket = await functions.httpsCallable('database-createTicket')(ticketParam);
+  bookedTickets.push(ticket);
+} //end of requests
+
+function printError(type, errorMessage) {
+  var errorPlaceholder;
+  var errorParagraph;
+  var errorText;
+  switch(parseInt(type)) {
+    case 1:
+      document.getElementById("ZahlungDetails").open = true;
+      document.getElementById("selectionDetails").open = false;
+      document.getElementById("zusammenfassungDetails").open = false;
+      document.getElementById("ZahlungDetails").hidden = false;
+      location.href = '#Zahlung';
+      errorPlaceholder = document.getElementById("ErrorContainerZahlung");
+      errorParagraph = document.createElement("p");
+      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      errorParagraph.appendChild(errorText);
+      errorPlaceholder.appendChild(errorParagraph);
+      var tickets = document.getElementById("tickets");
+      tickets.innerHTML = "";
+      alert('You are not looged in, please log in or select guest loggin!');
+      break;
+    case 2:
+      document.getElementById("ZahlungDetails").open = false;
+      document.getElementById("selectionDetails").open = true;
+      document.getElementById("ZahlungDetails").hidden = true;
+      location.href = '#Platzauswahl';
+      errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      errorParagraph = document.createElement("p");
+      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      errorParagraph.appendChild(errorText);
+      errorPlaceholder.appendChild(errorParagraph);
+      if(corruptedSeats.length !== 0) {
+        for(var i = 0; i < parseInt(corruptedSeats.length); i++) {
+          errorText = "Seat number " + (corruptedSeats[i].seat + 1) + " in row " + (corruptedSeats[i].row + 1) + " was already booked!";
+          var paragraphSaver = document.createElement("p");
+          var errorTextSaver = document.createTextNode(errorText);
+          paragraphSaver.appendChild(errorTextSaver);
+          errorPlaceholder.appendChild(paragraphSaver);
+        } //end of for
+      } //end of if
+      alert('One of your selected seats was booked by another costumer please select a new one!')
+      break;
+    case 3:
+      errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      errorParagraph = document.createElement("p");
+      errorText = document.createTextNode("FEHLER: " + errorMessage);
+      errorParagraph.appendChild(errorText);
+      errorPlaceholder.appendChild(errorParagraph);
+      alert('You forgot to select a seat, please select a seat!')
+      break;
+    default:
+      //Nothing todo
+      break;
+  } //end of switch-case
+} //end of printError
 
 async function loginWithGoogle() {
+  document.getElementById("anmeldung").hidden = true;
+  //document.getElementById("guestLogin").hidden = true;
+  document.getElementById("loadWhile").hidden = false;
   const providerGoogle = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(providerGoogle).then(result => {
       var user = result.user;
       var credential = result.credential;
       console.log(user);
       console.log(credential);
-      return;
+      loadCurrentUserData();
+      loggedIn = true;
+      return ;
   }).catch((error) => {console.error(error)});
 } //end of loginWithGoogle
 
@@ -612,6 +781,7 @@ async function loginWithUserCredentials() {
   var password = document.querySelector("#password").value;
   firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
       console.log(user);
+      loggedIn = true;
       return;
   }).catch((error) => {
       console.log(error);
@@ -619,22 +789,36 @@ async function loginWithUserCredentials() {
   });   
 } //end of loginWithUserCredentials
 
+/*async function loginAsGuest() {
+  document.getElementById("anmeldung").hidden = true;
+  //document.getElementById("guestLogin").hidden = true;
+  document.getElementById("hiddenInfo").hidden = false;
+  loggedIn = true;
+}*/
+
 
 async function loadCurrentUserData() {
   if(firebase.auth().currentUser !== null){
     const param = {};
     const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
     const userData = result.data.data;
-    document.getElementById("Vorname").value = userData.vorname === undefined ? "" : userData.vorname;
-    document.getElementById("Nachname").value = userData.nachname === undefined ? "" : userData.nachname;
+    document.getElementById("Vorname").value = userData.firstName === undefined ? "" : userData.firstName;
+    document.getElementById("Nachname").value = userData.lastName === undefined ? "" : userData.lastName;
     document.getElementById("Email").value = userData.email === undefined ? "" : userData.email;
     document.getElementById("Rufnummer").value = userData.phone === undefined ? "" : userData.phone;
     document.getElementById("Postleitzahl").value = userData.zipCode === undefined ? "" : userData.zipCode;
     document.getElementById("Stadt").value = userData.city === undefined ? "" : userData.city;
-    document.getElementById("Straße").value = userData.primaryAdress === undefined ? "" : userData.primaryAdress;
-    document.getElementById("Zusatz").value = userData.secondaryAdres === undefined ? "" : userData.secondaryAdres;
+    document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
+    document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
     document.getElementById("anmeldung").hidden = true;
+    //document.getElementById("guestLogin").hidden = true;
+    document.getElementById("loadWhile").hidden = true;
+    document.getElementById("hiddenInfo").hidden = false;
+    document.getElementById("weiter").style.display = "flex";
+    document.getElementById("buchen").style.display = "flex";
+    loggedIn = true;
   }else{
     document.getElementById("anmeldung").hidden = false;
+    //document.getElementById("guestLogin").hidden = false;
   }
 }

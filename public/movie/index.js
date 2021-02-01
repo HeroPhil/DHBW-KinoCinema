@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", event => {
 
 let screenings = 0;
 const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
-const days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 let screeningsMonday = [];
 let screeningsTuesday = [];
 let screeningsWednesday = [];
@@ -35,6 +35,13 @@ let screeningsThursday = [];
 let screeningsFriday = [];
 let screeningsSaturday = [];
 let screeningsSunday = [];
+
+document.addEventListener('click', e => {
+    if (e.target.matches("input[name='time-slot']")) {
+        changeStateOfBookingButton();
+        return ;
+    }
+}); //end of eventhandler
 
 async function loadContent() {
     var id = location.search;
@@ -76,7 +83,7 @@ async function loadContent() {
     });
     sortInfoArrays();
     var actualDay = new Date().getDay();
-    screeningTable.createCaption().innerHTML = "Vorstellungen der nächsten 7 Tage:";
+    screeningTable.createCaption().innerHTML = "Performances for the next 7 days:";
     var rowheadings;
     var rowScreenings;
     var cell;
@@ -247,8 +254,10 @@ function changeStateOfBookingButton() {
     var button = document.getElementById("book-button");
     var selectedButtons = document.querySelector('input[name="time-slot"]:checked');
     if(selectedButtons !== null) {
+        button.style.display = "flex";
         button.disabled = false;
     } else {
+        button.style.display = "flex";
         button.disabled = true;
     } //end of if-else
 } //end of changeStateOfBookingButton
@@ -267,7 +276,7 @@ async function addScreeningToList(dataArray, row) {
                 screenings++;
                 inputScreening.setAttribute("name", "time-slot");
                 var labelScreening = document.createElement("label");
-                labelScreening.setAttribute("for", information.screeningId)
+                labelScreening.setAttribute("for", information.screeningId);
                 var dateOfScreening = new Date(information.time);
                 var minutes = String(checkForCorrectMinuteWriting(dateOfScreening.getMinutes()));
                 var time = dateOfScreening.getHours() + ":" + minutes;
@@ -286,11 +295,15 @@ async function addScreeningToList(dataArray, row) {
 } //end of addScreeningToList
 
 async function analyzeRadioInput() {
+    try {
     var screening = document.querySelector('input[name="time-slot"]:checked');
     if(screening !== null) {
         var information = sessionStorage.getItem(screening.value);
         sessionStorage.setItem('informationOfBooking', information);
         var reference = "../booking/";
         window.location = reference;
-    } //end of if
+    }//end of if
+    } catch(err) {
+        console.log(err);
+    } //end of try-catch
 } //end of analyzeRadioInput
