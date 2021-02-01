@@ -654,6 +654,7 @@ function loadTicketInfoIntoLocalStorage() {
     } catch(err) {
       console.log(err);
     } //end of try-catch
+    return false;
 } //end of loadTicketInfoIntoLocalStorage
 
 async function book() {
@@ -781,13 +782,14 @@ async function loginWithUserCredentials() {
   var password = document.getElementById("passwordInput").value;
   firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
       console.log(user);
-      testForCurrentUser();
+      loadCurrentUserData();
+      loggedIn = true;
       return;
   }).catch((error) => {
       console.log(error);
       if(error.code === "auth/email-already-in-use") {
           firebase.auth().signInWithEmailAndPassword(email, password).then((user) => { // eslint-disable-line promise/no-nesting
-              testForCurrentUser();
+              loadCurrentUserData();
               return;
           }).catch((error) => {
               console.log(error);
