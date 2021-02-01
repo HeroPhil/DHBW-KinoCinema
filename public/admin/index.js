@@ -179,7 +179,7 @@ async function addMovie(){
         name: title,
         description: description,
         duration: duration,
-        category: categories,
+        categories: categories,
         priority: rating
     };
     console.log(param);
@@ -188,15 +188,6 @@ async function addMovie(){
     let movieID = movie.data.id;
     let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
     console.log(newCoverUrl);
-    const param2 = {
-        id: movieID,
-        newData: {
-            cover: newCoverUrl
-        }
-    };
-
-    let movieWithCover = await functions.httpsCallable('database-updateMovie')(param2);
-    console.log(movieWithCover);
 }
 
 
@@ -495,15 +486,15 @@ function selectDropdownRowType(type){
 async function addHall(){
 
     var hallName = document.getElementById("ADD_Hall_Name").value;
+    console.log(rows);
     var hallRows = rows;
     var hallWidth = document.getElementById("ADD_Hall_Width").value;
-
     const param = {
         name: hallName,
         rows: hallRows,
         width: hallWidth
     };
-
+    console.log(param);
     let hall = await functions.httpsCallable('database-addHall')(param);
     console.log(hall);
 }
@@ -512,7 +503,7 @@ function addRow(){
     var pType = document.getElementById("ADD_Row_Type").value;
     var pCount = document.getElementById("ADD_Row_Count").value;
     const row = {
-        type: pType,
+        id: pType,
         count: pCount
     }
     rows.push(row);
@@ -529,7 +520,7 @@ function displayRows(){
     rows.forEach(row => {
         var tRow = document.createElement("tr");
         var tType = document.createElement("td");
-        tType.innerHTML = row.type;
+        tType.innerHTML = row.id;
         var tCount = document.createElement("td");
         tCount.innerHTML = row.count;
         tRow.appendChild(tType);
@@ -557,7 +548,7 @@ async function seatGeneration() {
     seatContainer.appendChild(rowScreen);
     for(var i = 0; i < rows.length; i++) {
       var rowAmount = rows[i].count;
-      var seatType = rows[i].type;
+      var seatType = rows[i].id;
       seatType = seatType.replace("\"", "");
       seatType = seatType.trim();
   

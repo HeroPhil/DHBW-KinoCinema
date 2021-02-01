@@ -45,11 +45,21 @@ async function loadUserDetails() {
         document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
 
         /*--------------Profil-Picture----------------*/
+        /*var URL = null;
         var profilPicture = document.getElementById("profile-picture");
         profilPicture.innerHTML = "";
         var image = document.createElement("img");
-        image.setAttribute("src" , userInformation[0].photoURL);
-        profilPicture.appendChild(image);
+        var storage = firebase.storage();
+
+        if(userInformation[0].photoURL === null){            
+            storage.refFromURL(users.default.png).getDownloadURL().then( url => {
+                image.src = url;
+            }).catch((error) => {console.error(error)});
+        }else{
+            URL = userInformation[0].photoURL;
+            image.src = URL;
+        }
+        profilPicture.appendChild(image);*/
 
         /* --------------------------- User-Card-----------------*/
         if(userData.firstName === undefined && userData.lastName === undefined || userData.firstName === "" && userData.lastName === "") {
