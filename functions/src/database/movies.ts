@@ -14,7 +14,7 @@ export class Movie {
 }
 
 const allowedKeys = [
-    "category",
+    "categories",
     "description",
     "duration",
     "name",
@@ -51,7 +51,7 @@ export async function getTopMovies(amount: number) {
     return movies;
 }
 
-export async function getMoviesByCategory(category: string, amount: number) {
+export async function getMoviesByCategory(category: string, amount: number) { //NEEDS CHANGES
     const movies: Movie[] = [];
 
     const query = await basics.getCollectionRefByID(moviesCollectionPath)
@@ -68,9 +68,9 @@ export async function getMoviesByCategory(category: string, amount: number) {
     return movies;
 }
 
-export async function addMovie(category: string[], description: string, duration: number, name: string, priority: number) {
+export async function addMovie(categories: string[], description: string, duration: number, name: string, priority: number) {
     const data = {
-        category: category,
+        category: categories,
         description: description,
         duration: duration,
         name: name,
