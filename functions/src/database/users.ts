@@ -161,7 +161,7 @@ export const checkIfAdminLogin = async (context: CallableContext) => {
     const adminCheck = await basics.getDocumentByID(adminsCollectionPath + '/' + context.auth.uid);
     if(!adminCheck.exists) {
         console.log("You don't have the permission to do this!");
-        const error = { message : "You don't have the permission to do this!"};
+        error = { message : "You don't have the permission to do this!"};
         return {error};
     }
 
