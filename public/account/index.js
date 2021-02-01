@@ -54,14 +54,22 @@ async function loginWithGoogle() {
 } //end of loginWithGoogle
 
 async function loginWithUserCredentials() {
-    var email = document.querySelector("#username").value;
-    var password = document.querySelector("#password").value;
-    firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
+    var email = document.getElementById("usernameInput").value;
+    var password = document.getElementById("passwordInput").value;
+    firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
         console.log(user);
         testForCurrentUser();
         return;
     }).catch((error) => {
         console.log(error);
+        if(error.code === "auth/email-already-in-use") {
+            firebase.auth().signInWithEmailAndPassword(email, password).then((user) => { // eslint-disable-line promise/no-nesting
+                testForCurrentUser();
+                return;
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
         return error;
     });   
 } //end of loginWithUserCredentials
