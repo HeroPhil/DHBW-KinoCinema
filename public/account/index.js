@@ -62,8 +62,8 @@ async function loginWithUserCredentials() {
         return;
     }).catch((error) => {
         console.log(error);
-        if(error.code = "auth/email-already-in-use") {
-            firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
+        if(error.code === "auth/email-already-in-use") {
+            firebase.auth().signInWithEmailAndPassword(email, password).then((user) => { // eslint-disable-line promise/no-nesting
                 testForCurrentUser();
                 return;
             }).catch((error) => {
