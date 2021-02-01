@@ -52,7 +52,7 @@ async function loadUserDetails() {
         var storage = firebase.storage();
 
         if(userInformation[0].photoURL === null){            
-            storage.refFromURL("gs://dhbw-kk-kino.appspot.com/live/users/default.png").getDownloadURL().then( url => {
+            await storage.refFromURL("gs://dhbw-kk-kino.appspot.com/live/users/default.png").getDownloadURL().then( url => {
                 image.src = url;
             }).catch((error) => {console.error(error)});
         }else{
@@ -84,6 +84,8 @@ function logout() {
 }
 
 async function updateDetails() {
+    document.getElementById("loading").hidden = false;
+    document.getElementById("main").hidden = true;
 
     const pVorname = document.getElementById("Vorname").value;
     const pNachname = document.getElementById("Nachname").value;
@@ -118,10 +120,10 @@ async function updateDetails() {
     userData.primaryAddress === pStraße ? x[6] = true : alert('We could not save the Street + House Number, please try again!');
     userData.secondaryAddress === pZusatz ? x[7] = true : alert('We could not save the Addition, please try again!');
 
+    loadUserDetails();
     if(x.every((e) => e === true)) {
         alert('Your update was successful!');
     }
-    loadUserDetails();
 }
 
 async function loadLastTickets(count) {

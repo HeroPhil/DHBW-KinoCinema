@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function OnLoad(){
     switchEditOption(1);
     loadDropdownHalls();
+    loadDropdownRowTypes();
     addNeededEventListerns();
 }
 
@@ -242,6 +243,21 @@ async function loadDropdownHalls(){
     });
 }
 
+async function loadDropdownRowTypes(){
+    let rowTypes = await functions.httpsCallable('database-getAllRowTypes')({});
+    rowTypesData = rowTypes.data;
+    var dropdown_content_rows = document.getElementById("dropdownRowTypes-content");
+
+    rowTypesData.forEach( row => {
+        var entryType = document.createElement("a");
+        entryType.onclick = function() {
+            selectDropdownRowType(row.id);
+        };
+        entryType.innerHTML = row.data.name;
+        dropdown_content_rows.appendChild(entryType);
+    });
+}
+
 function selectDropdownHallEDIT(id){
     document.getElementById("EDIT_Screening_Hall").value = id;
 }
@@ -251,6 +267,10 @@ function selectDropdownHallADD(id){
 
 function selectDropdownIncrement(value){
     document.getElementById("EDIT_ADD_Increment").value = value;
+}
+
+function selectDropdownRowType(type){
+    document.getElementById("ADD_Row_Type").value = type;
 }
 
 async function loadDatabaseMovie(){
@@ -479,9 +499,6 @@ function sortTable(n) {
     }
 }
 
-function selectDropdownRowType(type){
-    document.getElementById("ADD_Row_Type").value = type;
-}
 
 async function addHall(){
 
