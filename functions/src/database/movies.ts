@@ -14,14 +14,11 @@ export class Movie {
 }
 
 const allowedKeys = [
-    "city",
-    "displayName",
-    "firstName",
-    "lastName",
-    "phone",
-    "primaryAddress",
-    "secondaryAddress",
-    "zipCode"
+    "category",
+    "description",
+    "duration",
+    "name",
+    "priority"
 ];
 
 
