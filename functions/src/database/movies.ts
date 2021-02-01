@@ -1,4 +1,6 @@
 import * as basics from './basics';
+import { checkIfAdminLogin } from './users';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 export const moviesCollectionPath = 'live/events/movies';
 const topPriority = 'priority';
@@ -14,7 +16,7 @@ export class Movie {
 }
 
 const allowedKeys = [
-    "category",
+    "categories",
     "description",
     "duration",
     "name",
@@ -51,7 +53,7 @@ export async function getTopMovies(amount: number) {
     return movies;
 }
 
-export async function getMoviesByCategory(category: string, amount: number) {
+export async function getMoviesByCategory(category: string, amount: number) { //NEEDS CHANGES
     const movies: Movie[] = [];
 
     const query = await basics.getCollectionRefByID(moviesCollectionPath)
@@ -68,9 +70,17 @@ export async function getMoviesByCategory(category: string, amount: number) {
     return movies;
 }
 
-export async function addMovie(category: string[], description: string, duration: number, name: string, priority: number) {
+export async function addMovie(categories: string[], description: string, duration: number, name: string, priority: number, context: CallableContext) {
+    let error: {message: string} = { message: "" };
+    //check if user is logged in as admin
+    const checkAdmin = await checkIfAdminLogin(context)
+    if (checkAdmin.error) {
+        error = checkAdmin.error;
+        return {error};
+    }
+
     const data = {
-        category: category,
+        category: categories,
         description: description,
         duration: duration,
         name: name,
@@ -81,12 +91,18 @@ export async function addMovie(category: string[], description: string, duration
 
     const gsCoverLink = "gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/" + movieRef.id;
 
-    return await updateMovie(movieRef.id, {cover: gsCoverLink});
+    return await updateMovie(movieRef.id, {cover: gsCoverLink}, context);
 }
 
-export async function updateMovie(id: string, changes: { [x: string]: any}) {
-    const error: {message: string} = { message: "" };
-    
+export async function updateMovie(id: string, changes: { [x: string]: any}, context: CallableContext) {
+    let error: {message: string} = { message: "" };
+    //check if user is logged in as admin
+    const checkAdmin = await checkIfAdminLogin(context)
+    if (checkAdmin.error) {
+        error = checkAdmin.error;
+        return {error};
+    }
+
     //check if movie is passed as parameter (defaulted to undefined) and check if movie exists in database
     if(id !== undefined) {
         const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + id);

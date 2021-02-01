@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function OnLoad(){
+    let admin = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')({});
+    if(admin.data.error){
+        window.location = "../index";
+    }
     switchEditOption(1);
     loadDropdownHalls();
     loadDropdownRowTypes();
@@ -186,6 +190,9 @@ async function addMovie(){
     console.log(param);
     let movie = await functions.httpsCallable('database-addMovie')(param);
     console.log(movie);
+    if(movie.data.error) {
+        alert(movie.data.error.message);
+    }
     let movieID = movie.data.id;
     let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
     console.log(newCoverUrl);
@@ -368,6 +375,9 @@ async function updateScreeningInformation(){
     };
 
     let screening = await functions.httpsCallable('database-updateScreening')(param);
+    if(screening.data.error) {
+        alert(screening.data.error.message);
+    }
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
 
@@ -393,6 +403,9 @@ async function updateInformationOfMovie(){
     };
 
     let movie = await functions.httpsCallable('database-updateMovie')(param);
+    if(movie.data.error) {
+        alert(movie.data.error.message);
+    }
     console.log(movie);
 }
 
@@ -415,7 +428,9 @@ async function addScreenings(){
     };
 
     let screening = await functions.httpsCallable('database-addScreening')(param);
-
+    if(screening.data.error) {
+        alert(screening.data.error.message);
+    }
     console.log(screening);
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
@@ -439,6 +454,9 @@ async function uploadCover(){
             }
         };
         let movieWithCover = await functions.httpsCallable('database-updateMovie')(param2);
+        if(movieWithCover.data.error) {
+            alert(movieWithCover.data.error.message);
+        }
         console.log(movieWithCover);
         loadDatabaseMovie();
     }
@@ -513,6 +531,9 @@ async function addHall(){
     };
     console.log(param);
     let hall = await functions.httpsCallable('database-addHall')(param);
+    if(hall.data.error) {
+        alert(hall.data.error.message);
+    }
     console.log(hall);
 }
 

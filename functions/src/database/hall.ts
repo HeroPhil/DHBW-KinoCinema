@@ -1,5 +1,7 @@
 import * as basics from './basics';
 import {RowType, rowTypeCollectionPath} from './rowType';
+import { checkIfAdminLogin } from './users';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 const hallCollectionPath = "/live/infastructure/halls";
 
@@ -54,7 +56,15 @@ export async function getAllHalls(sublevel = 0) {
     return halls;
 }
 
-export async function addHall(name: string, rows: { count: number; id: string; }[], width: number) {
+export async function addHall(name: string, rows: { count: number; id: string; }[], width: number, context: CallableContext) {
+    let error: {message: string} = { message: "" };
+    //check if user is logged in as admin
+    const checkAdmin = await checkIfAdminLogin(context)
+    if (checkAdmin.error) {
+        error = checkAdmin.error;
+        return {error};
+    }
+
     const data: {name: string, rows: { count: number; type: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>; }[], width: number} = {
         "name": name,
         "width": width,
