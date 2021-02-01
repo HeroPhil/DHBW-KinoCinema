@@ -778,6 +778,9 @@ async function loginWithGoogle() {
 } //end of loginWithGoogle
 
 async function loginWithUserCredentials() {
+  document.getElementById("anmeldung").hidden = true;
+  //document.getElementById("guestLogin").hidden = true;
+  document.getElementById("loadWhile").hidden = false;
   var email = document.getElementById("usernameInput").value;
   var password = document.getElementById("passwordInput").value;
   firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
