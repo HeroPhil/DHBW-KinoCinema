@@ -169,7 +169,8 @@ async function addMovie(){
     let title = document.getElementById("Movie_Title").value;
     let description = document.getElementById("Movie_Description").value;
     let duration = document.getElementById("Movie_Duration").value;
-    let categories = document.getElementById("Movie_Category").value;
+    let categoriesAsString = document.getElementById("Movie_Category").value;
+    let categories = categoriesAsString.split("|");
     let rating = Number(document.getElementById("Movie_Rating").value);
     rating = rating * 10;
     let coverURL = document.getElementById("Movie_IMG").src;
@@ -181,7 +182,7 @@ async function addMovie(){
         category: categories,
         priority: rating
     };
-
+    console.log(param);
     let movie = await functions.httpsCallable('database-addMovie')(param);
     console.log(movie);
     let movieID = movie.data.id;
