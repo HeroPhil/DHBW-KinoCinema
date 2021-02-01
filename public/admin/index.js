@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function OnLoad(){
+    let admin = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')({});
+    if(admin.data.error){
+        window.location = "../index";
+    }
     switchEditOption(1);
     loadDropdownHalls();
     loadDropdownRowTypes();
