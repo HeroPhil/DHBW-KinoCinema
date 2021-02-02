@@ -102,9 +102,9 @@ async function loadContent() {
     showSlides(1);
 
     await createCategorySections();
-    for (let i = 0; i < categorySectionDetails.length; i++) {
-        loadMoviesOfCategory(i);
-    }
+    // for (let i = 0; i < categorySectionDetails.length; i++) {
+    //     loadMoviesOfCategory(i);
+    // }
 
     endLoading();
 }
@@ -140,17 +140,16 @@ function showSlides(n) {
 
 async function createCategorySections() {
 
-
     const section = document.getElementById("categories");
 
     const doc = await functions.httpsCallable("database-getAllCategories")({});
-    const categories = doc.data.movieCategories;
+    const categories = doc.data.movieCategories ?? [];
     console.log(categories);
-
 
     let index = 0;
     categories.forEach((category) => {
         
+
         const row = document.createElement("div");
             row.classList.add("row");
                 const rowLeft = document.createElement("div");
@@ -162,7 +161,19 @@ async function createCategorySections() {
                         const summary = document.createElement("summary");
                             summary.classList.add("expand");
                             summary.innerHTML = category;
+                            summary.setAttribute("onclick", "loadMoviesOfCategory(" + index + ")");
+                            summary.setAttribute("loaded", "false");
+                        const loading = document.createElement("div");
+                            loading.classList.add("loadingContainer");
+                            loading.id = "loadingWhileCategory" + index;
+                            const loadingSpinner = document.createElement("div");
+                                loadingSpinner.classList.add("ldio-t32oece7z3");
+                            loadingSpinner.appendChild(getLoadingImg());
+                            loadingSpinner.appendChild(getLoadingImg());
+                            loadingSpinner.appendChild(getLoadingImg());
+                        loading.appendChild(loadingSpinner);
                     details.appendChild(summary);
+                    details.appendChild(loading);
                 rowRight.appendChild(details);
             row.appendChild(rowLeft);
             row.appendChild(rowRight);
@@ -174,34 +185,61 @@ async function createCategorySections() {
     });
 }
 
+function getLoadingImg()  {
+    const loadingImg = document.createElement("img");
+    loadingImg.classList.add("carrotAnimation");
+    loadingImg.setAttribute("src", "../icons/png/karotte.png");
+    return loadingImg;
+}
+
 async function loadMoviesOfCategory(categoryIndex) {
 
     const details = categorySectionDetails[categoryIndex];
     const summary = details.children[0];
-    
+
+    if (summary.getAttribute("loaded") !== "false") {
+        return;
+    }
+    summary.setAttribute("loaded", "true");
+
+    const moviesContainer = document.createElement("div");
+        moviesContainer.hidden = true;
+        moviesContainer.classList.add("moviesContainer");
+        moviesContainer.innerHTML = "&nbsp;";
+    details.appendChild(moviesContainer);
+
+
+
     const param = {
         category: summary.innerHTML,
         amount: 10
     }
     const movies = await functions.httpsCallable("database-getMoviesByCategory")(param);
 
-    const moviesContainer = document.createElement("div");
-        moviesContainer.classList.add("moviesContainer");
-    movies.data.forEach(async (movie) => {
-        const movieContainer = document.createElement("div")
-            movieContainer.classList.add("resultMovie");
-                movieContainer.setAttribute("onclick", "window.location=\"../movie?id=" + movie.id + "\"");
-                const cover = document.createElement("img");
-                    firebase.storage().refFromURL(movie.data.cover).getDownloadURL().then(url => {
-                        cover.setAttribute("src", url);
-                        return ;
-                    }).catch((error) => {console.error(error)});
-                const title = document.createElement("div");
-                    title.classList.add("movieTitle");
-                    title.innerHTML = movie.data.name;
-            movieContainer.appendChild(title);
-            movieContainer.appendChild(cover);
-        moviesContainer.appendChild(movieContainer);
-    });
-    details.appendChild(moviesContainer);
+
+    const promises = [];
+
+
+            movies.data.forEach(async (movie) => {
+                promises.push(this);
+                const movieContainer = document.createElement("div")
+                    movieContainer.classList.add("resultMovie");
+                        movieContainer.setAttribute("onclick", "window.location=\"../movie?id=" + movie.id + "\"");
+                        const cover = document.createElement("img");
+                            firebase.storage().refFromURL(movie.data.cover).getDownloadURL().then(url => {
+                                cover.setAttribute("src", url);
+                                return ;
+                            }).catch((error) => {console.error(error)});
+                        const title = document.createElement("div");
+                            title.classList.add("movieTitle");
+                            title.innerHTML = movie.data.name;
+                    movieContainer.appendChild(title);
+                    movieContainer.appendChild(cover);
+                moviesContainer.appendChild(movieContainer);
+            });
+
+    await Promise.all(promises);
+    document.getElementById("loadingWhileCategory" + categoryIndex).hidden = true;
+    moviesContainer.hidden = false;
 }
+
