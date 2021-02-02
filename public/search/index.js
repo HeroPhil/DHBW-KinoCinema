@@ -149,8 +149,8 @@ function sortByCategorie() {
         } //end of customizedMovieInfo
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
-    for(var i = 0; i < moviesAdventure.length; i++) {
-        var movieInfo = moviesAdventure[i];
+    for(varj = 0; j < moviesAdventure.length; j++) {
+        var movieInfo = moviesAdventure[j];
         var movieId = movieInfo.id;
         var movieData = movieInfo.data;
         var title = movieData.name;
@@ -166,8 +166,8 @@ function sortByCategorie() {
         } //end of customizedMovieInfo
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
-    for(var i = 0; i < moviesAction.length; i++) {
-        var movieInfo = moviesAction[i];
+    for(var k = 0; k < moviesAction.length; k++) {
+        var movieInfo = moviesAction[k];
         var movieId = movieInfo.id;
         var movieData = movieInfo.data;
         var title = movieData.name;
@@ -183,8 +183,8 @@ function sortByCategorie() {
         } //end of customizedMovieInfo
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
-    for(var i = 0; i < moviesRomantic.length; i++) {
-        var movieInfo = moviesRomantic[i];
+    for(var h = 0; h < moviesRomantic.length; h++) {
+        var movieInfo = moviesRomantic[h];
         var movieId = movieInfo.id;
         var movieData = movieInfo.data;
         var title = movieData.name;
@@ -200,8 +200,8 @@ function sortByCategorie() {
         } //end of customizedMovieInfo
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
-    for(var i = 0; i < moviesCommedy.length; i++) {
-        var movieInfo = moviesCommedy[i];
+    for(var l = 0; l < moviesCommedy.length; l++) {
+        var movieInfo = moviesCommedy[l];
         var movieId = movieInfo.id;
         var movieData = movieInfo.data;
         var title = movieData.name;
@@ -217,8 +217,8 @@ function sortByCategorie() {
         } //end of customizedMovieInfo
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
-    for(var i = 0; i < moviesHorror.length; i++) {
-        var movieInfo = moviesHorror[i];
+    for(var m = 0; m < moviesHorror.length; m++) {
+        var movieInfo = moviesHorror[m];
         var movieId = movieInfo.id;
         var movieData = movieInfo.data;
         var title = movieData.name;
@@ -256,8 +256,8 @@ function sortMoviesASC() {
             } //end of if-else
         } //end of for
     } //end of while
-    for(var i = 0; i < moviesDataSorted.length; i++) {
-        var movie = moviesDataSorted[i];
+    for(var j = 0; j < moviesDataSorted.length; j++) {
+        var movie = moviesDataSorted[j];
         createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
     } //end of for
 } //end of sortMoviesASC
@@ -282,8 +282,8 @@ function sortMoviesDESC() {
             } //end of if-else
         } //end of for
     } //end of while
-    for(var i = 0; i < moviesDataSorted.length; i++) {
-        var movie = moviesDataSorted[i];
+    for(var j = 0; j < moviesDataSorted.length; j++) {
+        var movie = moviesDataSorted[j];
         createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
     } //end of for
 } //end of sortMoviesASC
@@ -308,8 +308,8 @@ function sortMoviesByPlayTime() {
             } //end of if-else
         } //end of for
     } //end of while
-    for(var i = 0; i < moviesDataSorted.length; i++) {
-        var movie = moviesDataSorted[i];
+    for(var j = 0; j < moviesDataSorted.length; j++) {
+        var movie = moviesDataSorted[j];
         createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
     } //end of for
 } //end of sortMoviesASC
