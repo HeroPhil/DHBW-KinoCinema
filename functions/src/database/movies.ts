@@ -58,7 +58,7 @@ export async function getMoviesByCategory(category: string, amount: number) { //
     const movies: Movie[] = [];
 
     const query = await basics.getCollectionRefByID(moviesCollectionPath)
-        .where("category", "==", category)
+        .where("categories", "array-contains", category)
         .orderBy(topPriority, order)
         .limit(amount);
     console.log(amount);
