@@ -110,7 +110,7 @@ async function loadContent() {
 
     await createCategorySections();
     for (let i = 0; i < categorySectionDetails.length; i++) {
-        loadMoviesOfCategories(i);
+        loadMoviesOfCategory(i);
     }
 
     endLoading();
@@ -181,7 +181,7 @@ async function createCategorySections() {
     });
 }
 
-async function loadMoviesOfCategories(categoryIndex) {
+async function loadMoviesOfCategory(categoryIndex) {
 
     const details = categorySectionDetails[categoryIndex];
     const summary = details.children[0];
@@ -192,6 +192,8 @@ async function loadMoviesOfCategories(categoryIndex) {
     }
     const movies = await functions.httpsCallable("database-getMoviesByCategory")(param);
 
+    const moviesContainer = document.createElement("div");
+        moviesContainer.classList.add("moviesContainer");
     movies.data.forEach(async (movie) => {
         const movieContainer = document.createElement("div")
             movieContainer.classList.add("resultMovie");
@@ -206,6 +208,7 @@ async function loadMoviesOfCategories(categoryIndex) {
                     title.innerHTML = movie.data.name;
             movieContainer.appendChild(title);
             movieContainer.appendChild(cover);
-        details.appendChild(movieContainer);
+        moviesContainer.appendChild(movieContainer);
     });
+    details.appendChild(moviesContainer);
 }

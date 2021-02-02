@@ -259,6 +259,7 @@ form.field input[type=text] {
 
 .movieTitle {
   font-size: 1.2rem;
+  font-weight: bold;
   padding: 0rem 1rem 0.5rem;
 }
 
@@ -289,6 +290,12 @@ summary{
 
 summary:focus {
   outline: none;
+}
+
+.moviesContainer{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 /*------------Media Queries -----------------*/
@@ -335,3 +342,4 @@ summary:focus {
   .box {
     width: 115rem;
   }
+}
