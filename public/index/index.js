@@ -29,6 +29,13 @@ const categorySectionDetails = [];
 
 async function loadContent() {
     //var i = 1;
+    try {
+        if(((sessionStorage.getItem("LoggedIn")) === null)) {
+            sessionStorage.setItem("LoggedIn", "out");
+        } //end of if
+    } catch(err) {
+        console.log(err);
+    } //end of try-catch
     var i = 0;
     var storage = firebase.storage();
     var amount = "5";
