@@ -296,14 +296,15 @@ async function addScreeningToList(dataArray, row) {
 
 async function analyzeRadioInput() {
     try {
-    var screening = document.querySelector('input[name="time-slot"]:checked');
-    if(screening !== null) {
-        var information = sessionStorage.getItem(screening.value);
-        sessionStorage.setItem('informationOfBooking', information);
-        var reference = "../booking/";
-        window.location = reference;
-    }//end of if
+        var screening = document.querySelector('input[name="time-slot"]:checked');
+        if(screening !== null) {
+            var information = sessionStorage.getItem(screening.value);
+            sessionStorage.setItem('informationOfBooking', information);
+            var reference = "../booking/";
+            window.location = reference;
+        }//end of if
     } catch(err) {
         console.log(err);
+        window.location.href = "../index/";
     } //end of try-catch
 } //end of analyzeRadioInput
