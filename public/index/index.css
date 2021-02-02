@@ -257,3 +257,20 @@ form.field input[type=text] {
   justify-content: left;
   padding-left: 1rem;
 }
+
+summary::-webkit-details-marker{
+  display: block;
+  color: var(--accent);
+}
+
+summary:hover {
+  font-size: 2.5rem;
+}
+
+summary{
+  list-style-image: none;
+}
+
+summary:focus {
+  outline: none;
+}

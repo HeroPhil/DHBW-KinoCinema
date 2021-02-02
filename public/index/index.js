@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", event => {
 //
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
+const categorySectionDetails = [];
+
 async function loadContent() {
     //var i = 1;
     var i = 0;
@@ -99,10 +101,10 @@ async function loadContent() {
 
     showSlides(1);
 
-
-    createCategorySections();
-
-
+    await createCategorySections();
+    for (let i = 0; i < categorySectionDetails.length; i++) {
+        loadMoviesOfCategories(i);
+    }
 
     endLoading();
 }
@@ -145,6 +147,8 @@ async function createCategorySections() {
     const categories = doc.data.movieCategories;
     console.log(categories);
 
+
+    let index = 0;
     categories.forEach((category) => {
         
         const row = document.createElement("div");
@@ -160,10 +164,41 @@ async function createCategorySections() {
                             summary.innerHTML = category;
                     details.appendChild(summary);
                 rowRight.appendChild(details);
-            row.appendChild(rowRight);
             row.appendChild(rowLeft);
+            row.appendChild(rowRight);
         section.appendChild(row);
 
-    });
+        categorySectionDetails.push(details);
 
+        index++;
+    });
+}
+
+async function loadMoviesOfCategories(categoryIndex) {
+
+    const details = categorySectionDetails[categoryIndex];
+    const summary = details.children[0];
+    
+    const param = {
+        category: summary.innerHTML,
+        amount: 10
+    }
+    const movies = await functions.httpsCallable("database-getMoviesByCategory")(param);
+
+    movies.data.forEach(async (movie) => {
+        const movieContainer = document.createElement("div")
+            movieContainer.classList.add("resultMovie");
+                movieContainer.setAttribute("onclick", "window.location=\"../movie?id=" + movie.id + "\"");
+                const cover = document.createElement("img");
+                    firebase.storage().refFromURL(movie.data.cover).getDownloadURL().then(url => {
+                        cover.setAttribute("src", url);
+                        return ;
+                    }).catch((error) => {console.error(error)});
+                const title = document.createElement("div");
+                    title.classList.add("movieTitle");
+                    title.innerHTML = movie.data.name;
+            movieContainer.appendChild(title);
+            movieContainer.appendChild(cover);
+        details.appendChild(movieContainer);
+    });
 }
