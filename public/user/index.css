@@ -53,6 +53,9 @@ summary:focus {
     outline: none;
 }
 
+#onlyAdmins {
+    display: none;
+}
 
 .button{
     color: var(--textPrimary);
