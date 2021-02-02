@@ -80,7 +80,7 @@ export async function addMovie(categories: string[], description: string, durati
     }
 
     const data = {
-        category: categories,
+        categories: categories,
         description: description,
         duration: duration,
         name: name,
