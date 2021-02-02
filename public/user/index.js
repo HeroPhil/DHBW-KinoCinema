@@ -229,7 +229,7 @@ async function proofForAdmin() {
     }
 }
 
-function adminPage() {
+async function adminPage() {
     var anwser2 = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')();
     var admin2 = anwser2.data.data
     if(admin2){
