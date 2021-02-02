@@ -51,10 +51,25 @@
             <div class="row">
                 <div class="col-11">&nbsp;</div>
                 <div class="col-4">
+                    <div id="dropdown.menu">
+                        <ul>
+                            <li id="sorting">Sorting
+                                <ul>
+                                    <li>Name</li>
+                                    <ul>
+                                        <li onclick="sortMoviesASC()">Increasing</li>
+                                        <li onclick="sortMoviesDESC()">Decreasing</li>
+                                    </ul>
+                                    <li onclick="sortByCategorie()">Category</li>
+                                    <li onclick="sortMoviesByPlayTime()">Playtime</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                     <!--Hier fehlt Funktion!-->
                     <form class="field" action="void">
-                        <input type="text" placeholder="Search..." name="search">
-                        <button type="submit">Search</button>
+                        <input id="search-input"type="text" placeholder="Search..." name="search">
+                        <button onclick="search()" type="submit">Search</button>
                     </form>   
                 </div>
                 <div class="col-1">&nbsp;</div>

@@ -48,6 +48,7 @@ async function loginWithGoogle() {
         console.log(user);
         console.log(credential);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {console.error(error)});
     firebase.auth().currentUser.get
@@ -59,6 +60,7 @@ async function loginWithUserCredentials() {
     firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
         console.log(user);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {
         console.log(error);
@@ -86,6 +88,7 @@ async function loginWithMicrosoft() {
         console.log(user);
         console.log(credential);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithMicrosoft
@@ -98,6 +101,7 @@ async function loginWithFacebook() {
         console.log(user);
         console.log(credential);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook
@@ -110,6 +114,7 @@ async function loginWithApple() {
         console.log(user);
         console.log(credential);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook

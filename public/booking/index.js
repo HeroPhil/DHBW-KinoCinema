@@ -495,7 +495,8 @@ function addTicketsToWebsite() {
     console.log(selectedSeats[0]);
     for(var i = 0; i < selectedSeats.length; i++) {
       var seat = selectedSeats[i];
-      var seatPrice = normalTicketPrice;
+      var seatObject = document.getElementById(seat.id);
+      var seatPrice = seatObject.getAttribute("value");
       createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString, seatPrice);
     } //end of for
   } //end of if
@@ -626,7 +627,9 @@ function checkSeatsAreNotAlreadyBooked(hallInfo) {
 } //end of checkSeatAreNotAlreadyBooked
 
 function loadTicketInfoIntoLocalStorage() {
+    var saver = sessionStorage.getItem("LoggedIn");
     sessionStorage.clear();
+    sessionStorage.setItem("LoggedIn", saver);
     var pSurname = document.getElementById("ausVorname").value;
     var pName = document.getElementById("ausNachname").value;
     var pPostalCode = document.getElementById("ausPLZ").value;
@@ -779,6 +782,7 @@ async function loginWithGoogle() {
       console.log(credential);
       loadCurrentUserData();
       loggedIn = true;
+      sessionStorage.setItem("LoggedIn", "in");
       return ;
   }).catch((error) => {
     console.error(error)
@@ -800,6 +804,7 @@ async function loginWithUserCredentials() {
       console.log(user);
       loadCurrentUserData();
       loggedIn = true;
+      sessionStorage.setItem("LoggedIn", "in");
       return;
   }).catch((error) => {
       console.log(error);

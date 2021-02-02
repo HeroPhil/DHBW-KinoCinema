@@ -167,7 +167,7 @@ form.field input[type=text] {
 
 .imageSl {
     width: 40%;
-    height: 100%;
+    height: 28rem;
 }
 
 .imageSl img {
@@ -194,7 +194,7 @@ form.field input[type=text] {
 
 .tableSl {
     width: 100%;
-    height: 100%;
+    max-height: 100%;
 }
 
 .tableSl tr {
@@ -251,7 +251,6 @@ form.field input[type=text] {
 
 .resultMovie img {
   height: 20rem;
-  width: auto;
   width: 18rem;
   object-fit: contain;
   margin: 0.2rem;
@@ -296,6 +295,14 @@ summary:focus {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  min-height: 5rem;
+}
+
+.loadingContainer{
+  width: 250px;
+  margin-left: auto;
+  justify-content: center;
+  margin-right: auto;
 }
 
 /*------------Media Queries -----------------*/
