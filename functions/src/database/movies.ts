@@ -3,6 +3,7 @@ import { checkIfAdminLogin } from './users';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 export const moviesCollectionPath = 'live/events/movies';
+export const eventDocumentPath = 'live/events';
 const topPriority = 'priority';
 const order: "desc" | "asc" = 'desc';
 
@@ -57,7 +58,7 @@ export async function getMoviesByCategory(category: string, amount: number) { //
     const movies: Movie[] = [];
 
     const query = await basics.getCollectionRefByID(moviesCollectionPath)
-        .where("category", "==", category)
+        .where("categories", "array-contains", category)
         .orderBy(topPriority, order)
         .limit(amount);
     console.log(amount);
@@ -80,7 +81,7 @@ export async function addMovie(categories: string[], description: string, durati
     }
 
     const data = {
-        category: categories,
+        categories: categories,
         description: description,
         duration: duration,
         name: name,
@@ -130,4 +131,32 @@ export async function updateMovie(id: string, changes: { [x: string]: any}, cont
     const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, newData);
     console.log(movie);
     return await getMovieByID(id);
+}
+
+export async function getAllCategories() {
+    const document = await basics.getDocumentByID(eventDocumentPath)
+    return document.data();
+}
+
+export async function updateCategoriesOnAddMovie() {
+    let categoriesSet = new Set();
+    let categoriesArray: any[] = [];
+
+    const query = await basics.getCollectionRefByID(moviesCollectionPath);
+    const collection = await basics.getCollectionByRef(query);
+
+    collection.forEach((movie: { id: string; data: () => any; }) => {
+        
+        for(let category in movie.data().categories) {
+            categoriesSet.add(movie.data().categories[category]);
+            //console.log(movie.data().categories[category]);
+        }
+    });
+    //console.log(categoriesSet);
+    for (let category of categoriesSet) {
+        categoriesArray.push(category);
+    };
+
+    await basics.updateDocumentByID(eventDocumentPath, {movieCategories: categoriesArray});
+    return categoriesArray;
 }

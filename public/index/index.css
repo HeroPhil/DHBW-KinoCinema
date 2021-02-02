@@ -227,6 +227,71 @@ form.field input[type=text] {
   }
 }
 
+/* -----Kategorie---*/
+
+.searchResults {
+  background-color: var(--layer1);
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  width: auto;
+  justify-content: flex-start;
+}
+
+.resultMovie {
+  height: 24rem;
+  width: 18rem;
+  background-color: var(--layer3);
+  margin: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-content: space-between;
+}
+
+.resultMovie img {
+  height: 20rem;
+  width: auto;
+  width: 18rem;
+  object-fit: contain;
+  margin: 0.2rem;
+}
+
+.movieTitle {
+  font-size: 1.2rem;
+  padding: 0rem 1rem 0.5rem;
+}
+
+.expand{
+  height: 5rem;
+  background-color: var(--layer3);
+  color: var(--textPrimary);
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 2rem;
+  display: flex;
+  justify-content: left;
+  padding-left: 1rem;
+}
+
+summary::-webkit-details-marker{
+  display: block;
+  color: var(--accent);
+}
+
+summary:hover {
+  font-size: 2.5rem;
+}
+
+summary{
+  list-style-image: none;
+}
+
+summary:focus {
+  outline: none;
+}
+
+/*------------Media Queries -----------------*/
 @media only screen and (min-width: 720px) and (max-width: 1099px){
   html{
     font-size: 13px;
@@ -270,4 +335,3 @@ form.field input[type=text] {
   .box {
     width: 115rem;
   }
-}

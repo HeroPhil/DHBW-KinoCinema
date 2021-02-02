@@ -65,7 +65,7 @@ export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
 });
 
 export const addMovie = httpsOnCall((data, context) => {
-    return movies.addMovie(data.category, data.description, parseInt(data.duration), data.name, parseInt(data.priority), context);
+    return movies.addMovie(data.categories, data.description, parseInt(data.duration), data.name, parseInt(data.priority), context);
 });
 
 export const updateMovie = httpsOnCall((data, context) => {
@@ -118,4 +118,12 @@ export const addHall = httpsOnCall((data, context) => {
 
 export const getAllRowTypes = httpsOnCall((data, context) => {
     return rowType.getAllRowTypes();
+});
+
+export const getAllCategories = httpsOnCall((data, context) => {
+    return movies.getAllCategories();
+});
+
+export const updateCategoriesOnAddMovie = func().firestore.document('live/events/movies/{docId}').onWrite((change, context) => {
+    return movies.updateCategoriesOnAddMovie();
 });
