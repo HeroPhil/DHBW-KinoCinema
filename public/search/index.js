@@ -371,7 +371,7 @@ function search() {
     } //end of for
     if(foundResults.length > 0) {
         movieContainer = "";
-        for(var j; j < foundResults.length; j++) {
+        for(var j = 0; j < foundResults.length; j++) {
             movie = foundResults[j];
             createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
         } //end of for

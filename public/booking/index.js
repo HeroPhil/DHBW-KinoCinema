@@ -626,7 +626,9 @@ function checkSeatsAreNotAlreadyBooked(hallInfo) {
 } //end of checkSeatAreNotAlreadyBooked
 
 function loadTicketInfoIntoLocalStorage() {
+    var saver = sessionStorage.getItem("LoggedIn");
     sessionStorage.clear();
+    sessionStorage.setItem("LoggedIn", saver);
     var pSurname = document.getElementById("ausVorname").value;
     var pName = document.getElementById("ausNachname").value;
     var pPostalCode = document.getElementById("ausPLZ").value;
@@ -779,6 +781,7 @@ async function loginWithGoogle() {
       console.log(credential);
       loadCurrentUserData();
       loggedIn = true;
+      sessionStorage.setItem("LoggedIn", "in");
       return ;
   }).catch((error) => {
     console.error(error)
@@ -800,6 +803,7 @@ async function loginWithUserCredentials() {
       console.log(user);
       loadCurrentUserData();
       loggedIn = true;
+      sessionStorage.setItem("LoggedIn", "in");
       return;
   }).catch((error) => {
       console.log(error);
