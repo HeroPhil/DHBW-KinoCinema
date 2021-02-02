@@ -495,7 +495,8 @@ function addTicketsToWebsite() {
     console.log(selectedSeats[0]);
     for(var i = 0; i < selectedSeats.length; i++) {
       var seat = selectedSeats[i];
-      var seatPrice = normalTicketPrice;
+      var seatObject = document.getElementById(seat.id);
+      var seatPrice = seatObject.value;
       createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString, seatPrice);
     } //end of for
   } //end of if

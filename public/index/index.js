@@ -30,10 +30,9 @@ const categorySectionDetails = [];
 async function loadContent() {
     //var i = 1;
     try {
-        if(((sessionStorage.getItem("LoggedIn")) === null)) {
-            sessionStorage.setItem("LoggedIn", "out");
-        } //end of if
+        saver = sessionStorage.getItem("LoggedIn");
     } catch(err) {
+        sessionStorage.setItem("LoggedIn", "out");
         console.log(err);
     } //end of try-catch
     var i = 0;
