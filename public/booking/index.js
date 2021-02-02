@@ -824,7 +824,7 @@ async function loadCurrentUserData() {
     document.getElementById("Email").value = userData.email === undefined || userData.firstName === null ? "" : userData.email;
     document.getElementById("Rufnummer").value = userData.phone === undefined || userData.firstName === null ? "" : userData.phone;
     document.getElementById("Postleitzahl").value = userData.zipCode === undefined || userData.firstName === null ? "" : userData.zipCode;
-    document.getElementById("Stadt").value = userData.city === uundefined || userData.firstName === null ? "" : userData.city;
+    document.getElementById("Stadt").value = userData.city === undefined || userData.firstName === null ? "" : userData.city;
     document.getElementById("Straße").value = userData.primaryAddress === undefined || userData.firstName === null ? "" : userData.primaryAddress;
     document.getElementById("Zusatz").value = userData.secondaryAddress === undefined || userData.firstName === null ? "" : userData.secondaryAddress;
     document.getElementById("anmeldung").hidden = true;

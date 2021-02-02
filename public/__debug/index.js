@@ -382,3 +382,11 @@ async function uploadImageFromURL() {
     console.log("gs://dhbw-kk-kino.appspot.com/live/events/movies/cover/"+movieID); // link to added to database.
 
 }
+
+async function payWithPaypal() {
+
+    const button = document.getElementById("paypalButton");
+
+    
+
+}
