@@ -3,6 +3,7 @@ import { checkIfAdminLogin } from './users';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 export const moviesCollectionPath = 'live/events/movies';
+export const eventDocumentPath = 'live/events';
 const topPriority = 'priority';
 const order: "desc" | "asc" = 'desc';
 
@@ -130,4 +131,9 @@ export async function updateMovie(id: string, changes: { [x: string]: any}, cont
     const movie = await basics.updateDocumentByID(moviesCollectionPath+ '/' + id, newData);
     console.log(movie);
     return await getMovieByID(id);
+}
+
+export async function getAllCategories() {
+    const document = await basics.getDocumentByID(eventDocumentPath)
+    return document.data();
 }

@@ -119,3 +119,7 @@ export const addHall = httpsOnCall((data, context) => {
 export const getAllRowTypes = httpsOnCall((data, context) => {
     return rowType.getAllRowTypes();
 });
+
+export const getAllCategories = httpsOnCall((data, context) => {
+    return movies.getAllCategories();
+});
