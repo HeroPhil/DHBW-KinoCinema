@@ -1,5 +1,4 @@
 :root{
-    font-size: 16px;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 
     
@@ -70,10 +69,6 @@
     display: table;
 }
 
-main{
-    margin-left: var(--navbar-size);
-}
-
 
 body{
     margin: 0;
@@ -116,19 +111,25 @@ main{
     letter-spacing: 0.3ch;
     background-color: var(--layer2);
     color: var(--textPrimary);
-    height: 10vh;
-    margin: 0;
-    margin-bottom: 0.5vh;
+    height: 10rem;
     width: 100%;
 }
 
 #title{
     text-align: center;
     font-weight: bold;
-    font-size: 5vh;
-    padding: 2vh;
+    font-size: 5rem;
     letter-spacing: 0.15em;
     color: var(--textPrimary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#title #rainbow{
+    text-align: center;
 }
 
 #copyright {
@@ -170,7 +171,7 @@ main{
     color: var(--accent-Dark);
 }
 
-.fa-primary,.fa-secondary{
+.fa-primary.fa-secondary{
     transition: var(--transition-speed);
 }
 
@@ -220,6 +221,7 @@ main{
 
 .nav-link svg{
     min-width: 2rem;
+    max-width: 2rem;
     margin: 0 1.5rem;
 }
 
@@ -246,7 +248,15 @@ main{
     transform: rotate(-180deg);
 }
 
-@media only screen and (max-width: 720px){
+@media only screen and (min-width: 0px) and (max-width: 1099px){
+    
+    [class*="col-"] {
+        width: 100%;
+    }
+
+}
+
+@media only screen and (min-width: 0px) and (max-width: 719px){
 
     .navbar{
         bottom: 0;
@@ -263,12 +273,17 @@ main{
     .nav-link{
         justify-content: center;
     }
-    .main{
-        margin:0;
+    main{
+        margin-left: 0px;
+    }
+    #header{
+        height: 12vw;
+    }
+    #title{
+        font-size: 8vw;
     }
 
 }
-
 
 @media only screen and (min-width: 720px){
     .navbar{
@@ -286,7 +301,7 @@ main{
         display: block;
     }
 
-    .main{
+    main{
         margin-left: var(--navbar-size);
     }
 }
@@ -347,7 +362,8 @@ main{
 
   
 #loading{
-    width: 50%;
-    margin-left: 45%;
+    width: 250px;
+    margin-left: auto;
+    justify-content: center;
     margin-right: auto;
 }
