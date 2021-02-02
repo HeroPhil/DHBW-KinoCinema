@@ -71,6 +71,8 @@ async function loadUserDetails() {
         document.getElementById("fullEmail").innerHTML = userData.email === undefined ? "" : userData.email;
         document.getElementById("fullStraße").innerHTML = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("fullStadt").innerHTML = userData.city === undefined ? "" : userData.city;
+
+        proofForAdmin();
         
     }else {
         window.location = "../account"
@@ -215,4 +217,22 @@ function createQrCode(element, textValue) {
         correctLevel : QRCode.CorrectLevel.H
     });
     qrcode.makeCode(textValue);
+}
+
+async function proofForAdmin() {
+    var anwser= await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')();
+    var admin = anwser.data.data
+    if(admin){
+        document.getElementById("onlyAdmins").style.display = "flex";
+    }else {
+        document.getElementById("onlyAdmins").style.display = "none";
+    }
+}
+
+async function adminPage() {
+    var anwser2 = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')();
+    var admin2 = anwser2.data.data
+    if(admin2){
+        window.location = "../admin/";
+    }
 }

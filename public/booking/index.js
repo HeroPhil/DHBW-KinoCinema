@@ -778,6 +778,9 @@ async function loginWithGoogle() {
 } //end of loginWithGoogle
 
 async function loginWithUserCredentials() {
+  document.getElementById("anmeldung").hidden = true;
+  //document.getElementById("guestLogin").hidden = true;
+  document.getElementById("loadWhile").hidden = false;
   var email = document.getElementById("usernameInput").value;
   var password = document.getElementById("passwordInput").value;
   firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
@@ -794,7 +797,7 @@ async function loginWithUserCredentials() {
           }).catch((error) => {
               console.log(error);
               if(error.code !== "auth/email-already-in-use") {
-                  Window.alert(error.message);
+                  alert(error.message);
               }
           })
       }
@@ -816,14 +819,14 @@ async function loadCurrentUserData() {
     const param = {};
     const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
     const userData = result.data.data;
-    document.getElementById("Vorname").value = userData.firstName === undefined ? "" : userData.firstName;
-    document.getElementById("Nachname").value = userData.lastName === undefined ? "" : userData.lastName;
-    document.getElementById("Email").value = userData.email === undefined ? "" : userData.email;
-    document.getElementById("Rufnummer").value = userData.phone === undefined ? "" : userData.phone;
-    document.getElementById("Postleitzahl").value = userData.zipCode === undefined ? "" : userData.zipCode;
-    document.getElementById("Stadt").value = userData.city === undefined ? "" : userData.city;
-    document.getElementById("Straße").value = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
-    document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
+    document.getElementById("Vorname").value = userData.firstName === undefined || userData.firstName === null ? "" : userData.firstName;
+    document.getElementById("Nachname").value = userData.lastName === undefined || userData.firstName === null ? "" : userData.lastName;
+    document.getElementById("Email").value = userData.email === undefined || userData.firstName === null ? "" : userData.email;
+    document.getElementById("Rufnummer").value = userData.phone === undefined || userData.firstName === null ? "" : userData.phone;
+    document.getElementById("Postleitzahl").value = userData.zipCode === undefined || userData.firstName === null ? "" : userData.zipCode;
+    document.getElementById("Stadt").value = userData.city === uundefined || userData.firstName === null ? "" : userData.city;
+    document.getElementById("Straße").value = userData.primaryAddress === undefined || userData.firstName === null ? "" : userData.primaryAddress;
+    document.getElementById("Zusatz").value = userData.secondaryAddress === undefined || userData.firstName === null ? "" : userData.secondaryAddress;
     document.getElementById("anmeldung").hidden = true;
     //document.getElementById("guestLogin").hidden = true;
     document.getElementById("loadWhile").hidden = true;

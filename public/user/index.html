@@ -59,7 +59,15 @@
             </div>
 
             <div id="main" hidden>
-                <button onclick = logout()>Logout</button>
+                <div class="row">
+                    <div class="col-2">
+                        <button class="button" onclick = logout()>Logout</button>
+                    </div>
+                    <div class="col-11">&nbsp;</div>
+                    <div class="col-3">
+                        <button class="button" id="onlyAdmins" onclick = adminPage()>Edit Website</button>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-1">&nbsp;</div>
                     <div class="col-14">
