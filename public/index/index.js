@@ -98,6 +98,12 @@ async function loadContent() {
     document.getElementById("slideshow-container").appendChild(nextBut);
 
     showSlides(1);
+
+
+    createCategorySections();
+
+
+
     endLoading();
 }
 
@@ -128,4 +134,36 @@ function showSlides(n) {
   }
   slides[slideIndex-1].style.display = "block";
   dots[slideIndex-1].className += " active";
+}
+
+async function createCategorySections() {
+
+
+    const section = document.getElementById("categories");
+
+    const doc = await functions.httpsCallable("database-getAllCategories")({});
+    const categories = doc.data.movieCategories;
+    console.log(categories);
+
+    categories.forEach((category) => {
+        
+        const row = document.createElement("div");
+            row.classList.add("row");
+                const rowLeft = document.createElement("div");
+                    rowLeft.classList.add("col-1");
+                    rowLeft.innerHTML = "&nbsp;";
+                const rowRight = document.createElement("div");
+                    rowRight.classList.add("col-14");
+                    const details = document.createElement("details");
+                        const summary = document.createElement("summary");
+                            summary.classList.add("expand");
+                            summary.innerHTML = category;
+                    details.appendChild(summary);
+                rowRight.appendChild(details);
+            row.appendChild(rowRight);
+            row.appendChild(rowLeft);
+        section.appendChild(row);
+
+    });
+
 }
