@@ -838,10 +838,10 @@ function fillCurrentUserData() {
 async function loadCurrentUserData() {
   if(firebase.auth().currentUser !== null){
     const param = {};
-    const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param).then(function(snapshot) {
+    const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param).then((snapshot) => {
       console.log(snapshot.data.data);
       const userData = snapshot.data.data;
-      if(userData != null) {
+      if(userData !== null) {
         document.getElementById("Vorname").value = "firstName" in  userData  ? userData.firstName : "";
         document.getElementById("Nachname").value = "lastName" in  userData  ? userData.lastName : "";
         document.getElementById("Email").value = "email" in  userData  ? userData.email : "";
@@ -850,7 +850,7 @@ async function loadCurrentUserData() {
         document.getElementById("Stadt").value = "city" in userData ? userData.city : "";
         document.getElementById("Straße").value = "primaryAddress" in userData ? userData.primaryAddress : "";
         document.getElementById("Zusatz").value = "secondaryAddress" in userData ? userData.secondaryAddress : "";
-      };
+      }
       document.getElementById("anmeldung").hidden = true;
       //document.getElementById("guestLogin").hidden = true;
       document.getElementById("loadWhile").hidden = true;
@@ -858,6 +858,9 @@ async function loadCurrentUserData() {
       document.getElementById("weiter").style.display = "flex";
       document.getElementById("buchen").style.display = "flex";
       loggedIn = true;
+      return true;
+    }).catch((error) => {
+      console.log(error);
     });
   }else{
     document.getElementById("anmeldung").hidden = false;
