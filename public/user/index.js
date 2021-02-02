@@ -31,6 +31,7 @@ async function loadUserDetails() {
     await new Promise(resolve => setTimeout(resolve, 2500));
     
     if(firebase.auth().currentUser !== null){
+        proofForAdmin();
         const param = {};
         const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
         const userInformation = await firebase.auth().currentUser.providerData;
@@ -45,10 +46,21 @@ async function loadUserDetails() {
         document.getElementById("Zusatz").value = userData.secondaryAddress === undefined ? "" : userData.secondaryAddress;
 
         /*--------------Profil-Picture----------------*/
+        var URL = null;
         var profilPicture = document.getElementById("profile-picture");
         profilPicture.innerHTML = "";
         var image = document.createElement("img");
-        image.setAttribute("src" , userInformation[0].photoURL);
+        var storage = firebase.storage();
+
+        if(userInformation[0].photoURL === null){            
+            await storage.refFromURL("gs://dhbw-kk-kino.appspot.com/live/users/default.png").getDownloadURL().then( url => {
+                image.src = url;
+                return;
+            }).catch((error) => {console.error(error)});
+        }else{
+            URL = userInformation[0].photoURL;
+            image.src = URL;
+        }
         profilPicture.appendChild(image);
 
         /* --------------------------- User-Card-----------------*/
@@ -60,7 +72,7 @@ async function loadUserDetails() {
         document.getElementById("fullEmail").innerHTML = userData.email === undefined ? "" : userData.email;
         document.getElementById("fullStraße").innerHTML = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("fullStadt").innerHTML = userData.city === undefined ? "" : userData.city;
-        
+
     }else {
         window.location = "../account"
         return ;
@@ -74,6 +86,8 @@ function logout() {
 }
 
 async function updateDetails() {
+    document.getElementById("loading").hidden = false;
+    document.getElementById("main").hidden = true;
 
     const pVorname = document.getElementById("Vorname").value;
     const pNachname = document.getElementById("Nachname").value;
@@ -108,10 +122,10 @@ async function updateDetails() {
     userData.primaryAddress === pStraße ? x[6] = true : alert('We could not save the Street + House Number, please try again!');
     userData.secondaryAddress === pZusatz ? x[7] = true : alert('We could not save the Addition, please try again!');
 
+    loadUserDetails();
     if(x.every((e) => e === true)) {
         alert('Your update was successful!');
     }
-    loadUserDetails();
 }
 
 async function loadLastTickets(count) {
@@ -202,4 +216,27 @@ function createQrCode(element, textValue) {
         correctLevel : QRCode.CorrectLevel.H
     });
     qrcode.makeCode(textValue);
+}
+
+async function proofForAdmin() {
+    var anwser= await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')();
+    var admin = anwser.data.data
+    if(admin){
+        document.getElementById("onlyAdmins").style.display = "flex";
+    }else {
+        document.getElementById("onlyAdmins").style.display = "none";
+    }
+}
+
+async function adminPage() {
+    document.getElementById("loading").hidden = false;
+    document.getElementById("main").hidden = true;
+    var anwser2 = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')();
+    var admin2 = anwser2.data.data
+    if(admin2){
+        window.location = "../admin/";
+        return ;
+    }
+    document.getElementById("loading").hidden = true;
+    document.getElementById("main").hidden = false;
 }

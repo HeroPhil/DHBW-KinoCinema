@@ -48,20 +48,34 @@ async function loginWithGoogle() {
         console.log(user);
         console.log(credential);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {console.error(error)});
     firebase.auth().currentUser.get
 } //end of loginWithGoogle
 
 async function loginWithUserCredentials() {
-    var email = document.querySelector("#username").value;
-    var password = document.querySelector("#password").value;
-    firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
+    var email = document.getElementById("usernameInput").value;
+    var password = document.getElementById("passwordInput").value;
+    firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
         console.log(user);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {
         console.log(error);
+        if(error.code === "auth/email-already-in-use") {
+            firebase.auth().signInWithEmailAndPassword(email, password).then((user) => { // eslint-disable-line promise/no-nesting
+                testForCurrentUser();
+                return;
+            }).catch((error) => {
+                console.log(error);
+                if(error.code !== "auth/email-already-in-use") {
+                    alert(error.message);
+                }
+            })
+        }
+        
         return error;
     });   
 } //end of loginWithUserCredentials
@@ -74,6 +88,7 @@ async function loginWithMicrosoft() {
         console.log(user);
         console.log(credential);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithMicrosoft
@@ -86,6 +101,7 @@ async function loginWithFacebook() {
         console.log(user);
         console.log(credential);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook
@@ -98,6 +114,7 @@ async function loginWithApple() {
         console.log(user);
         console.log(credential);
         testForCurrentUser();
+        sessionStorage.setItem("LoggedIn", "in");
         return;
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook

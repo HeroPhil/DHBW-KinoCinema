@@ -33,8 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function OnLoad(){
+    let admin = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')({});
+    if(admin.data.error){
+        window.location = "../index";
+    }
     switchEditOption(1);
     loadDropdownHalls();
+    loadDropdownRowTypes();
     addNeededEventListerns();
 }
 
@@ -169,7 +174,8 @@ async function addMovie(){
     let title = document.getElementById("Movie_Title").value;
     let description = document.getElementById("Movie_Description").value;
     let duration = document.getElementById("Movie_Duration").value;
-    let categories = document.getElementById("Movie_Category").value;
+    let categoriesAsString = document.getElementById("Movie_Category").value;
+    let categories = categoriesAsString.split("|");
     let rating = Number(document.getElementById("Movie_Rating").value);
     rating = rating * 10;
     let coverURL = document.getElementById("Movie_IMG").src;
@@ -178,24 +184,18 @@ async function addMovie(){
         name: title,
         description: description,
         duration: duration,
-        category: categories,
+        categories: categories,
         priority: rating
     };
-
+    console.log(param);
     let movie = await functions.httpsCallable('database-addMovie')(param);
     console.log(movie);
+    if(movie.data.error) {
+        alert(movie.data.error.message);
+    }
     let movieID = movie.data.id;
     let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
     console.log(newCoverUrl);
-    const param2 = {
-        id: movieID,
-        newData: {
-            cover: newCoverUrl
-        }
-    };
-
-    let movieWithCover = await functions.httpsCallable('database-updateMovie')(param2);
-    console.log(movieWithCover);
 }
 
 
@@ -250,6 +250,21 @@ async function loadDropdownHalls(){
     });
 }
 
+async function loadDropdownRowTypes(){
+    let rowTypes = await functions.httpsCallable('database-getAllRowTypes')({});
+    rowTypesData = rowTypes.data;
+    var dropdown_content_rows = document.getElementById("dropdownRowTypes-content");
+
+    rowTypesData.forEach( row => {
+        var entryType = document.createElement("a");
+        entryType.onclick = function() {
+            selectDropdownRowType(row.id);
+        };
+        entryType.innerHTML = row.data.name;
+        dropdown_content_rows.appendChild(entryType);
+    });
+}
+
 function selectDropdownHallEDIT(id){
     document.getElementById("EDIT_Screening_Hall").value = id;
 }
@@ -259,6 +274,10 @@ function selectDropdownHallADD(id){
 
 function selectDropdownIncrement(value){
     document.getElementById("EDIT_ADD_Increment").value = value;
+}
+
+function selectDropdownRowType(type){
+    document.getElementById("ADD_Row_Type").value = type;
 }
 
 async function loadDatabaseMovie(){
@@ -356,6 +375,9 @@ async function updateScreeningInformation(){
     };
 
     let screening = await functions.httpsCallable('database-updateScreening')(param);
+    if(screening.data.error) {
+        alert(screening.data.error.message);
+    }
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
 
@@ -381,6 +403,9 @@ async function updateInformationOfMovie(){
     };
 
     let movie = await functions.httpsCallable('database-updateMovie')(param);
+    if(movie.data.error) {
+        alert(movie.data.error.message);
+    }
     console.log(movie);
 }
 
@@ -403,7 +428,9 @@ async function addScreenings(){
     };
 
     let screening = await functions.httpsCallable('database-addScreening')(param);
-
+    if(screening.data.error) {
+        alert(screening.data.error.message);
+    }
     console.log(screening);
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
 }
@@ -427,6 +454,9 @@ async function uploadCover(){
             }
         };
         let movieWithCover = await functions.httpsCallable('database-updateMovie')(param2);
+        if(movieWithCover.data.error) {
+            alert(movieWithCover.data.error.message);
+        }
         console.log(movieWithCover);
         loadDatabaseMovie();
     }
@@ -487,23 +517,23 @@ function sortTable(n) {
     }
 }
 
-function selectDropdownRowType(type){
-    document.getElementById("ADD_Row_Type").value = type;
-}
 
 async function addHall(){
 
     var hallName = document.getElementById("ADD_Hall_Name").value;
+    console.log(rows);
     var hallRows = rows;
     var hallWidth = document.getElementById("ADD_Hall_Width").value;
-
     const param = {
         name: hallName,
         rows: hallRows,
         width: hallWidth
     };
-
+    console.log(param);
     let hall = await functions.httpsCallable('database-addHall')(param);
+    if(hall.data.error) {
+        alert(hall.data.error.message);
+    }
     console.log(hall);
 }
 
@@ -511,7 +541,7 @@ function addRow(){
     var pType = document.getElementById("ADD_Row_Type").value;
     var pCount = document.getElementById("ADD_Row_Count").value;
     const row = {
-        type: pType,
+        id: pType,
         count: pCount
     }
     rows.push(row);
@@ -528,7 +558,7 @@ function displayRows(){
     rows.forEach(row => {
         var tRow = document.createElement("tr");
         var tType = document.createElement("td");
-        tType.innerHTML = row.type;
+        tType.innerHTML = row.id;
         var tCount = document.createElement("td");
         tCount.innerHTML = row.count;
         tRow.appendChild(tType);
@@ -556,7 +586,7 @@ async function seatGeneration() {
     seatContainer.appendChild(rowScreen);
     for(var i = 0; i < rows.length; i++) {
       var rowAmount = rows[i].count;
-      var seatType = rows[i].type;
+      var seatType = rows[i].id;
       seatType = seatType.replace("\"", "");
       seatType = seatType.trim();
   

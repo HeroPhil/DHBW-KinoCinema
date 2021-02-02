@@ -1,0 +1,36 @@
+#uniqueMessage h2{
+    color: var(--accent);
+    text-align: center;
+    font-size: 3rem;
+}
+#uniqueMessage h1{
+    color: var(--accent);
+    text-align: center;
+    font-size: 2rem;
+}
+#container{
+    background-color: var(--layer3);
+    color: var(--textPrimary);
+    padding-left: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+@media only screen and (min-width: 0px) and (max-width: 719px){
+
+}
+
+@media only screen and (min-width: 720px) and (max-width: 899px){
+
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1079px){
+
+}
+
+@media only screen and (min-width: 1080px) and (max-width: 1259px){
+
+}
+
+@media only screen and (min-width: 1260px) and (max-width: 1440px){
+
+}

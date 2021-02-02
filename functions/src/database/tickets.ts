@@ -4,6 +4,7 @@ import {nanoid} from 'nanoid';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { checkIfAnyLogin } from '../logic/auth';
 import { checkIfSeatIsValidInScreening } from '../logic/tickets';
+import { getRowTypeIndex } from '../logic/row';
 
 const screeningsSyncCollectionPath = "live/sync/screenings";
 const userCollectionPath = "live/users";
@@ -125,13 +126,16 @@ export async function createTicket(screening: string, row: number, seat: number,
 
   // Proceed with ticket creation
   const userRef = await basics.getDocumentRefByID(userPath);
+  let rowTypeIndex = getRowTypeIndex(row, screeningCheckObj);
+  let price = screeningCheck.data().price * screeningCheckObj.data.hall.data.rows[rowTypeIndex].type.data.price;
 
   const data = {
     buyTime: timestamp,
     row: row,
     seat: seat,
     screening: screeningRef,
-    user: userRef
+    user: userRef,
+    price: price
   };
    
 

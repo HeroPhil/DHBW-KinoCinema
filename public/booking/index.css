@@ -3,12 +3,12 @@
 #seat-selection{
 
     background-color: var(--layer1);
-    color: #fff;
+    color: var(--textPrimary);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 75rem;
+    height: auto;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
     margin: 0;
 }
@@ -16,23 +16,25 @@
 .movie-container {
     margin: 2rem 0;
     padding-top: 2rem;
-    width: 20%;
+    width: 50%;
     text-align: center;
 }
 #movie {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    border-bottom: 0.2rem solid var(--accent);
 }
 
 
 
 .container {
-    width: 60vw;
+    width: 80%;
     margin-bottom: 2rem;
 }
 
 .seat {
     background-color: var(--layer10);
-    height: 1.5rem;
+    max-height: 1.5rem;
+    height: auto;
     width: 1.8rem;
     margin: 0.25rem;
     border-top-left-radius: 0.8rem;
@@ -86,6 +88,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 2rem;
+    width: auto;
 }
 
 .showcase li {
@@ -162,8 +165,12 @@ summary:focus {
     outline: none;
 }
 
-#formStyle {
+.formStyle {
     background-color: var(--layer1);
+    height: auto;
+    padding-bottom: 1.5rem;
+    padding-right: 0.8rem;
+    padding-left: 0.8rem;
 }
 
 
@@ -177,7 +184,8 @@ summary:focus {
     align-items: center;
     cursor: pointer;
     background-color: var(--layer1);
-    margin: 1rem;
+    margin-top: 2rem;
+    float: right;
 }
 
 .SignUp{
@@ -287,12 +295,11 @@ summary:focus {
 .ticket {
     color: var(--textPrimary);
     font-size: 1.2rem;
-    width: 50rem;
-    height: 15rem;
     background-color: var(--layer3);
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: row;
     justify-content: space-around;
+    align-items: center;
     border: 0.2rem solid var(--layer1);
     border-radius: 2rem;
     margin: 3rem;
@@ -310,24 +317,37 @@ summary:focus {
 .ticketMovieTitle {
     font-weight: bold;
     letter-spacing: 0.3ch;
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 0.25rem 1rem;
     width: 100%;
+    min-height: 30%;
+    max-height: 30%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-bottom: 0.2rem solid var(--accent);
 }
 
 .ticketInformation table {
     border-collapse: collapse;
-    width: 50%;
+    width: 100%;
     margin-left: 1rem;
 }
 
 .ticketInformation table tr td {
     padding-top: 5%;
-    border-bottom: 1px solid var(--layer3);
+    border-bottom: 1px dotted var(--layer8);
 }
 
-.ticketInformation table tr td:last-child {
+.ticketInformation table tr td:nth-child(2) {
+    border-right: 1px solid var(--accent-Light);
+    padding-right: 0.5rem;
+}
+
+.ticketInformation table tr td:nth-child(3) {
+    padding-left: 0.5rem;
+}
+
+.ticketInformation table tr td:nth-child(even) {
     text-align: right;
 }
 
@@ -374,6 +394,7 @@ summary:focus {
 
 .pic{
     width: 30%;
+    height: 90%;
     display: inherit;
     align-items: center;
 }
@@ -381,20 +402,109 @@ summary:focus {
 .image {
     padding-top: 1rem;
     padding-bottom: 1rem;
-    height: 90%;
+    height: 100%;
     display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .image img{
-    height: 100%;
-    width: auto;
-    padding-bottom: 5rem;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    overflow: hidden;
 }
 
 
 
 #loadingWhileLogin{
-    width: 50%;
-    margin-left: 40%;
+    width: 250px;
+    margin-left: auto;
+    justify-content: center;
     margin-right: auto;
+}
+
+/* --------------------------Media Queries ---------------*/
+
+@media only screen and (min-width: 0px) and (max-width: 719px){
+    html {
+        font-size: 12px;
+    }
+    
+    .ticket{
+        width: 25rem;
+        flex-direction: column-reverse;
+        margin-left: 0;
+    }
+
+    .ticketInformation{
+        width: 80%;
+    }
+
+    .pic{
+        width: 90%;
+    }
+
+    .ticketMovieTitle{
+        padding: 0;
+    }
+
+    .container{
+        width: 95%;
+    }
+
+    #seat-selection ul{
+        width: fit-content;
+    }
+}
+
+@media only screen and (min-width: 720px) and (max-width: 1099px){
+    html{
+        font-size: 13px;
+    }
+    
+    .ticket{
+        width: 40rem;
+    }
+}
+  
+@media only screen and (min-width: 1100px) and (max-width: 1499px){
+    html{
+        font-size: 14px;
+    }
+    
+    .ticket{
+        width: 30rem;
+    }
+}
+    
+@media only screen and (min-width: 1500px) and (max-width: 1899px){
+    html{
+        font-size: 15px;
+    }
+    
+    .ticket{
+        width: 40rem;
+    }
+}
+    
+@media only screen and (min-width: 1900px) and (max-width: 2299px){
+    html{
+        font-size: 16px;
+    }
+
+    .ticket{
+        width: 50rem;
+    }
+}
+    
+@media only screen and (min-width: 2300px){
+    html{
+        font-size: 18px;
+    }
+
+    .ticket{
+        width: 60rem;
+    }
 }

@@ -65,19 +65,19 @@ export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
 });
 
 export const addMovie = httpsOnCall((data, context) => {
-    return movies.addMovie(data.category, data.description, parseInt(data.duration), data.name, parseInt(data.priority));
+    return movies.addMovie(data.categories, data.description, parseInt(data.duration), data.name, parseInt(data.priority), context);
 });
 
 export const updateMovie = httpsOnCall((data, context) => {
-    return movies.updateMovie(data.id || undefined, data.newData);
+    return movies.updateMovie(data.id || undefined, data.newData, context);
 });
 
 export const addScreening = httpsOnCall((data, context) => {
-    return screenings.addScreening(data.movie, data.hall, parseInt(data.price), parseInt(data.startTime), parseInt(data.repetitions) || undefined, parseInt(data.increments) || undefined);
+    return screenings.addScreening(data.movie, data.hall, parseInt(data.price), parseInt(data.startTime), parseInt(data.repetitions) || undefined, parseInt(data.increments) || undefined, context);
 });
 
 export const updateScreening = httpsOnCall((data, context) => {
-    return screenings.updateScreening(data.id || undefined, data.newData);
+    return screenings.updateScreening(data.id || undefined, data.newData, context);
 });
 
 export const getInformationOfCurrentUser = httpsOnCall((data, context) => {
@@ -113,9 +113,17 @@ export const getAllHalls = httpsOnCall((data, context) => {
 });
 
 export const addHall = httpsOnCall((data, context) => {
-    return halls.addHall(data.name ?? "new Hall", data.rows, data.width ?? 1);
+    return halls.addHall(data.name ?? "new Hall", data.rows, data.width ?? 1, context);
 })
 
 export const getAllRowTypes = httpsOnCall((data, context) => {
     return rowType.getAllRowTypes();
+});
+
+export const getAllCategories = httpsOnCall((data, context) => {
+    return movies.getAllCategories();
+});
+
+export const updateCategoriesOnAddMovie = func().firestore.document('live/events/movies/{docId}').onWrite((change, context) => {
+    return movies.updateCategoriesOnAddMovie();
 });

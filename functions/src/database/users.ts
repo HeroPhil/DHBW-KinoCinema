@@ -88,12 +88,6 @@ export async function promoteUserToAdminByID(context: CallableContext, id: strin
         return {error};
     }
 
-    const checkLogin = checkIfAnyLogin(context);
-    if (checkLogin.error) {
-        error = checkLogin.error;
-        return {error};
-    }
-
     const checkAdmin = await checkIfAdminLogin(context)
     if (checkAdmin.error) {
         error = checkAdmin.error;
@@ -157,16 +151,17 @@ export async function checkIfCurrentUserIsAdmin(context: CallableContext) {
 }
 
 export const checkIfAdminLogin = async (context: CallableContext) => {
-    if(!context.auth) {
-      console.log("You are not logged in!");
-      const error = {message: "You are not logged in!"};
-      return {error};
+    let error: {message: string} = { message: "" };
+    const checkLogin = checkIfAnyLogin(context);
+    if (checkLogin.error) {
+        error = checkLogin.error;
+        return {error};
     }
     
     const adminCheck = await basics.getDocumentByID(adminsCollectionPath + '/' + context.auth.uid);
     if(!adminCheck.exists) {
         console.log("You don't have the permission to do this!");
-        const error = { message : "You don't have the permission to do this!"};
+        error = { message : "You don't have the permission to do this!"};
         return {error};
     }
 

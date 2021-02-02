@@ -53,6 +53,9 @@ summary:focus {
     outline: none;
 }
 
+#onlyAdmins {
+    display: none;
+}
 
 .button{
     color: var(--textPrimary);
@@ -239,4 +242,25 @@ fieldset {
 
 #pref button {
     margin: 1rem 1rem 1rem auto;
+}
+
+
+@media only screen and (min-width: 0px) and (max-width: 719px){
+
+}
+
+@media only screen and (min-width: 720px) and (max-width: 899px){
+
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1079px){
+
+}
+
+@media only screen and (min-width: 1080px) and (max-width: 1259px){
+
+}
+
+@media only screen and (min-width: 12px) and (max-width: 899px){
+
 }

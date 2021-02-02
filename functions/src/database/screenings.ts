@@ -4,6 +4,8 @@ import { Hall } from './hall';
 import { createEmptyHallSeatArray, markSeatsAsOccupied } from '../logic/screenings';
 import { countRowsOfScreening } from '../logic/row';
 import { Ticket } from './tickets';
+import { checkIfAdminLogin } from './users';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 export const screeningsCollectionPath = 'live/events/screenings'
 const ticketsCollectionPath = 'live/events/tickets';
@@ -131,9 +133,16 @@ export async function getBookedSeatsByScreeningID(id: string) {
     return seats; 
 }
 
-export async function addScreening(movie:  string, hall: string, price: number, startTime: number, repetitions: number, increments: number) {
-    const error: {message: string} = { message: "" };
+export async function addScreening(movie:  string, hall: string, price: number, startTime: number, repetitions: number, increments: number, context: CallableContext) {
+    let error: {message: string} = { message: "" };
     const screenings: Screening[] = [];
+
+    //check if user is logged in as admin
+    const checkAdmin = await checkIfAdminLogin(context)
+    if (checkAdmin.error) {
+        error = checkAdmin.error;
+        return {error};
+    }
     
     const movieRef = await basics.getDocumentRefByID(moviesCollectionPath + "/" + movie);
     const movieDoc = await basics.getDocumentByRef(movieRef);
@@ -185,9 +194,16 @@ export async function addScreening(movie:  string, hall: string, price: number, 
   return screenings;
 }
 
-export async function updateScreening(id: string, newData: {movie: any, hall: any, price: any, startTime: any}) {
-    const error: {message: string} = { message: "" };
+export async function updateScreening(id: string, newData: {movie: any, hall: any, price: any, startTime: any}, context: CallableContext) {
+    let error: {message: string} = { message: "" };
     const validChanges: validChangesInterface = {};
+
+    //check if user is logged in as admin
+    const checkAdmin = await checkIfAdminLogin(context)
+    if (checkAdmin.error) {
+        error = checkAdmin.error;
+        return {error};
+    }
 
     //check if screening is passed as parameter (defaulted to undefined) and check if screening exists in database
     if(id !== undefined) {

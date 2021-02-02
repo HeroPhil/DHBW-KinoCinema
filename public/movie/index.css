@@ -88,7 +88,20 @@
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-
+#movie-screening-list{
+    overflow: auto;
+}
+#movie-screening-list::-webkit-scrollbar {
+    width: 0.1rem;
+}
+  
+#movie-screening-list::-webkit-scrollbar-track {
+    background: var(--layer0);
+}
+  
+#movie-screening-list::-webkit-scrollbar-thumb {
+    background: var(--accent-Dark);
+}
 
 #movie-screening-list table{
     border-collapse: collapse;
@@ -100,6 +113,7 @@
     width: 14.25%;
     text-align: center;
     vertical-align: top;
+    height: 1rem;
 }
 
 #movie-screening-list table th{
@@ -110,4 +124,44 @@
     text-align: left;
     background-color: var(--layer3);
     color: var(--accent);
+}
+
+
+
+
+/*----------------------Media Queries--------------------------*/
+@media only screen and (min-width: 0px) and (max-width: 719px){
+    html {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (min-width: 720px) and (max-width: 1099px){
+    html{
+        font-size: 13px;
+    }
+}
+  
+@media only screen and (min-width: 1100px) and (max-width: 1499px){
+    html{
+        font-size: 14px;
+    }
+}
+    
+@media only screen and (min-width: 1500px) and (max-width: 1899px){
+    html{
+        font-size: 15px;
+    }
+}
+    
+@media only screen and (min-width: 1900px) and (max-width: 2299px){
+    html{
+        font-size: 16px;
+    }
+  }
+    
+@media only screen and (min-width: 2300px){
+    html{
+        font-size: 18px;
+    }
 }
