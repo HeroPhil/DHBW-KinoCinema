@@ -23,6 +23,8 @@
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
+    <script src="https://www.paypal.com/sdk/js?client-id=Abq6Js0kK4F_KcrPiOEIAZsJIDDCOXmpSvFoB5J1iYOBIYGoBo4nCp9GqHEU2pFoJerkR3_alJnFFxFJ&components=buttons"></script>
+
     <script src="./index.js"></script>
 
   </head>
@@ -93,5 +95,41 @@
 
     <hr>
     <button onclick="uploadImageFromURL()">upload image from url</button>
+
+    <hr>
+    <div id="paypal-button-container"></div>
+    <script>
+      paypal.Buttons( {
+        style:  {
+          layout:  'vertical',
+          color:   'blue',
+          shape:   'rect',
+          label:   'paypal'
+        }
+      }).render('#paypal-button-container');
+    </script>
+    <script>
+      paypal.Buttons( {
+        createOrder: function(data, actions)  {
+          // This function sets up the details of the transaction, including the amount and line item details.
+          return actions.order.create( {
+            purchase_units: [ {
+              amount:  {
+                value: '0.01'
+              }
+            }]
+          });
+        },
+        onApprove: function(data, actions)  {
+          // This function captures the funds from the transaction.
+          return actions.order.capture().then(function(details)  {
+            // This function shows a transaction success message to your buyer.
+            alert('Transaction completed by ' + details.payer.name.given_name);
+            window.location = "./index";
+          });
+        }
+      }).render('#paypal-button-container');
+      //This function displays payment buttons on your web page.
+    </script>
   </body>
 </html>
