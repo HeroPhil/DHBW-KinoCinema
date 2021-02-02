@@ -150,7 +150,7 @@ async function createCategorySections() {
     const section = document.getElementById("categories");
 
     const doc = await functions.httpsCallable("database-getAllCategories")({});
-    const categories = doc.data.movieCategories ?? [];
+    const categories = doc.data.movieCategories || [];
     console.log(categories);
 
     let index = 0;
