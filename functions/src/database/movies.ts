@@ -135,5 +135,5 @@ export async function updateMovie(id: string, changes: { [x: string]: any}, cont
 
 export async function getAllCategories() {
     const document = await basics.getDocumentByID(eventDocumentPath)
-    return document.data().data.movieCategories;
+    return document.data().movieCategories;
 }
