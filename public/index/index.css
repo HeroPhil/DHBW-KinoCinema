@@ -251,7 +251,6 @@ form.field input[type=text] {
 
 .resultMovie img {
   height: 20rem;
-  width: auto;
   width: 18rem;
   object-fit: contain;
   margin: 0.2rem;
@@ -295,7 +294,7 @@ summary:focus {
 .moviesContainer{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   min-height: 5rem;
 }
 
