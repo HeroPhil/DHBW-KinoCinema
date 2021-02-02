@@ -826,27 +826,34 @@ async function loginWithUserCredentials() {
   loggedIn = true;
 }*/
 
+function fillCurrentUserData() {
+
+}
 
 async function loadCurrentUserData() {
   if(firebase.auth().currentUser !== null){
     const param = {};
-    const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
-    const userData = result.data.data;
-    document.getElementById("Vorname").value = userData.firstName === undefined || userData.firstName === null ? "" : userData.firstName;
-    document.getElementById("Nachname").value = userData.lastName === undefined || userData.firstName === null ? "" : userData.lastName;
-    document.getElementById("Email").value = userData.email === undefined || userData.firstName === null ? "" : userData.email;
-    document.getElementById("Rufnummer").value = userData.phone === undefined || userData.firstName === null ? "" : userData.phone;
-    document.getElementById("Postleitzahl").value = userData.zipCode === undefined || userData.firstName === null ? "" : userData.zipCode;
-    document.getElementById("Stadt").value = userData.city === undefined || userData.firstName === null ? "" : userData.city;
-    document.getElementById("Straße").value = userData.primaryAddress === undefined || userData.firstName === null ? "" : userData.primaryAddress;
-    document.getElementById("Zusatz").value = userData.secondaryAddress === undefined || userData.firstName === null ? "" : userData.secondaryAddress;
-    document.getElementById("anmeldung").hidden = true;
-    //document.getElementById("guestLogin").hidden = true;
-    document.getElementById("loadWhile").hidden = true;
-    document.getElementById("hiddenInfo").hidden = false;
-    document.getElementById("weiter").style.display = "flex";
-    document.getElementById("buchen").style.display = "flex";
-    loggedIn = true;
+    const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param).then(function(snapshot) {
+      console.log(snapshot.data.data);
+      const userData = snapshot.data.data;
+      if(userData != null) {
+        document.getElementById("Vorname").value = "firstName" in  userData  ? userData.firstName : "";
+        document.getElementById("Nachname").value = "lastName" in  userData  ? userData.lastName : "";
+        document.getElementById("Email").value = "email" in  userData  ? userData.email : "";
+        document.getElementById("Rufnummer").value = "phone" in  userData ? userData.phone : "";
+        document.getElementById("Postleitzahl").value = "zipCode" in userData ? userData.zipCode : "";
+        document.getElementById("Stadt").value = "city" in userData ? userData.city : "";
+        document.getElementById("Straße").value = "primaryAddress" in userData ? userData.primaryAddress : "";
+        document.getElementById("Zusatz").value = "secondaryAddress" in userData ? userData.secondaryAddress : "";
+      };
+      document.getElementById("anmeldung").hidden = true;
+      //document.getElementById("guestLogin").hidden = true;
+      document.getElementById("loadWhile").hidden = true;
+      document.getElementById("hiddenInfo").hidden = false;
+      document.getElementById("weiter").style.display = "flex";
+      document.getElementById("buchen").style.display = "flex";
+      loggedIn = true;
+    });
   }else{
     document.getElementById("anmeldung").hidden = false;
     //document.getElementById("guestLogin").hidden = false;
