@@ -65,7 +65,7 @@ export const getTicketsOfCurrentUser = httpsOnCall((data, context) => {
 });
 
 export const addMovie = httpsOnCall((data, context) => {
-    return movies.addMovie(data.category, data.description, parseInt(data.duration), data.name, parseInt(data.priority), context);
+    return movies.addMovie(data.categories, data.description, parseInt(data.duration), data.name, parseInt(data.priority), context);
 });
 
 export const updateMovie = httpsOnCall((data, context) => {
