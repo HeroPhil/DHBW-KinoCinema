@@ -72,57 +72,61 @@ function loadTicketsWithQRCode() {
       var hallId = actualTicket.data.screening.data.hall.data.name;
       var dateOfScreening = new Date(parseInt(actualTicket.data.screening.data.startTime));
       var date = (dateOfScreening.getDay() + 1) + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear();
-      createTicket(movieTitle, hallId, actualTicket.data.row, actualTicket.data.seat, date, ticketId);
+      createTicket(movieTitle, hallId, actualTicket.data.row, actualTicket.data.seat, date, actualTicket.data.price, ticketId);
     } //end of if
   } //end of for
 } //end of loadTicketsWithQRCode
 
-function createTicket(title, hall, row, seat, date, value) {
-    var tickets = document.getElementById("tickets");
-    var ticket = document.createElement("div");
-    ticket.classList.add("ticket");
-      var ticketInformation = document.createElement("div");
-      ticketInformation.classList.add("ticketInformation");
-        var movieTitle = document.createElement("div");
-        movieTitle.classList.add("ticketMovieTitle");
-        movieTitle.innerHTML = title;
-      ticketInformation.appendChild(movieTitle);
-        var detailsTable = document.createElement("table");
-          var rowHall = document.createElement("tr");
+function createTicket(title, hall, row, seat, date, price, value) {
+  var tickets = document.getElementById("tickets");
+  var ticket = document.createElement("div");
+  ticket.classList.add("ticket");
+    var ticketInformation = document.createElement("div");
+    ticketInformation.classList.add("ticketInformation");
+      var movieTitle = document.createElement("div");
+      movieTitle.classList.add("ticketMovieTitle");
+      movieTitle.innerHTML = title;
+    ticketInformation.appendChild(movieTitle);
+      var detailsTable = document.createElement("table");
+        var rowHall = document.createElement("tr");
           var tHall = document.createElement("td");
-          tHall.innerHTML = "Saal";
+          tHall.innerHTML = "Hall";
           var tHallValue = document.createElement("td");
           tHallValue.innerHTML = hall;
           rowHall.appendChild(tHall);
           rowHall.appendChild(tHallValue);
+          var tDate = document.createElement("td");
+          tDate.innerHTML = "Date";
+          var tDateValue = document.createElement("td");
+          tDateValue.innerHTML = date;
+          rowHall.appendChild(tDate);
+          rowHall.appendChild(tDateValue);
         detailsTable.appendChild(rowHall);
         var rowRow = document.createElement("tr");
           var tRow = document.createElement("td");
-          tRow.innerHTML = "Reihe";
+          tRow.innerHTML = "Row";
           var tRowValue = document.createElement("td");
           tRowValue.innerHTML = row;
           rowRow.appendChild(tRow);
           rowRow.appendChild(tRowValue);
+          var tPrice = document.createElement("td");
+          tPrice.innerHTML = "Price";
+          var tPriceValue = document.createElement("td");
+          tPriceValue.innerHTML = price;
+          rowRow.appendChild(tPrice);
+          rowRow.appendChild(tPriceValue);
         detailsTable.appendChild(rowRow);
         var rowSeat = document.createElement("tr");
           var tSeat = document.createElement("td");
-          tSeat.innerHTML = "Sitz";
+          tSeat.innerHTML = "Seat";
           var tSeatValue = document.createElement("td");
           tSeatValue.innerHTML = seat;
           rowSeat.appendChild(tSeat);
           rowSeat.appendChild(tSeatValue);
         detailsTable.appendChild(rowSeat);
-        var rowDate = document.createElement("tr");
-          var tDate = document.createElement("td");
-          tDate.innerHTML = "Datum";
-          var tDateValue = document.createElement("td");
-          tDateValue.innerHTML = date;
-          rowDate.appendChild(tDate);
-          rowDate.appendChild(tDateValue);
-        detailsTable.appendChild(rowDate);
       ticketInformation.appendChild(detailsTable);
     ticket.appendChild(ticketInformation);
-    tickets.appendChild(ticket);
+  tickets.appendChild(ticket);
     createQrCode(ticket, value);
     html2canvas(ticket).then(canvas => {
       var imgBase64Coded = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
