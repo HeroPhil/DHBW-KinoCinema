@@ -70,7 +70,7 @@
                             <div id="seat-selection">
                                 <br>
                                 <div class="movie-container">
-                                    <label id="movie" value="10">Selected Movie: <span id="movie-title">MOVIE x</span></label>
+                                    <label id="movie" value="10"></label>
                                     
                                 </div>
               
@@ -161,7 +161,7 @@
                   <div class="col-14">
                     <details id="ZahlungDetails" hidden = true>
                         <summary id="Zahlung" class="expand">Payment</summary>
-                        <form id="formStyle">
+                        <form class="formStyle">
                             <div id="ErrorContainerZahlung"></div>
                             <div class="row" id="loadWhile" hidden>
                                 <div class="col-16">
@@ -175,7 +175,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-7" id="anmeldung">
+                                <div class="col-4">&nbsp;</div>
+                                <div class="col-8" id="anmeldung">
                                     <br>
                                     <fieldset>
                                         <legend>Registration</legend>
@@ -194,7 +195,7 @@
                                         </div>
                                     </fieldset>
                                 </div>
-                                <div class="col-9">&nbsp;</div>
+                                <div class="col-4">&nbsp;</div>
 
 <!-- Future Guest Login         <div class="col-1">
                                     <button onclick="loginAsGuest()" class="SignUp" id="guestLogin">Guest</button>
@@ -257,8 +258,9 @@
                                             <label>Pay On Site</label>
                                             <input type="radio" name="paymethod" value="Kreditkarte" onclick = pay(1)>
                                             <label>Credit Card</label>
-                                            <input type="radio" name="paymethod" value="PayPal" onclick = pay(2)>
+<!--                                        <input type="radio" name="paymethod" value="PayPal" onclick = pay(2)>
                                             <label>PayPal</label>
+-->                                            
                                             <br>
                                             <div id="radioAus"></div>
                                         </fieldset>
@@ -266,11 +268,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-2">
+                                    <div class="col-4">
                                         <input type="checkbox" id="saveCeck" onclick = otherAdr() checked>
                                         <label>Save changes</label>
                                     </div>
-                                    <div class="col-14"></div>
+                                    <div class="col-12"></div>
                                 </div>
         
                                 <div class="row">
@@ -291,7 +293,7 @@
                     <div class="col-14">
                         <details id="zusammenfassungDetails" hidden = true> 
                         <summary class="expand">Summary</summary>
-                            <form id="formStyle">
+                            <form class="formStyle">
                                 <div class="row">
                                     <div class="col-16">
                                         <h1><center>You have provided the following information!</center></h1>
