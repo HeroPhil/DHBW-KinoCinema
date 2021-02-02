@@ -453,6 +453,10 @@ summary:focus {
     .container{
         width: 95%;
     }
+
+    #seat-selection ul{
+        width: fit-content;
+    }
 }
 
 @media only screen and (min-width: 720px) and (max-width: 1099px){
