@@ -142,13 +142,13 @@ async function loadContent() {
     screeningReference = information.screeningId;
     screeningTime = information.time;
     var screeningDate = new Date(screeningTime);
-    screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + "<br>" + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
+    screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + " - " + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
     var movieTitle = sessionStorage.getItem('movieTitle');
     movieName = sessionStorage.getItem('movieTitle');
   } catch(err) {
     console.log(err);
   } //end of try-catch
-  var titlePlaceHolder = document.getElementById("movie-title");
+  var titlePlaceHolder = document.getElementById("movie");
   titlePlaceHolder.innerHTML = movieTitle + "<br>" + screeningDate;
   var hallInfo = information.hall.data;
   normalTicketPrice = parseFloat(information.price);
@@ -492,14 +492,16 @@ function addTicketsToWebsite() {
   if(selectedSeats.length > 0) {
     var date = new Date(screeningTime);
     var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+    console.log(selectedSeats[0]);
     for(var i = 0; i < selectedSeats.length; i++) {
       var seat = selectedSeats[i];
-      createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString);
+      var seatPrice = normalTicketPrice;
+      createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString, seatPrice);
     } //end of for
   } //end of if
 }
 
-function createTicket(title, hall, row, seat, date) {
+function createTicket(title, hall, row, seat, date, price) {
     var tickets = document.getElementById("tickets");
     var ticket = document.createElement("div");
     ticket.classList.add("ticket");
@@ -511,39 +513,43 @@ function createTicket(title, hall, row, seat, date) {
       ticketInformation.appendChild(movieTitle);
         var detailsTable = document.createElement("table");
           var rowHall = document.createElement("tr");
-          var tHall = document.createElement("td");
-          tHall.innerHTML = "Hall";
-          var tHallValue = document.createElement("td");
-          tHallValue.innerHTML = hall;
-          rowHall.appendChild(tHall);
-          rowHall.appendChild(tHallValue);
-        detailsTable.appendChild(rowHall);
-        var rowRow = document.createElement("tr");
-          var tRow = document.createElement("td");
-          tRow.innerHTML = "Row";
-          var tRowValue = document.createElement("td");
-          tRowValue.innerHTML = row;
-          rowRow.appendChild(tRow);
-          rowRow.appendChild(tRowValue);
-        detailsTable.appendChild(rowRow);
-        var rowSeat = document.createElement("tr");
-          var tSeat = document.createElement("td");
-          tSeat.innerHTML = "Seat";
-          var tSeatValue = document.createElement("td");
-          tSeatValue.innerHTML = seat;
-          rowSeat.appendChild(tSeat);
-          rowSeat.appendChild(tSeatValue);
-        detailsTable.appendChild(rowSeat);
-        var rowDate = document.createElement("tr");
-          var tDate = document.createElement("td");
-          tDate.innerHTML = "Date";
-          var tDateValue = document.createElement("td");
-          tDateValue.innerHTML = date;
-          rowDate.appendChild(tDate);
-          rowDate.appendChild(tDateValue);
-        detailsTable.appendChild(rowDate);
-      ticketInformation.appendChild(detailsTable);
-    ticket.appendChild(ticketInformation);
+            var tHall = document.createElement("td");
+            tHall.innerHTML = "Hall";
+            var tHallValue = document.createElement("td");
+            tHallValue.innerHTML = hall;
+            rowHall.appendChild(tHall);
+            rowHall.appendChild(tHallValue);
+            var tDate = document.createElement("td");
+            tDate.innerHTML = "Date";
+            var tDateValue = document.createElement("td");
+            tDateValue.innerHTML = date;
+            rowHall.appendChild(tDate);
+            rowHall.appendChild(tDateValue);
+          detailsTable.appendChild(rowHall);
+          var rowRow = document.createElement("tr");
+            var tRow = document.createElement("td");
+            tRow.innerHTML = "Row";
+            var tRowValue = document.createElement("td");
+            tRowValue.innerHTML = row;
+            rowRow.appendChild(tRow);
+            rowRow.appendChild(tRowValue);
+            var tPrice = document.createElement("td");
+            tPrice.innerHTML = "Price";
+            var tPriceValue = document.createElement("td");
+            tPriceValue.innerHTML = price;
+            rowRow.appendChild(tPrice);
+            rowRow.appendChild(tPriceValue);
+          detailsTable.appendChild(rowRow);
+          var rowSeat = document.createElement("tr");
+            var tSeat = document.createElement("td");
+            tSeat.innerHTML = "Seat";
+            var tSeatValue = document.createElement("td");
+            tSeatValue.innerHTML = seat;
+            rowSeat.appendChild(tSeat);
+            rowSeat.appendChild(tSeatValue);
+          detailsTable.appendChild(rowSeat);
+        ticketInformation.appendChild(detailsTable);
+      ticket.appendChild(ticketInformation);
     tickets.appendChild(ticket);
     //createQrCode(ticket, value);
     movieLogo(ticket);
@@ -774,7 +780,14 @@ async function loginWithGoogle() {
       loadCurrentUserData();
       loggedIn = true;
       return ;
-  }).catch((error) => {console.error(error)});
+  }).catch((error) => {
+    console.error(error)
+    if(error.code === "auth/popup-closed-by-user") {
+      document.getElementById("anmeldung").hidden = false;
+      //document.getElementById("guestLogin").hidden = true;
+      document.getElementById("loadWhile").hidden = true;
+    }
+  });
 } //end of loginWithGoogle
 
 async function loginWithUserCredentials() {
@@ -824,7 +837,7 @@ async function loadCurrentUserData() {
     document.getElementById("Email").value = userData.email === undefined || userData.firstName === null ? "" : userData.email;
     document.getElementById("Rufnummer").value = userData.phone === undefined || userData.firstName === null ? "" : userData.phone;
     document.getElementById("Postleitzahl").value = userData.zipCode === undefined || userData.firstName === null ? "" : userData.zipCode;
-    document.getElementById("Stadt").value = userData.city === uundefined || userData.firstName === null ? "" : userData.city;
+    document.getElementById("Stadt").value = userData.city === undefined || userData.firstName === null ? "" : userData.city;
     document.getElementById("Straße").value = userData.primaryAddress === undefined || userData.firstName === null ? "" : userData.primaryAddress;
     document.getElementById("Zusatz").value = userData.secondaryAddress === undefined || userData.firstName === null ? "" : userData.secondaryAddress;
     document.getElementById("anmeldung").hidden = true;

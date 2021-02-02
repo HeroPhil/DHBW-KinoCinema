@@ -31,6 +31,7 @@ async function loadUserDetails() {
     await new Promise(resolve => setTimeout(resolve, 2500));
     
     if(firebase.auth().currentUser !== null){
+        proofForAdmin();
         const param = {};
         const result = await functions.httpsCallable('database-getInformationOfCurrentUser')(param);
         const userInformation = await firebase.auth().currentUser.providerData;
@@ -72,8 +73,6 @@ async function loadUserDetails() {
         document.getElementById("fullStraße").innerHTML = userData.primaryAddress === undefined ? "" : userData.primaryAddress;
         document.getElementById("fullStadt").innerHTML = userData.city === undefined ? "" : userData.city;
 
-        proofForAdmin();
-        
     }else {
         window.location = "../account"
         return ;
@@ -230,9 +229,14 @@ async function proofForAdmin() {
 }
 
 async function adminPage() {
+    document.getElementById("loading").hidden = false;
+    document.getElementById("main").hidden = true;
     var anwser2 = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')();
     var admin2 = anwser2.data.data
     if(admin2){
         window.location = "../admin/";
+        return ;
     }
+    document.getElementById("loading").hidden = true;
+    document.getElementById("main").hidden = false;
 }
