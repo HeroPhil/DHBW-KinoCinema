@@ -130,16 +130,25 @@ async function getCoverUrl(gsLink) {
 
 function sortByCategorie() {
     movieContainer.innerHTML = "";
+    var movieInfo;
+    var movieId;
+    var movieData;
+    var title;
+    var category;
+    var cover;
+    var description;
+    var time;
+    var customizedMovieInfo;
     for(var i = 0; i < moviesThriller.length; i++) {
-        var movieInfo = moviesThriller[i];
-        var movieId = movieInfo.id;
-        var movieData = movieInfo.data;
-        var title = movieData.name;
-        var category = movieData.category;
-        var cover = movieData.cover;
-        var description = movieData.description;
-        var time = movieData.duration;
-        var customizedMovieInfo = {
+        movieInfo = moviesThriller[i];
+        movieId = movieInfo.id;
+        movieData = movieInfo.data;
+        title = movieData.name;
+        category = movieData.category;
+        cover = movieData.cover;
+        description = movieData.description;
+        time = movieData.duration;
+        customizedMovieInfo = {
             id : movieId,
             name : title,
             category : category,
@@ -150,14 +159,14 @@ function sortByCategorie() {
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
     for(varj = 0; j < moviesAdventure.length; j++) {
-        var movieInfo = moviesAdventure[j];
-        var movieId = movieInfo.id;
-        var movieData = movieInfo.data;
-        var title = movieData.name;
-        var category = movieData.category;
-        var cover = movieData.cover;
-        var description = movieData.description;
-        var customizedMovieInfo = {
+        movieInfo = moviesAdventure[j];
+        movieId = movieInfo.id;
+        movieData = movieInfo.data;
+        title = movieData.name;
+        category = movieData.category;
+        cover = movieData.cover;
+        description = movieData.description;
+        customizedMovieInfo = {
             id : movieId,
             name : title,
             category : category,
@@ -167,14 +176,14 @@ function sortByCategorie() {
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
     for(var k = 0; k < moviesAction.length; k++) {
-        var movieInfo = moviesAction[k];
-        var movieId = movieInfo.id;
-        var movieData = movieInfo.data;
-        var title = movieData.name;
-        var category = movieData.category;
-        var cover = movieData.cover;
-        var description = movieData.description;
-        var customizedMovieInfo = {
+        movieInfo = moviesAction[k];
+        movieId = movieInfo.id;
+        movieData = movieInfo.data;
+        title = movieData.name;
+        category = movieData.category;
+        cover = movieData.cover;
+        description = movieData.description;
+        customizedMovieInfo = {
             id : movieId,
             name : title,
             category : category,
@@ -184,14 +193,14 @@ function sortByCategorie() {
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
     for(var h = 0; h < moviesRomantic.length; h++) {
-        var movieInfo = moviesRomantic[h];
-        var movieId = movieInfo.id;
-        var movieData = movieInfo.data;
-        var title = movieData.name;
-        var category = movieData.category;
-        var cover = movieData.cover;
-        var description = movieData.description;
-        var customizedMovieInfo = {
+        movieInfo = moviesRomantic[h];
+        movieId = movieInfo.id;
+        movieData = movieInfo.data;
+        title = movieData.name;
+        category = movieData.category;
+        cover = movieData.cover;
+        description = movieData.description;
+        customizedMovieInfo = {
             id : movieId,
             name : title,
             category : category,
@@ -201,14 +210,14 @@ function sortByCategorie() {
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
     for(var l = 0; l < moviesCommedy.length; l++) {
-        var movieInfo = moviesCommedy[l];
-        var movieId = movieInfo.id;
-        var movieData = movieInfo.data;
-        var title = movieData.name;
-        var category = movieData.category;
-        var cover = movieData.cover;
-        var description = movieData.description;
-        var customizedMovieInfo = {
+        movieInfo = moviesCommedy[l];
+        movieId = movieInfo.id;
+        movieData = movieInfo.data;
+        title = movieData.name;
+        category = movieData.category;
+        cover = movieData.cover;
+        description = movieData.description;
+        customizedMovieInfo = {
             id : movieId,
             name : title,
             category : category,
@@ -218,14 +227,14 @@ function sortByCategorie() {
         moviesDataSorted.push(customizedMovieInfo);
     } //end of for
     for(var m = 0; m < moviesHorror.length; m++) {
-        var movieInfo = moviesHorror[m];
-        var movieId = movieInfo.id;
-        var movieData = movieInfo.data;
-        var title = movieData.name;
-        var category = movieData.category;
-        var cover = movieData.cover;
-        var description = movieData.description;
-        var customizedMovieInfo = {
+        movieInfo = moviesHorror[m];
+        movieId = movieInfo.id;
+        movieData = movieInfo.data;
+        title = movieData.name;
+        category = movieData.category;
+        cover = movieData.cover;
+        description = movieData.description;
+        customizedMovieInfo = {
             id : movieId,
             name : title,
             category : category,
