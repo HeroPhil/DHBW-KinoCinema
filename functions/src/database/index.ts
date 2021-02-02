@@ -123,3 +123,7 @@ export const getAllRowTypes = httpsOnCall((data, context) => {
 export const getAllCategories = httpsOnCall((data, context) => {
     return movies.getAllCategories();
 });
+
+export const updateCategoriesOnAddMovie = func().firestore.document('live/events/movies/{docId}').onWrite((change, context) => {
+    return movies.updateCategoriesOnAddMovie();
+});
