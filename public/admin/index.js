@@ -301,7 +301,7 @@ async function loadDatabaseMovie(){
     document.getElementById("EDIT_Movie_Title").value = movie.name;
     document.getElementById("EDIT_Movie_Description").value = movie.description;
     document.getElementById("EDIT_Movie_Duration").value = movie.duration;
-    document.getElementById("EDIT_Movie_Category").value = movie.category;
+    document.getElementById("EDIT_Movie_Category").value = movie.categories.join("|");
     document.getElementById("EDIT_Movie_Rating").value = movie.priority;
     document.getElementById("EDIT_Movie_Cover_URL").value = movie.cover;
     loadScreenings(id);
@@ -394,7 +394,7 @@ async function updateInformationOfMovie(){
     let title = document.getElementById("EDIT_Movie_Title").value;
     let description = document.getElementById("EDIT_Movie_Description").value;
     let duration = document.getElementById("EDIT_Movie_Duration").value;
-    let categories = document.getElementById("EDIT_Movie_Category").value;
+    let categories = document.getElementById("EDIT_Movie_Category").value.split("|");
     let rating = Number(document.getElementById("EDIT_Movie_Rating").value);
     let coverURL = document.getElementById("EDIT_Movie_Cover_URL").value;
 
@@ -404,7 +404,7 @@ async function updateInformationOfMovie(){
             name: title,
             description: description,
             duration: duration,
-            category: categories,
+            categories: categories,
             priority: rating,
             cover: coverURL
         }
