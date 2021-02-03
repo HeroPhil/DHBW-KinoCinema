@@ -41,7 +41,7 @@
 }
 
 .resultMovie {
-    height: 24rem;
+    height: 28rem;
     width: 18rem;
     background-color: var(--layer3);
     margin: 1rem;
@@ -52,13 +52,13 @@
 }
 
 .input-field {
-    font-size: 1.2rem;
+    height: 80%;
     border : 0.2rem solid;
     padding : 10px 50px;
 }
 
 .resultMovie img {
-    height: 20rem;
+    height: 16rem;
     width: auto;
     width: 18rem;
     object-fit: contain;
@@ -66,6 +66,19 @@
 }
 
 .movieTitle {
+    line-height : 1.5;
+    width: auto;
+    text-align : center;
+    color : white;
+    font-size: 1.2rem;
+    padding: 0rem 1rem 0.5rem;
+}
+
+.movieCategory {
+    text-align : center;
+    text-decoration : overline;
+    width: auto;
+    color : white;
     font-size: 1.2rem;
     padding: 0rem 1rem 0.5rem;
 }
@@ -92,13 +105,14 @@
     align-items: center;
     cursor: pointer;
     background-color: var(--layer1);
-    margin-top: 2rem;
     float: right;
 }
 
 .button-group {
     display: flex;
     flex-wrap: wrap;
+    padding: 1.0rem;
+    align-items: center;
     justify-content: flex-end;
 }
 

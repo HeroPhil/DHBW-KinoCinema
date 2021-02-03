@@ -77,14 +77,15 @@ function saveMovieInfos(movieInfos) {
         var cover = movieData.cover;
         var description = movieData.description;
         var playTime = movieData.duration;
+        var rating = movieData.priority;
         var customizedMovieInfo = {
             id : movieId,
             name : title,
             category : category,
             cover : cover,
             description : description,
-            playTime : playTime
-
+            playTime : playTime,
+            rating : rating
         } //end of customizedMovieInfo
         moviesData.push(customizedMovieInfo);
         saveToSpecificInfoArray(category, customizedMovieInfo);
@@ -128,8 +129,8 @@ async function createResultGraphic(gsLink, title, categorie, id , position) {
     movieTitle.classList.add("movieTitle");
     movieTitle.innerHTML = title;
     var movieCategorie = document.createElement("div");
-    movieCategorie.classList.add("movieTitle");
-    movieCategorie.innerHTML = categorie;
+    movieCategorie.classList.add("movieCategory");
+    movieCategorie.innerHTML = "Category : " + categorie;
     movieInfoContainer.appendChild(movieCover);
     movieInfoContainer.appendChild(movieTitle);
     movieInfoContainer.appendChild(movieCategorie);
@@ -294,7 +295,7 @@ function sortMoviesDESC() {
         var movie = moviesDataSorted[j];
         createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
     } //end of for
-} //end of sortMoviesASC
+} //end of sortMoviesDESC
 
 function sortMoviesByPlayTime() {
     movieContainer.innerHTML = "";
@@ -312,7 +313,25 @@ function sortMoviesByPlayTime() {
         var movie = moviesDataSorted[j];
         createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
     } //end of for
-} //end of sortMoviesASC
+} //end of sortMoviesByPlayTime
+
+function sortMoviesByRating() {
+    movieContainer.innerHTML = "";
+    moviesDataSorted.sort(function(movieOne, movieTwo){
+        if(movieTwo.rating < movieOne.rating) {
+            return -1;
+        } else if(movieTwo.rating > movieOne.rating) {
+            return 1;
+        } else {
+            return 0;
+        } //end of if-else 
+    });
+    console.log(moviesDataSorted);
+    for(var j = 0; j < moviesDataSorted.length; j++) {
+        var movie = moviesDataSorted[j];
+        createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
+    } //end of for
+} //end of sortMoviesByPlayTime
 
 function sortName() {
     if(sortNameMode) {
