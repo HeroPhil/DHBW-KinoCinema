@@ -37,8 +37,10 @@ async function OnLoad(){
         if(admin.data.error){
             window.location = "../index";
         }
+        return;
     }).catch((error) => {
         window.location = "../index";
+        return;
     });
     
     switchEditOption(1);
