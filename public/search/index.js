@@ -54,6 +54,8 @@ async function loadContent() {
     console.log(moviesRomantic);
     console.log(moviesHorror);
     console.log(moviesCommedy);
+
+    endLoading();
 } ///end of loadContent
 
 function addMoviesToWebsite() {

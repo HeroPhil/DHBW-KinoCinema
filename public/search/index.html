@@ -48,25 +48,34 @@
 
         <main>
             <div id="headerX"></div>
-
-            <div class="row">
-                <div class="col-1">&nbsp;</div>
-                <div class="col-14">
-                    <div id="sort-buttons" class="button-group">
-                        <button type="button" class="sortbutton button" onclick="sortName()">Sort : Name</button>
-                        <button type="button" class="sortbutton button" onclick="sortMoviesByRating()">Sort : Rating</button>
-                        <button type="button" class="sortbutton button" onclick="sortMoviesByPlayTime()">Sort : Playtime</button>
-                        <input id="search-input" class="input-field" style="float : right" type="text" placeholder="Search..." name="search">
-                        <button id="search-button" class="input-field" style="float : right" onclick="search()">Search</button>
+            <div id="loading">
+                <div class="loadingio-spinner-pulse-utrg899k0nk">
+                    <div class="ldio-t32oece7z3">
+                        <img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png">
                     </div>
-                </div>
-                <div class="col-1">&nbsp;</div>
+                </div> 
             </div>
-            <div class="row">
-                <div class="col-1">&nbsp;</div>
-                <div class="col-14">
-                    <div id="Movie-Container" class="searchResults">
-                        
+
+            <div id="main" hidden>
+                <div class="row">
+                    <div class="col-1">&nbsp;</div>
+                    <div class="col-14">
+                        <div id="sort-buttons" class="button-group">
+                            <button type="button" class="sortbutton button" onclick="sortName()">Sort : Name</button>
+                            <button type="button" class="sortbutton button" onclick="sortMoviesByRating()">Sort : Rating</button>
+                            <button type="button" class="sortbutton button" onclick="sortMoviesByPlayTime()">Sort : Playtime</button>
+                            <input id="search-input" class="input-field" style="float : right" type="text" placeholder="Search..." name="search">
+                            <button id="search-button" class="input-field" style="float : right" onclick="search()">Search</button>
+                        </div>
+                    </div>
+                    <div class="col-1">&nbsp;</div>
+                </div>
+                <div class="row">
+                    <div class="col-1">&nbsp;</div>
+                    <div class="col-14">
+                        <div id="Movie-Container" class="searchResults">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
