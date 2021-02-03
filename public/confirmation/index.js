@@ -113,7 +113,7 @@ function createTicket(title, hall, row, seat, date, price, value) {
           var tPrice = document.createElement("td");
           tPrice.innerHTML = "Price";
           var tPriceValue = document.createElement("td");
-          tPriceValue.innerHTML = price;
+          tPriceValue.innerHTML = formatAsCurrency(price) + " €";
           rowRow.appendChild(tPrice);
           rowRow.appendChild(tPriceValue);
         detailsTable.appendChild(rowRow);
@@ -224,3 +224,13 @@ function addTicketsToPDF(pdfDocument) {
     pictureAddedCounter++;
   } //end of for
 } //end of addImageToPDF
+
+
+function formatAsCurrency(number) {
+  const sp = number.toString().split(".");
+  if (sp.length > 1) {
+    sp[sp.length-1] = sp[sp.length-1].concat("0".repeat(2 - sp[sp.length-1].length));
+    return sp.join(".");
+  }
+  return sp[0].concat(".00");
+}
