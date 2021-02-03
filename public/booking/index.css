@@ -34,7 +34,7 @@
 .seat {
     background-color: var(--layer10);
     max-height: 1.5rem;
-    height: auto;
+    height: 1.5rem;
     width: 1.8rem;
     margin: 0.25rem;
     border-top-left-radius: 0.8rem;

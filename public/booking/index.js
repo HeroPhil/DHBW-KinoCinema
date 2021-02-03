@@ -454,11 +454,11 @@ async function ausgabe() {
       document.getElementById("zusammenfassungDetails").hidden = false;
       location.href = '#Zusammenfassung';
     } else {
-      document.getElementById("anmeldung").hidden = true;
-      document.getElementById("guestLogin").hidden = true;
-      document.getElementById("Information1").hidden = false;
-      document.getElementById("Information2").hidden = false;
-      document.getElementById("Information3").hidden = false;
+      //document.getElementById("anmeldung").hidden = true;
+      //document.getElementById("guestLogin").hidden = true;
+      //document.getElementById("Information1").hidden = false;
+      //document.getElementById("Information2").hidden = false;
+      //document.getElementById("Information3").hidden = false;
       userDataMissing = false;
     } //end of if-else
   } //end of if

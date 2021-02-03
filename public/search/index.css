@@ -65,9 +65,11 @@
 }
 
 .sortbutton {
+    display : flex;
     margin : 0;
     padding : 0;
     border : 1px solid;
+    justify-content: flex-end;
 }
 
 .button-group {
