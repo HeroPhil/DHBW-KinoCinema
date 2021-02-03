@@ -157,6 +157,8 @@ export async function updateCategoriesOnAddMovie() {
         categoriesArray.push(category);
     };
 
+    categoriesArray.sort();
+
     await basics.updateDocumentByID(eventDocumentPath, {movieCategories: categoriesArray});
     return categoriesArray;
 }
