@@ -142,7 +142,7 @@ async function loadContent() {
     screeningReference = information.screeningId;
     screeningTime = information.time;
     var screeningDate = new Date(screeningTime);
-    screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + " - " + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
+    screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + " - " + screeningDate.getHours() + ":" + checkForCorrectMinuteWriting(screeningDate.getMinutes()) + " Uhr";
     var movieTitle = sessionStorage.getItem('movieTitle');
     movieName = sessionStorage.getItem('movieTitle');
   } catch(err) {
@@ -161,6 +161,14 @@ async function loadContent() {
   endLoading();
   loadCurrentUserData();
 } //end of loadContent
+
+function checkForCorrectMinuteWriting(timeStamp) {
+  if(timeStamp < 10) {
+      return "0" + timeStamp;
+  } else {
+      return timeStamp;
+  } //end of if-else
+} //end of checkForCorrectMinuteWriting
 
 // dynamic seats
 async function seatGeneration(hallInfo) {
@@ -395,14 +403,14 @@ function pay(id) {
       ausgabe.appendChild(field3);
       ausgabe.appendChild(field4);
       break;
-    case 2:
+    /*case 2:
       ausgabe.innerHTML = "";
       var button3 = document.createElement("button");
       button3.classList.add("button");
       button3.setAttribute("id","PayPal");
       button3.innerHTML = "PayPal";
       ausgabe.appendChild(button3);
-      break;
+      break;*/
   }
 }
  
@@ -818,6 +826,11 @@ async function loginWithUserCredentials() {
                   alert(error.message);
               }
           })
+      }
+      if(error.code === "auth/invalid-email"){
+        document.getElementById("anmeldung").hidden = false;
+        //document.getElementById("guestLogin").hidden = true;
+        document.getElementById("loadWhile").hidden = true;
       }
       
       return error;
