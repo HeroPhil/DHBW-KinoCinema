@@ -57,6 +57,7 @@ summary:focus {
 
 #onlyAdmins {
     display: none;
+    float: right;
 }
 
 .button{
