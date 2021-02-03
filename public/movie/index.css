@@ -134,11 +134,17 @@
     html {
         font-size: 12px;
     }
+    .movie-content{
+        padding-left: 0;
+    }
 }
 
 @media only screen and (min-width: 720px) and (max-width: 1099px){
     html{
         font-size: 13px;
+    }
+    .movie-content{
+        padding-left: 0;
     }
 }
   
