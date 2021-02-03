@@ -44,11 +44,15 @@ document.addEventListener('click', e => {
 }); //end of eventhandler
 
 async function loadContent() {
-    var id = location.search;
-    id = id.replace("?id=", "");
-    var paramMovie = {id: id};
-    var movie = await functions.httpsCallable('database-getMovieByID')(paramMovie);
-    var movieData = movie.data;
+    try {
+        var id = location.search;
+        id = id.replace("?id=", "");
+        var paramMovie = {id: id};
+        var movie = await functions.httpsCallable('database-getMovieByID')(paramMovie);
+        var movieData = movie.data;
+    } catch(err) {
+        window.location.href = "../index/";
+    } //end of try-catch
     console.log(movieData);
     var title = document.getElementById("movie-title");
     var description = document.getElementById("movie-description");

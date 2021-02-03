@@ -42,6 +42,7 @@ function loadContent() {
   console.log(ticketsInfo);
   } catch(err) {
     console.log(err);
+    window.location.href = "../index/";
   } //end of try-catch
   loadTicketsWithQRCode();
   endLoading();
