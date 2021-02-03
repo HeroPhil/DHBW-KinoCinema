@@ -831,10 +831,6 @@ async function loginWithUserCredentials() {
   loggedIn = true;
 }*/
 
-function fillCurrentUserData() {
-
-}
-
 async function loadCurrentUserData() {
   if(firebase.auth().currentUser !== null){
     const param = {};
