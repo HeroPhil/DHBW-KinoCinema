@@ -4,7 +4,7 @@ function endLoading(){
 }
 
 async function showUserLoginStatus(){
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
     if(firebase.auth().currentUser === null){
         isLoggedIn(false);
     }else{
