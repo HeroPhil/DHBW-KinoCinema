@@ -229,8 +229,10 @@ async function proofForAdmin() {
     var admin = anwser.data.data
     if(admin){
         document.getElementById("onlyAdmins").style.display = "flex";
+        document.getElementById("onlyAdmins").style.float = "right";
     }else {
         document.getElementById("onlyAdmins").style.display = "none";
+        document.getElementById("onlyAdmins").style.float = "none";
     }
 }
 
