@@ -32,15 +32,33 @@ document.addEventListener('DOMContentLoaded', () => {
     OnLoad();
 });
 
+function endLoading() {
+    document.getElementById("loading").hidden = true;
+    document.getElementById("contentToHide").hidden = false;
+}
+
+function startLoading() {
+    document.getElementById("loading").hidden = false;
+    document.getElementById("contentToHide").hidden = true;
+}
+
 async function OnLoad(){
-    let admin = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')({});
-    if(admin.data.error){
+    await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')({}).then((admin) => {
+        if(admin.data.error){
+            window.location = "../index";
+        }
+        return;
+    }).catch((error) => {
         window.location = "../index";
-    }
+        return;
+    });
+    
     switchEditOption(1);
     loadDropdownHalls();
     loadDropdownRowTypes();
     addNeededEventListerns();
+    
+    endLoading();
 }
 
 function addNeededEventListerns(){
@@ -112,6 +130,7 @@ function switchEditOption(index){
 var API_Key = "d67e6d39e535da8b280d6346698efb87";
 
 function searchMovie() {
+    startLoading();
     var search_content = document.getElementById("SearchInput").value;
     var movie_id = "36547";
 
@@ -135,7 +154,7 @@ function searchMovie() {
     
     search_request.send();
 
-    
+    endLoading();
 }
 
 function loadMovie(movie_id) {
@@ -170,7 +189,7 @@ function loadMovie(movie_id) {
 
 
 async function addMovie(){
-
+    startLoading();
     let title = document.getElementById("Movie_Title").value;
     let description = document.getElementById("Movie_Description").value;
     let duration = document.getElementById("Movie_Duration").value;
@@ -196,6 +215,7 @@ async function addMovie(){
     let movieID = movie.data.id;
     let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(await (await fetch(coverURL)).blob());
     console.log(newCoverUrl);
+    endLoading();
 }
 
 
@@ -281,6 +301,7 @@ function selectDropdownRowType(type){
 }
 
 async function loadDatabaseMovie(){
+    startLoading();
     var id = document.getElementById("MovieIDInput").value;
     document.getElementById("editMovieContent").hidden = false;
     document.getElementById("editScreenings").hidden = false;
@@ -293,11 +314,12 @@ async function loadDatabaseMovie(){
     document.getElementById("EDIT_Movie_Title").value = movie.name;
     document.getElementById("EDIT_Movie_Description").value = movie.description;
     document.getElementById("EDIT_Movie_Duration").value = movie.duration;
-    document.getElementById("EDIT_Movie_Category").value = movie.category;
+    document.getElementById("EDIT_Movie_Category").value = movie.categories.join("|");
     document.getElementById("EDIT_Movie_Rating").value = movie.priority;
     document.getElementById("EDIT_Movie_Cover_URL").value = movie.cover;
     loadScreenings(id);
     document.getElementById("EDIT_Movie_IMG").src = await firebase.storage().refFromURL(movie.cover).getDownloadURL();
+    endLoading();
 }
 
 async function loadScreenings(pID) {
@@ -358,7 +380,7 @@ function loadScreeningRow(id){
 }
 
 async function updateScreeningInformation(){
-
+    startLoading();
     var sID = document.getElementById("EDIT_Screening_Hall").getAttribute("selectedScreeningID");
     var sHall = document.getElementById("EDIT_Screening_Hall").value;
     var sPrice = document.getElementById("EDIT_Screening_Price").value;
@@ -379,14 +401,16 @@ async function updateScreeningInformation(){
         alert(screening.data.error.message);
     }
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
+    endLoading();
 }
 
 async function updateInformationOfMovie(){
+    startLoading();
     let id =  document.getElementById("MovieIDInput").value;
     let title = document.getElementById("EDIT_Movie_Title").value;
     let description = document.getElementById("EDIT_Movie_Description").value;
     let duration = document.getElementById("EDIT_Movie_Duration").value;
-    let categories = document.getElementById("EDIT_Movie_Category").value;
+    let categories = document.getElementById("EDIT_Movie_Category").value.split("|");
     let rating = Number(document.getElementById("EDIT_Movie_Rating").value);
     let coverURL = document.getElementById("EDIT_Movie_Cover_URL").value;
 
@@ -396,7 +420,7 @@ async function updateInformationOfMovie(){
             name: title,
             description: description,
             duration: duration,
-            category: categories,
+            categories: categories,
             priority: rating,
             cover: coverURL
         }
@@ -407,9 +431,11 @@ async function updateInformationOfMovie(){
         alert(movie.data.error.message);
     }
     console.log(movie);
+    endLoading();
 }
 
 async function addScreenings(){
+    startLoading();
     var movieID = document.getElementById("MovieIDInput").value;
     var sHall = document.getElementById("EDIT_ADD_Screening_Hall").value;
     var sPrice = document.getElementById("EDIT_ADD_Screening_Price").value;
@@ -433,6 +459,7 @@ async function addScreenings(){
     }
     console.log(screening);
     loadScreenings(document.getElementById("screeningsTable").getAttribute("movieID"));
+    endLoading();
 }
 
 function setCoverFile(){
@@ -442,6 +469,7 @@ function setCoverFile(){
 }
 
 async function uploadCover(){
+    startLoading();
     if(file !== null){
         var movieID = document.getElementById("MovieIDInput").value;
         let newCoverUrl = await firebase.storage().ref().child('/live/events/movies/cover/' + movieID).put(file);
@@ -460,6 +488,7 @@ async function uploadCover(){
         console.log(movieWithCover);
         loadDatabaseMovie();
     }
+    endLoading();
 }
 
 function sortTable(n) {
@@ -519,7 +548,7 @@ function sortTable(n) {
 
 
 async function addHall(){
-
+    startLoading();
     var hallName = document.getElementById("ADD_Hall_Name").value;
     console.log(rows);
     var hallRows = rows;
@@ -535,6 +564,7 @@ async function addHall(){
         alert(hall.data.error.message);
     }
     console.log(hall);
+    endLoading();
 }
 
 function addRow(){
@@ -626,6 +656,7 @@ function removeLastRow(){
 }
 
 async function promoteToAdmin() {
+    startLoading();
     var uid = document.getElementById("EDIT_PERMISSION_UID").value;
 
     const param = {
@@ -637,9 +668,11 @@ async function promoteToAdmin() {
     if(user.data.error) {
         alert(user.data.error.message);
     }
+    endLoading();
 }
 
 async function degradeToUser() {
+    startLoading();
     var uid = document.getElementById("EDIT_PERMISSION_UID").value;
 
     const param = {
@@ -651,4 +684,5 @@ async function degradeToUser() {
     if(user.data.error) {
         alert(user.data.error.message);
     }
+    endLoading();
 }

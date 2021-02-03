@@ -61,7 +61,7 @@ export async function getMoviesByCategory(category: string, amount: number) { //
         .where("categories", "array-contains", category)
         .orderBy(topPriority, order)
         .limit(amount);
-    console.log(amount);
+    //console.log(amount);
     const collection = await basics.getCollectionByRef(query);
 
     collection.forEach((movie: { id: string; data: () => any; }) => {
@@ -156,6 +156,8 @@ export async function updateCategoriesOnAddMovie() {
     for (let category of categoriesSet) {
         categoriesArray.push(category);
     };
+
+    categoriesArray.sort();
 
     await basics.updateDocumentByID(eventDocumentPath, {movieCategories: categoriesArray});
     return categoriesArray;

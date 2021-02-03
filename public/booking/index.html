@@ -44,7 +44,7 @@
 
 
 
-    <body class="dark" onload="loadContent()">
+    <body class="dark" onload="loadContent(); showUserLoginStatus();">
 
         <div class="navbar"></div>
 
@@ -161,7 +161,7 @@
                   <div class="col-14">
                     <details id="ZahlungDetails" hidden = true>
                         <summary id="Zahlung" class="expand">Payment</summary>
-                        <form class="formStyle">
+                        <form class="formStyle" action="javascript:ausgabe()" method="GET">
                             <div id="ErrorContainerZahlung"></div>
                             <div class="row" id="loadWhile" hidden>
                                 <div class="col-16">
@@ -201,7 +201,7 @@
                                     <button onclick="loginAsGuest()" class="SignUp" id="guestLogin">Guest</button>
                                 </div>
                                 <div class="col-4">&nbsp;</div>
--->                             </div>
+-->                         </div>
 
                             <div id="hiddenInfo" hidden>
                                 <div class="row">
@@ -278,7 +278,7 @@
                                 <div class="row">
                                     <div class="col-14">&nbsp;</div>
                                     <div class="col-2">
-                                        <button class="button" type="button" id="weiter" onclick = ausgabe()>Next</button>
+                                        <button class="button" type="submit" id="weiter" value="required">Next</button>
                                     </div>
                                 </div>
                             </div>

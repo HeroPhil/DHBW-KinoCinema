@@ -42,7 +42,7 @@
 
 
 
-    <body class="dark" onload="loadContent()">
+    <body class="dark" onload="loadContent(); showUserLoginStatus();">
 
         <div class="navbar"></div>
 
@@ -62,7 +62,12 @@
                     You can now save your ticket for later!
                 </div>
             </div>
-            <div id="tickets"></div>
+            <div class="row">
+                <div class="col-8">
+                    <div id="tickets"></div>
+                </div>
+                <div class="col-8">&nbsp;</div>
+            </div>
             <button class="button" type="button" onclick ="printAndSaveTickets()">Print/Save</button>           
             
             

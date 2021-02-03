@@ -457,6 +457,17 @@ summary:focus {
     #seat-selection ul{
         width: fit-content;
     }
+
+    .showcase{
+        width: 100%;
+        font-size: 1.4rem;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .showcase ul{
+        padding: 10px;
+    }
 }
 
 @media only screen and (min-width: 720px) and (max-width: 1099px){

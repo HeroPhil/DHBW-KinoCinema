@@ -175,6 +175,14 @@ main{
     transition: var(--transition-speed);
 }
 
+.accountLoggedIn{
+    color: lawngreen;
+}
+
+.accountLoggedOut{
+    color: var(--accent-Dark);
+}
+
 .navbar{
     z-index: 5;
     position: fixed;
@@ -204,8 +212,11 @@ main{
     height: var(--navbar-size);
     color: var(--textPrimary);
     text-decoration: none;
-    filter: grayscale(100%) opacity(0.7);
     transition: var(--transition-speed);
+}
+
+.grayscale{
+    filter: grayscale(100%) opacity(0.7);
 }
 
 .nav-link:hover{
@@ -224,8 +235,6 @@ main{
     max-width: 2rem;
     margin: 0 1.5rem;
 }
-
-
 
 .logo{
     font-weight: bold;
