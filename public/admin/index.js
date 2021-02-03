@@ -33,14 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function OnLoad(){
-    let admin = await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')({});
-    if(admin.data.error){
+    await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')({}).then((admin) => {
+        if(admin.data.error){
+            window.location = "../index";
+        }
+    }).catch((error) => {
         window.location = "../index";
-    }
+    });
+    
     switchEditOption(1);
     loadDropdownHalls();
     loadDropdownRowTypes();
     addNeededEventListerns();
+    document.getElementById("loading").hidden = true;
+    document.getElementById("contentToHide").hidden = false;
 }
 
 function addNeededEventListerns(){
