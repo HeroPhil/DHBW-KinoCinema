@@ -99,6 +99,11 @@ body::-webkit-scrollbar-thumb {
     text-align: center;
 }
 
+#footer{
+    padding-left: var(--navbar-size);
+    margin-bottom: var(---navbar-size);
+}
+
 main{
     background-color: var(--layer0);
     padding: 1rem;
@@ -375,4 +380,10 @@ main{
     margin-left: auto;
     justify-content: center;
     margin-right: auto;
+}
+
+@media only screen and (min-width: 0px) and (max-width: 719px){
+    #footer{
+        padding-left: 0;
+    }
 }
