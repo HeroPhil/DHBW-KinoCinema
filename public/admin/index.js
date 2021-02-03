@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
 function endLoading() {
     document.getElementById("loading").hidden = true;
     document.getElementById("contentToHide").hidden = false;
-};
+}
 
 function startLoading() {
     document.getElementById("loading").hidden = false;
     document.getElementById("contentToHide").hidden = true;
-};
+}
 
 async function OnLoad(){
     await functions.httpsCallable('database-checkIfCurrentUserIsAdmin')({}).then((admin) => {
