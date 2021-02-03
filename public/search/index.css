@@ -51,6 +51,12 @@
     align-content: space-between;
 }
 
+.input-field {
+    font-size: 1.2rem;
+    border : 0.2rem solid;
+    padding : 10px 50px;
+}
+
 .resultMovie img {
     height: 20rem;
     width: auto;
@@ -72,10 +78,28 @@
     justify-content: flex-end;
 }
 
+.sort-buttons {
+    width : 100%;
+}
+
+.button {
+    color: var(--textPrimary);
+    font-size: 1.2rem;
+    margin-right : 0.5rem;
+    border: 0.2rem solid var(--accent);
+    border-radius: 1rem;
+    padding: 10px 50px;
+    align-items: center;
+    cursor: pointer;
+    background-color: var(--layer1);
+    margin-top: 2rem;
+    float: right;
+}
+
 .button-group {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: flex-end;
 }
 
 li {

@@ -50,17 +50,15 @@
             <div id="headerX"></div>
 
             <div class="row">
-                <div class="col-11">&nbsp;</div>
-                <div class="col-4">
+                <div class="col-1">&nbsp;</div>
+                <div class="col-14">
                     <div id="sort-buttons" class="button-group">
-                        <button type="button" class="sortbutton" onclick="sortName()">Sort : Name</button>
-                        <button type="button" class="sortbutton" onclick="sortByCategorie()">Sort : Category</button>
-                        <button type="button" class="sortbutton" onclick="sortMoviesByPlayTime()">Sort : Playtime</button>
-                        </ul>
+                        <button type="button" class="sortbutton button" onclick="sortName()">Sort : Name</button>
+                        <button type="button" class="sortbutton button" onclick="sortByCategorie()">Sort : Category</button>
+                        <button type="button" class="sortbutton button" onclick="sortMoviesByPlayTime()">Sort : Playtime</button>
+                        <input class="input-field" style="float : right" id="search-input"type="text" placeholder="Search..." name="search">
+                        <button class="input-field" style="float : right" onclick="search()">Search</button>
                     </div>
-                    <!--Hier fehlt Funktion!-->
-                    <input id="search-input"type="text" placeholder="Search..." name="search">
-                    <button onclick="search()">Search</button>
                 </div>
                 <div class="col-1">&nbsp;</div>
             </div>
