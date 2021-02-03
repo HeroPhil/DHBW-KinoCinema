@@ -35,11 +35,11 @@ const spaceBetweenText = 15;
 
 function loadContent() {
   try {
-  numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
-  billInfo = JSON.parse(sessionStorage.getItem("BillInfo"));
-  ticketsInfo = JSON.parse(sessionStorage.getItem("Tickets"));
-  console.log(billInfo);
-  console.log(ticketsInfo);
+    numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
+    billInfo = JSON.parse(sessionStorage.getItem("BillInfo"));
+    ticketsInfo = JSON.parse(sessionStorage.getItem("Tickets"));
+    console.log(billInfo);
+    console.log(ticketsInfo);
   } catch(err) {
     console.log(err);
     window.location.href = "../index/";
