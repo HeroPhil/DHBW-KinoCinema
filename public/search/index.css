@@ -63,3 +63,26 @@
     font-size: 1.2rem;
     padding: 0rem 1rem 0.5rem;
 }
+
+.sortbutton {
+    margin : 0;
+    padding : 0;
+    border : 1px solid;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+li {
+    display : inline;
+}
+
+ul {
+    background-color: var(--layer1);
+    list-style-type: none;
+    margin : 0;
+    padding : 0;
+}

@@ -36,11 +36,13 @@ let moviesRomantic = [];
 let moviesCommedy = [];
 let moviesHorror = [];
 let foundResults = [];
+let sortNameMode = false;
 let movieContainer;
 
 async function loadContent() {
     movieContainer = document.getElementById("Movie-Container");
     var allMovies = await functions.httpsCallable('database-getAllMovies')({});
+    console.log(allMovies);
     saveMovieInfos(allMovies);
     moviesDataSorted = moviesData;
     addMoviesToWebsite();
@@ -58,7 +60,7 @@ function addMoviesToWebsite() {
     var numberOfMovies = parseInt(moviesDataSorted.length);
     for(var i = 0; i < numberOfMovies; i++) {
         var movieInfo = moviesDataSorted[i];
-        createResultGraphic(movieInfo.cover, movieInfo.name, movieInfo.category, movieInfo.id);
+        createResultGraphic(movieInfo.cover, movieInfo.name, movieInfo.category, movieInfo.id , i);
     } //end of for
 } //end of addMoviesToWebsite
 
@@ -74,12 +76,15 @@ function saveMovieInfos(movieInfos) {
         var category = movieData.category;
         var cover = movieData.cover;
         var description = movieData.description;
+        var playTime = movieData.duration;
         var customizedMovieInfo = {
             id : movieId,
             name : title,
             category : category,
             cover : cover,
-            description : description
+            description : description,
+            playTime : playTime
+
         } //end of customizedMovieInfo
         moviesData.push(customizedMovieInfo);
         saveToSpecificInfoArray(category, customizedMovieInfo);
@@ -112,7 +117,7 @@ function saveToSpecificInfoArray(pCategory, Info) {
     } //end of switch case
 } //end of saveToSpecificInfoArray
 
-async function createResultGraphic(gsLink, title, categorie, id) {
+async function createResultGraphic(gsLink, title, categorie, id , position) {
     var refBorder = document.createElement("a");
     refBorder.href = "../movie/?id=" + id;
     var movieInfoContainer = document.createElement("div");
@@ -129,6 +134,8 @@ async function createResultGraphic(gsLink, title, categorie, id) {
     movieInfoContainer.appendChild(movieTitle);
     movieInfoContainer.appendChild(movieCategorie);
     refBorder.appendChild(movieInfoContainer);
+    var orderPosition = "order : " + position;
+    refBorder.setAttribute("style", orderPosition);
     movieContainer.appendChild(refBorder);
 } //end of createResultGraphic
 
@@ -256,72 +263,36 @@ function sortByCategorie() {
     console.log(moviesDataSorted);
     for(var o = 0; o < moviesDataSorted.length; o++) {
         var movie = moviesDataSorted[o];
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
+        createResultGraphic(movie.cover, movie.name, movie.category, movie.id , o);
     } //end of for
 } //end of sortByCategorie
 
 function sortMoviesASC() {
     movieContainer.innerHTML = "";
     moviesDataSorted.sort(function(movieOne, movieTwo){
-        if(movieOne.name.toLowerCase() < movieTwo.name.toLowerCase()) {
-            return -1;
-        } else if(movieOne.name.toLowerCase() > movieTwo.name.toLowerCase()) {
-            return 1;
-        } else {
-            return 0;
-        } //end of if-else 
+        var nameOne = new String(movieOne.name);
+        var nameTwo = new String(movieTwo.name);
+        return nameOne.localeCompare(nameTwo);
     });
-    /*while(counter !== moviesDataSorted.length - 1) {
-        counter = 0;
-        for(var i = 0; i < moviesDataSorted.length - 1; i++) {
-            movieOne = moviesDataSorted[i];
-            movieTwo = moviesDataSorted[i + 1];
-            if(movieOne.name <= movieTwo.name) {
-                counter++;
-            } else {
-                saver = movieTwo;
-                movieTwo = movieOne;
-                movieOne = saver;
-            } //end of if-else
-        } //end of for
-    } //end of while
-    */
+    console.log(moviesDataSorted);
     for(var j = 0; j < moviesDataSorted.length; j++) {
         var movie = moviesDataSorted[j];
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
+        console.log("Created element : " + movie.name);
+        createResultGraphic(movie.cover, movie.name, movie.category, movie.id , j);
     } //end of for
 } //end of sortMoviesASC
 
 function sortMoviesDESC() {
     movieContainer.innerHTML = "";
     moviesDataSorted.sort(function(movieOne, movieTwo){
-        if(movieTwo.name.toLowerCase() < movieOne.name.toLowerCase()) {
-            return -1;
-        } else if(movieTwo.name.toLowerCase() > movieOne.name.toLowerCase()) {
-            return 1;
-        } else {
-            return 0;
-        } //end of if-else 
+        var nameOne = new String(movieOne.name);
+        var nameTwo = new String(movieTwo.name);
+        return nameTwo.localeCompare(nameOne);
     });
-    /*
-    while(counter !== moviesDataSorted.length - 1) {
-        counter = 0;
-        for(var i = 0; i < moviesDataSorted.length - 1; i++) {
-            movieOne = moviesDataSorted[i];
-            movieTwo = moviesDataSorted[i + 1];
-            if(movieOne.name >= movieTwo.name) {
-                counter++;
-            } else {
-                saver = movieTwo;
-                movieTwo = movieOne;
-                movieOne = saver;
-            } //end of if-else
-        } //end of for
-    } //end of while
-    */
+    console.log(moviesDataSorted);
     for(var j = 0; j < moviesDataSorted.length; j++) {
         var movie = moviesDataSorted[j];
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
+        createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
     } //end of for
 } //end of sortMoviesASC
 
@@ -329,51 +300,53 @@ function sortMoviesByPlayTime() {
     movieContainer.innerHTML = "";
     moviesDataSorted.sort(function(movieOne, movieTwo){
         if(movieTwo.playTime < movieOne.playTime) {
-            return -1;
-        } else if(movieTwo.playTime > movieOne.playTime) {
             return 1;
+        } else if(movieTwo.playTime > movieOne.playTime) {
+            return -1;
         } else {
             return 0;
         } //end of if-else 
     });
-    /*
-    while(counter !== moviesDataSorted.length - 1) {
-        counter = 0;
-        for(var i = 0; i < moviesDataSorted.length - 1; i++) {
-            movieOne = moviesDataSorted[i];
-            movieTwo = moviesDataSorted[i + 1];
-            if(parseInt(movieOne.playTime) <= parseInt(movieTwo.playTime)) {
-                counter++;
-            } else {
-                saver = movieTwo;
-                movieTwo = movieOne;
-                movieOne = saver;
-            } //end of if-else
-        } //end of for
-    } //end of while
-    */
+    console.log(moviesDataSorted);
     for(var j = 0; j < moviesDataSorted.length; j++) {
         var movie = moviesDataSorted[j];
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
+        createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
     } //end of for
 } //end of sortMoviesASC
 
+function sortName() {
+    if(sortNameMode) {
+        sortMoviesDESC();
+    } else {
+        sortMoviesASC();
+    } //end of if-else
+    sortNameMode = !sortNameMode;
+} //end of sortName
+
 function search() {
     var input = document.getElementById("search-input");
+    console.log(input.value);
     var searchString = input.value;
+    foundResults = [];
     var movie;
     for(var i = 0; i < moviesData.length; i++) {
         movie = moviesData[i];
-        var movieExists = searchString.toLowerCase().search(movie.name.toLowerCase());
-        if(movieExists >= 0) {
+        var searchableObject = new String(movie.name.toLocaleLowerCase());
+        searchString = new String(searchString.toLocaleLowerCase());
+        console.log(searchString);
+        console.log(searchableObject);
+        var movieExists = searchableObject.includes(searchString);
+        console.log(movieExists);
+        if(movieExists) {
             foundResults.push(movie);
         } //end of if
     } //end of for
+    console.log(foundResults);
+    movieContainer.innerHTML = "";
     if(foundResults.length > 0) {
-        movieContainer = "";
         for(var j = 0; j < foundResults.length; j++) {
             movie = foundResults[j];
-            createResultGraphic(movie.cover, movie.name, movie.category, movie.id);
+            createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
         } //end of for
     } //end of if
 } //end of search

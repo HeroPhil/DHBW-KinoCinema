@@ -147,6 +147,7 @@ async function loadContent() {
     movieName = sessionStorage.getItem('movieTitle');
   } catch(err) {
     console.log(err);
+    window.location.href = "../index/";
   } //end of try-catch
   var titlePlaceHolder = document.getElementById("movie");
   titlePlaceHolder.innerHTML = movieTitle + "<br>" + screeningDate;
@@ -174,6 +175,7 @@ async function seatGeneration(hallInfo) {
   rowScreen.appendChild(screen);
   seatContainer.appendChild(rowScreen);
   for(var i = 0; i < hallInfo.rows.length; i++) {
+    console.log(hallInfo.rows[i]);
     var rowAmount = hallInfo.rows[i].count;
     var seatPrice = hallInfo.rows[i].type.data.price;
     seatPrice = normalTicketPrice * parseFloat(seatPrice);
@@ -185,38 +187,42 @@ async function seatGeneration(hallInfo) {
       var row = document.createElement("div");
       row.classList.add("seat-row");
       for(var j = 0; j < numberOfSeats; j++) {
-        var seat = document.createElement("div");
-        var seatIdentificationObject = {
-          id : seatCounter,
-          row : rowCounter,
-          seat : j
-        } //end of seatObject
-        seatsMap[seatCounter] = seatIdentificationObject;
-        seat.id = seatCounter;
-        seatCounter++;
-        seat.setAttribute("value", seatPrice);
-        seat.classList.add("seat");
-        seatType = seatType.replace(/\s/g, '');
-        seat.classList.add(seatType);
-        
-        if(seat.classList.contains('withspecialneeds')) {
-          document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
-          var design = document.createElement("img");
-          design.setAttribute("id", "seatDesign");
-          design.setAttribute("src", "../icons/png/special.png");
-          seat.appendChild(design);
-        }
-        if(seat.classList.contains('lodge')) {
-          document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
-          var lodgDesin = document.createElement("img");
-          lodgDesin.setAttribute("id", "seatDesign");
-          lodgDesin.setAttribute("src", "../icons/png/krone1.png");
-          seat.appendChild(lodgDesin);
-        }
-        if(seat.classList.contains('normal')) {
-          document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
-        }
-        
+        console.log(seatType);
+        try {
+          var seat = document.createElement("div");
+          var seatIdentificationObject = {
+            id : seatCounter,
+            row : rowCounter,
+            seat : j
+          } //end of seatObject
+          seatsMap[seatCounter] = seatIdentificationObject;
+          seat.id = seatCounter;
+          seatCounter++;
+          seat.setAttribute("value", seatPrice);
+          seat.classList.add("seat");
+          seatType = seatType.replace(/\s/g, '');
+          seat.classList.add(seatType);
+          
+          if(seat.classList.contains('withspecialneeds')) {
+            document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            var design = document.createElement("img");
+            design.setAttribute("id", "seatDesign");
+            design.setAttribute("src", "../icons/png/special.png");
+            seat.appendChild(design);
+          }
+          if(seat.classList.contains('lodge')) {
+            document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            var lodgDesin = document.createElement("img");
+            lodgDesin.setAttribute("id", "seatDesign");
+            lodgDesin.setAttribute("src", "../icons/png/krone1.png");
+            seat.appendChild(lodgDesin);
+          }
+          if(seat.classList.contains('normal')) {
+            document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+          }
+        } catch(err) {
+          console.log(err);
+        } //end of try-catch
         row.appendChild(seat);
       } //end of for
       seatContainer.appendChild(row);
@@ -716,8 +722,8 @@ async function request(ticketParam) {
 } //end of requests
 
 function printError(type, errorMessage) {
-  var errorPlaceholder;
-  var errorParagraph;
+  //var errorPlaceholder;
+  //var errorParagraph;
   var errorText;
   switch(parseInt(type)) {
     case 1:
@@ -726,11 +732,11 @@ function printError(type, errorMessage) {
       document.getElementById("zusammenfassungDetails").open = false;
       document.getElementById("ZahlungDetails").hidden = false;
       location.href = '#Zahlung';
-      errorPlaceholder = document.getElementById("ErrorContainerZahlung");
-      errorParagraph = document.createElement("p");
-      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
-      errorParagraph.appendChild(errorText);
-      errorPlaceholder.appendChild(errorParagraph);
+      //errorPlaceholder = document.getElementById("ErrorContainerZahlung");
+      //errorParagraph = document.createElement("p");
+      //errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      //errorParagraph.appendChild(errorText);
+      //errorPlaceholder.appendChild(errorParagraph);
       var tickets = document.getElementById("tickets");
       tickets.innerHTML = "";
       alert('You are not looged in, please log in or select guest loggin!');
@@ -740,28 +746,25 @@ function printError(type, errorMessage) {
       document.getElementById("selectionDetails").open = true;
       document.getElementById("ZahlungDetails").hidden = true;
       location.href = '#Platzauswahl';
-      errorPlaceholder = document.getElementById("ErrorContainerSeats");
-      errorParagraph = document.createElement("p");
-      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
-      errorParagraph.appendChild(errorText);
-      errorPlaceholder.appendChild(errorParagraph);
+      //errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      //errorParagraph = document.createElement("p");
+      //errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      //errorParagraph.appendChild(errorText);
+      //errorPlaceholder.appendChild(errorParagraph);
+      errorText = "";
       if(corruptedSeats.length !== 0) {
         for(var i = 0; i < parseInt(corruptedSeats.length); i++) {
-          errorText = "Seat number " + (corruptedSeats[i].seat + 1) + " in row " + (corruptedSeats[i].row + 1) + " was already booked!";
-          var paragraphSaver = document.createElement("p");
-          var errorTextSaver = document.createTextNode(errorText);
-          paragraphSaver.appendChild(errorTextSaver);
-          errorPlaceholder.appendChild(paragraphSaver);
+          errorText = errorText + "Seat number " + (corruptedSeats[i].seat + 1) + " in row " + (corruptedSeats[i].row + 1) + " was already booked!\n";
         } //end of for
       } //end of if
-      alert('One of your selected seats was booked by another costumer please select a new one!')
+      alert('One of your selected seats was booked by another costumer please select a new one!\n' + errorText)
       break;
     case 3:
-      errorPlaceholder = document.getElementById("ErrorContainerSeats");
-      errorParagraph = document.createElement("p");
-      errorText = document.createTextNode("FEHLER: " + errorMessage);
-      errorParagraph.appendChild(errorText);
-      errorPlaceholder.appendChild(errorParagraph);
+      //errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      //errorParagraph = document.createElement("p");
+      //errorText = document.createTextNode("FEHLER: " + errorMessage);
+      //errorParagraph.appendChild(errorText);
+      //errorPlaceholder.appendChild(errorParagraph);
       alert('You forgot to select a seat, please select a seat!')
       break;
     default:
