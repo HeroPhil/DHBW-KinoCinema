@@ -10,7 +10,7 @@ export const countRowsOfScreening = (screening: Screening) => {
 
 export function getRowTypeIndex(row: number, screening: Screening) {
     let sum = 0;
-    let i = 0;
+    let i = row >= 0 ? 0 : -1;
     for(var rowType in screening.data.hall.data.rows) {
         sum += screening.data.hall.data.rows[rowType].count;
         if(row <= sum) {

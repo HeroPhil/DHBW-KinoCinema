@@ -35,12 +35,21 @@ async function loadContent() {
         sessionStorage.setItem("LoggedIn", "out");
         console.log(err);
     } //end of try-catch
+
+
+    promises = [];
+
+    promises.push(createCategorySections());
+    // for (let i = 0; i < categorySectionDetails.length; i++) {
+    //     loadMoviesOfCategory(i);
+    // }
+
     var i = 0;
     var storage = firebase.storage();
     var amount = "5";
     var param = {amount : amount};
     var topMovies = await functions.httpsCallable('database-getTopMovies')(param);
-    topMovies.data.forEach( movie => {
+    topMovies.data.forEach((movie) => {
         i++;
         content = movie.data;
         var dot = document.createElement("span");
@@ -90,7 +99,6 @@ async function loadContent() {
                 link.appendChild(box);
             slideContent.appendChild(link);
         slide.appendChild(slideContent);
-
         document.getElementById("slideshow-container").appendChild(slide);
     });
 
@@ -107,10 +115,8 @@ async function loadContent() {
 
     showSlides(1);
 
-    await createCategorySections();
-    // for (let i = 0; i < categorySectionDetails.length; i++) {
-    //     loadMoviesOfCategory(i);
-    // }
+    //console.log(promises);
+    await Promise.all(promises);
 
     endLoading();
 }
