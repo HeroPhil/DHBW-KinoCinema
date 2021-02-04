@@ -58,7 +58,6 @@ async function loadContent() {
     saveMovieInfos(allMovies);
     moviesDataSorted = moviesData;
     if(preSearchRedirection) {
-        document.getElementById("search-input").value = preSearch;
         searchWithParameter(preSearch);
     } else {
         addMoviesToWebsite();
@@ -149,7 +148,7 @@ async function createResultGraphic(gsLink, title, rating, id , position) {
     movieTitle.innerHTML = title;
     var movieCategorie = document.createElement("div");
     movieCategorie.classList.add("movieCategory");
-    movieCategorie.innerHTML = "Rating : " + rating / 10;
+    movieCategorie.innerHTML = "Rating : " + (rating / 10).toFixed(1);
     movieInfoContainer.appendChild(movieCover);
     movieInfoContainer.appendChild(movieTitle);
     movieInfoContainer.appendChild(movieCategorie);
@@ -391,6 +390,7 @@ function search() {
 
 function searchWithParameter(searchString) {
     console.log(searchString);
+    document.getElementById("search-input").value = searchString;
     foundResults = [];
     var movie;
     for(var i = 0; i < moviesData.length; i++) {
