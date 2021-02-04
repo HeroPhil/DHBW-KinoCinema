@@ -29,12 +29,6 @@ document.addEventListener("DOMContentLoaded", event => {
 
 let moviesData = [];
 let moviesDataSorted = [];
-let moviesAction = [];
-let moviesThriller = [];
-let moviesAdventure = [];
-let moviesRomantic = [];
-let moviesCommedy = [];
-let moviesHorror = [];
 let foundResults = [];
 let sortNameMode = false;
 let preSearchRedirection;
@@ -62,14 +56,6 @@ async function loadContent() {
     } else {
         addMoviesToWebsite();
     } //end of if-else
-    console.log(moviesData);
-    console.log(moviesDataSorted);
-    console.log(moviesAction);
-    console.log(moviesThriller);
-    console.log(moviesAdventure);
-    console.log(moviesRomantic);
-    console.log(moviesHorror);
-    console.log(moviesCommedy);
 
     endLoading();
 } ///end of loadContent
@@ -106,35 +92,9 @@ function saveMovieInfos(movieInfos) {
             rating : rating
         } //end of customizedMovieInfo
         moviesData.push(customizedMovieInfo);
-        saveToSpecificInfoArray(category, customizedMovieInfo);
     } //end of for
 } //end of saveMovieInfos
 
-function saveToSpecificInfoArray(pCategory, Info) {
-    switch(pCategory) {
-        case "Abenteuer":
-            moviesAdventure.push(Info);
-            break;
-        case "Horror":
-            moviesHorror.push(Info);
-            break;
-        case "Romantik":
-            moviesRomantic.push(Info);
-            break;
-        case "Komödie":
-            moviesCommedy.push(Info);
-            break;
-        case "Action":
-            moviesAction.push(Info);
-            break;
-        case "Thriller":
-            moviesThriller.push(Info);
-            break;
-        default:
-            console.log("Found new movie category!");
-            break;
-    } //end of switch case
-} //end of saveToSpecificInfoArray
 
 async function createResultGraphic(gsLink, title, rating, id , position) {
     var refBorder = document.createElement("a");
@@ -165,129 +125,6 @@ async function getCoverUrl(gsLink) {
     var coverUrl = storage.refFromURL(gsLink).getDownloadURL();
     return coverUrl;
 } //end of getCoverUrl
-
-function sortByCategorie() {
-    moviesDataSorted = [];
-    movieContainer.innerHTML = "";
-    var movieInfo;
-    var movieId;
-    var movieData;
-    var title;
-    var category;
-    var cover;
-    var description;
-    var time;
-    var customizedMovieInfo;
-    for(var i = 0; i < moviesThriller.length; i++) {
-        movieInfo = moviesThriller[i];
-        movieId = movieInfo.id;
-        movieData = movieInfo;
-        title = movieData.name;
-        category = movieData.category;
-        cover = movieData.cover;
-        description = movieData.description;
-        time = movieData.duration;
-        customizedMovieInfo = {
-            id : movieId,
-            name : title,
-            category : category,
-            cover : cover,
-            description : description,
-            playTime : time
-        } //end of customizedMovieInfo
-        moviesDataSorted.push(customizedMovieInfo);
-    } //end of for
-    for(var j = 0; j < moviesAdventure.length; j++) {
-        movieInfo = moviesAdventure[j];
-        movieId = movieInfo.id;
-        movieData = movieInfo;
-        title = movieData.name;
-        category = movieData.category;
-        cover = movieData.cover;
-        description = movieData.description;
-        customizedMovieInfo = {
-            id : movieId,
-            name : title,
-            category : category,
-            cover : cover,
-            description : description
-        } //end of customizedMovieInfo
-        moviesDataSorted.push(customizedMovieInfo);
-    } //end of for
-    for(var k = 0; k < moviesAction.length; k++) {
-        movieInfo = moviesAction[k];
-        movieId = movieInfo.id;
-        movieData = movieInfo;
-        title = movieData.name;
-        category = movieData.category;
-        cover = movieData.cover;
-        description = movieData.description;
-        customizedMovieInfo = {
-            id : movieId,
-            name : title,
-            category : category,
-            cover : cover,
-            description : description
-        } //end of customizedMovieInfo
-        moviesDataSorted.push(customizedMovieInfo);
-    } //end of for
-    for(var h = 0; h < moviesRomantic.length; h++) {
-        movieInfo = moviesRomantic[h];
-        movieId = movieInfo.id;
-        movieData = movieInfo;
-        title = movieData.name;
-        category = movieData.category;
-        cover = movieData.cover;
-        description = movieData.description;
-        customizedMovieInfo = {
-            id : movieId,
-            name : title,
-            category : category,
-            cover : cover,
-            description : description
-        } //end of customizedMovieInfo
-        moviesDataSorted.push(customizedMovieInfo);
-    } //end of for
-    for(var l = 0; l < moviesCommedy.length; l++) {
-        movieInfo = moviesCommedy[l];
-        movieId = movieInfo.id;
-        movieData = movieInfo;
-        title = movieData.name;
-        category = movieData.category;
-        cover = movieData.cover;
-        description = movieData.description;
-        customizedMovieInfo = {
-            id : movieId,
-            name : title,
-            category : category,
-            cover : cover,
-            description : description
-        } //end of customizedMovieInfo
-        moviesDataSorted.push(customizedMovieInfo);
-    } //end of for
-    for(var m = 0; m < moviesHorror.length; m++) {
-        movieInfo = moviesHorror[m];
-        movieId = movieInfo.id;
-        movieData = movieInfo;
-        title = movieData.name;
-        category = movieData.category;
-        cover = movieData.cover;
-        description = movieData.description;
-        customizedMovieInfo = {
-            id : movieId,
-            name : title,
-            category : category,
-            cover : cover,
-            description : description
-        } //end of customizedMovieInfo
-        moviesDataSorted.push(customizedMovieInfo);
-    } //end of for
-    console.log(moviesDataSorted);
-    for(var o = 0; o < moviesDataSorted.length; o++) {
-        var movie = moviesDataSorted[o];
-        createResultGraphic(movie.cover, movie.name, movie.rating, movie.id , o);
-    } //end of for
-} //end of sortByCategorie
 
 function sortMoviesASC() {
     movieContainer.innerHTML = "";
@@ -396,6 +233,8 @@ function searchWithParameter(searchString) {
             movie = foundResults[j];
             createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
         } //end of for
+        moviesDataSorted = foundResults;
+        return;
     } // end of if
-
+    moviesDataSorted = moviesData;
 } // end of search
