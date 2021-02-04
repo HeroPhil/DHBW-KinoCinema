@@ -249,3 +249,10 @@ async function loadMoviesOfCategory(categoryIndex) {
     moviesContainer.hidden = false;
 }
 
+function search() {
+    var inputObject = document.getElementById("search-input");
+    var searchString = new String(inputObject.value);
+    sessionStorage.setItem("Search", searchString);
+    window.location.href = "../search/";
+} //end of search
+

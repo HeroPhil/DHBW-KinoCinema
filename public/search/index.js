@@ -37,15 +37,31 @@ let moviesCommedy = [];
 let moviesHorror = [];
 let foundResults = [];
 let sortNameMode = false;
+let preSearchRedirection;
 let movieContainer;
 
 async function loadContent() {
+    try {
+        var preSearch = sessionStorage.getItem("Search");
+        if(preSearch.localeCompare("used") !== 0) {
+            preSearchRedirection = true;
+        } else {
+            preSearchRedirection = false;
+        } //end of if-else
+        sessionStorage.setItem("Search", "used");
+    } catch(err) {
+        preSearchRedirection = false;
+    }
     movieContainer = document.getElementById("Movie-Container");
     var allMovies = await functions.httpsCallable('database-getAllMovies')({});
     console.log(allMovies);
     saveMovieInfos(allMovies);
     moviesDataSorted = moviesData;
-    addMoviesToWebsite();
+    if(preSearchRedirection) {
+        search(preSearch);
+    } else {
+        addMoviesToWebsite();
+    } //end of if-else
     console.log(moviesData);
     console.log(moviesDataSorted);
     console.log(moviesAction);
@@ -62,7 +78,7 @@ function addMoviesToWebsite() {
     var numberOfMovies = parseInt(moviesDataSorted.length);
     for(var i = 0; i < numberOfMovies; i++) {
         var movieInfo = moviesDataSorted[i];
-        createResultGraphic(movieInfo.cover, movieInfo.name, movieInfo.category, movieInfo.id , i);
+        createResultGraphic(movieInfo.cover, movieInfo.name, movieInfo.rating, movieInfo.id , i);
     } //end of for
 } //end of addMoviesToWebsite
 
@@ -120,7 +136,7 @@ function saveToSpecificInfoArray(pCategory, Info) {
     } //end of switch case
 } //end of saveToSpecificInfoArray
 
-async function createResultGraphic(gsLink, title, categorie, id , position) {
+async function createResultGraphic(gsLink, title, rating, id , position) {
     var refBorder = document.createElement("a");
     refBorder.href = "../movie/?id=" + id;
     var movieInfoContainer = document.createElement("div");
@@ -132,7 +148,7 @@ async function createResultGraphic(gsLink, title, categorie, id , position) {
     movieTitle.innerHTML = title;
     var movieCategorie = document.createElement("div");
     movieCategorie.classList.add("movieCategory");
-    movieCategorie.innerHTML = "Category : " + categorie;
+    movieCategorie.innerHTML = "Rating : " + rating;
     movieInfoContainer.appendChild(movieCover);
     movieInfoContainer.appendChild(movieTitle);
     movieInfoContainer.appendChild(movieCategorie);
@@ -266,7 +282,7 @@ function sortByCategorie() {
     console.log(moviesDataSorted);
     for(var o = 0; o < moviesDataSorted.length; o++) {
         var movie = moviesDataSorted[o];
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id , o);
+        createResultGraphic(movie.cover, movie.name, movie.rating, movie.id , o);
     } //end of for
 } //end of sortByCategorie
 
@@ -281,7 +297,7 @@ function sortMoviesASC() {
     for(var j = 0; j < moviesDataSorted.length; j++) {
         var movie = moviesDataSorted[j];
         console.log("Created element : " + movie.name);
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id , j);
+        createResultGraphic(movie.cover, movie.name, movie.rating, movie.id , j);
     } //end of for
 } //end of sortMoviesASC
 
@@ -295,7 +311,7 @@ function sortMoviesDESC() {
     console.log(moviesDataSorted);
     for(var j = 0; j < moviesDataSorted.length; j++) {
         var movie = moviesDataSorted[j];
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
+        createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
     } //end of for
 } //end of sortMoviesDESC
 
@@ -313,7 +329,7 @@ function sortMoviesByPlayTime() {
     console.log(moviesDataSorted);
     for(var j = 0; j < moviesDataSorted.length; j++) {
         var movie = moviesDataSorted[j];
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
+        createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
     } //end of for
 } //end of sortMoviesByPlayTime
 
@@ -331,7 +347,7 @@ function sortMoviesByRating() {
     console.log(moviesDataSorted);
     for(var j = 0; j < moviesDataSorted.length; j++) {
         var movie = moviesDataSorted[j];
-        createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
+        createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
     } //end of for
 } //end of sortMoviesByPlayTime
 
@@ -367,7 +383,33 @@ function search() {
     if(foundResults.length > 0) {
         for(var j = 0; j < foundResults.length; j++) {
             movie = foundResults[j];
-            createResultGraphic(movie.cover, movie.name, movie.category, movie.id, j);
+            createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
+        } //end of for
+    } //end of if
+} //end of search
+
+function search(searchString) {
+    console.log(searchString);
+    foundResults = [];
+    var movie;
+    for(var i = 0; i < moviesData.length; i++) {
+        movie = moviesData[i];
+        var searchableObject = new String(movie.name.toLocaleLowerCase());
+        searchString = new String(searchString.toLocaleLowerCase());
+        console.log(searchString);
+        console.log(searchableObject);
+        var movieExists = searchableObject.includes(searchString);
+        console.log(movieExists);
+        if(movieExists) {
+            foundResults.push(movie);
+        } //end of if
+    } //end of for
+    console.log(foundResults);
+    movieContainer.innerHTML = "";
+    if(foundResults.length > 0) {
+        for(var j = 0; j < foundResults.length; j++) {
+            movie = foundResults[j];
+            createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
         } //end of for
     } //end of if
 } //end of search
