@@ -1,4 +1,5 @@
-# Mannheim, 08.02.2021
+# Ehrenwörtliche Erklärung
+## Mannheim, 08.02.2021
 
 Wir versicheren hiermit, dass wir die vorliegende Software selbständig und ohne Benutzung anderer als der angegebenen Quellen und Hilfsmittel entwickelt haben.
 Die Software hat in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegen.
