@@ -58,6 +58,7 @@ async function loadContent() {
     saveMovieInfos(allMovies);
     moviesDataSorted = moviesData;
     if(preSearchRedirection) {
+        document.getElementById("search-input").value = preSearch;
         searchWithParameter(preSearch);
     } else {
         addMoviesToWebsite();
@@ -148,7 +149,7 @@ async function createResultGraphic(gsLink, title, rating, id , position) {
     movieTitle.innerHTML = title;
     var movieCategorie = document.createElement("div");
     movieCategorie.classList.add("movieCategory");
-    movieCategorie.innerHTML = "Rating : " + rating;
+    movieCategorie.innerHTML = "Rating : " + rating / 10;
     movieInfoContainer.appendChild(movieCover);
     movieInfoContainer.appendChild(movieTitle);
     movieInfoContainer.appendChild(movieCategorie);
