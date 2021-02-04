@@ -58,20 +58,20 @@
 }
 
 .resultMovie img {
-    height: 16rem;
-    width: auto;
+    height: 20rem;
     width: 18rem;
     object-fit: contain;
     margin: 0.2rem;
 }
 
 .movieTitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0rem 1rem 0.5rem;
     line-height : 1.5;
     width: auto;
     text-align : center;
     color : white;
-    font-size: 1.2rem;
-    padding: 0rem 1rem 0.5rem;
 }
 
 .movieCategory {

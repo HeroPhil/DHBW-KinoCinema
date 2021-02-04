@@ -149,8 +149,8 @@ async function createResultGraphic(gsLink, title, rating, id , position) {
     var movieCategorie = document.createElement("div");
     movieCategorie.classList.add("movieCategory");
     movieCategorie.innerHTML = "Rating : " + rating;
-    movieInfoContainer.appendChild(movieCover);
     movieInfoContainer.appendChild(movieTitle);
+    movieInfoContainer.appendChild(movieCover);
     movieInfoContainer.appendChild(movieCategorie);
     refBorder.appendChild(movieInfoContainer);
     var orderPosition = "order : " + position;
