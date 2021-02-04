@@ -288,9 +288,9 @@ function sortByCategorie() {
 
 function sortMoviesASC() {
     movieContainer.innerHTML = "";
-    moviesDataSorted.sort(function(movieOne, movieTwo){
-        var nameOne = new String(movieOne.name);
-        var nameTwo = new String(movieTwo.name);
+    moviesDataSorted.sort((movieOne, movieTwo) => {
+        var nameOne = new String(movieOne.name); // eslint-disable-line no-new-wrappers
+        var nameTwo = new String(movieTwo.name); // eslint-disable-line no-new-wrappers
         return nameOne.localeCompare(nameTwo);
     });
     console.log(moviesDataSorted);
@@ -303,9 +303,9 @@ function sortMoviesASC() {
 
 function sortMoviesDESC() {
     movieContainer.innerHTML = "";
-    moviesDataSorted.sort(function(movieOne, movieTwo){
-        var nameOne = new String(movieOne.name);
-        var nameTwo = new String(movieTwo.name);
+    moviesDataSorted.sort((movieOne, movieTwo) => {
+        var nameOne = new String(movieOne.name); // eslint-disable-line no-new-wrappers
+        var nameTwo = new String(movieTwo.name); // eslint-disable-line no-new-wrappers
         return nameTwo.localeCompare(nameOne);
     });
     console.log(moviesDataSorted);
@@ -317,7 +317,7 @@ function sortMoviesDESC() {
 
 function sortMoviesByPlayTime() {
     movieContainer.innerHTML = "";
-    moviesDataSorted.sort(function(movieOne, movieTwo){
+    moviesDataSorted.sort((movieOne, movieTwo) =>{
         if(movieTwo.playTime < movieOne.playTime) {
             return 1;
         } else if(movieTwo.playTime > movieOne.playTime) {
@@ -335,7 +335,7 @@ function sortMoviesByPlayTime() {
 
 function sortMoviesByRating() {
     movieContainer.innerHTML = "";
-    moviesDataSorted.sort(function(movieOne, movieTwo){
+    moviesDataSorted.sort((movieOne, movieTwo) => {
         if(movieTwo.rating < movieOne.rating) {
             return -1;
         } else if(movieTwo.rating > movieOne.rating) {
@@ -364,53 +364,35 @@ function search() {
     var input = document.getElementById("search-input");
     console.log(input.value);
     var searchString = input.value;
-    foundResults = [];
-    var movie;
-    for(var i = 0; i < moviesData.length; i++) {
-        movie = moviesData[i];
-        var searchableObject = new String(movie.name.toLocaleLowerCase());
-        searchString = new String(searchString.toLocaleLowerCase());
-        console.log(searchString);
-        console.log(searchableObject);
-        var movieExists = searchableObject.includes(searchString);
-        console.log(movieExists);
-        if(movieExists) {
-            foundResults.push(movie);
-        } //end of if
-    } //end of for
-    console.log(foundResults);
-    movieContainer.innerHTML = "";
-    if(foundResults.length > 0) {
-        for(var j = 0; j < foundResults.length; j++) {
-            movie = foundResults[j];
-            createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
-        } //end of for
-    } //end of if
-} //end of search
+    searchWithParameter(searchString);
+}
 
 function searchWithParameter(searchString) {
     console.log(searchString);
     document.getElementById("search-input").value = searchString;
-    foundResults = [];
-    var movie;
-    for(var i = 0; i < moviesData.length; i++) {
-        movie = moviesData[i];
-        var searchableObject = new String(movie.name.toLocaleLowerCase());
-        searchString = new String(searchString.toLocaleLowerCase());
-        console.log(searchString);
-        console.log(searchableObject);
-        var movieExists = searchableObject.includes(searchString);
-        console.log(movieExists);
-        if(movieExists) {
-            foundResults.push(movie);
-        } //end of if
-    } //end of for
-    console.log(foundResults);
+    searchString = searchString.toLocaleLowerCase();
+
+    const foundResultsByTitle = [];
+    const foundResultsByDescription = [];
+    var movie, searchableTitle, searchableDescription;
+
+    moviesData.forEach((movie) => {
+        searchableTitle = movie.name.toLocaleLowerCase();
+        searchableDescription = movie.description.toLocaleLowerCase();
+        if (searchableTitle.includes(searchString)) {
+            foundResultsByTitle.push(movie);
+        } else if (searchableDescription.includes(searchString))  {
+            foundResultsByDescription.push(movie);
+        }
+    }); //end of for
+
+    const foundResults = foundResultsByTitle.sort().concat(foundResultsByDescription.sort());
     movieContainer.innerHTML = "";
     if(foundResults.length > 0) {
         for(var j = 0; j < foundResults.length; j++) {
             movie = foundResults[j];
             createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
         } //end of for
-    } //end of if
-} //end of search
+    } // end of if
+
+} // end of search
