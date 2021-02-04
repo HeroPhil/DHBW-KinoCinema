@@ -422,6 +422,9 @@ function pay(id) {
  
 //weiter Button click event zur Zusammenfassung
 async function ausgabe() {
+  document.getElementById("hiddenInfo").hidden = true;
+  document.getElementById("loadWhile").hidden = false;
+
   document.getElementById("ausVorname").innerHTML = document.getElementById("Vorname").value;
   document.getElementById("ausNachname").innerHTML = document.getElementById("Nachname").value;
   document.getElementById("ausEmail").innerHTML = document.getElementById("Email").value;
@@ -456,12 +459,11 @@ async function ausgabe() {
     } else {
       //document.getElementById("anmeldung").hidden = true;
       //document.getElementById("guestLogin").hidden = true;
-      //document.getElementById("Information1").hidden = false;
-      //document.getElementById("Information2").hidden = false;
-      //document.getElementById("Information3").hidden = false;
       userDataMissing = false;
     } //end of if-else
   } //end of if
+  document.getElementById("hiddenInfo").hidden = false;
+  document.getElementById("loadWhile").hidden = true;
 } //end of ausgabe
 
 async function updateUserDetails() {
@@ -505,7 +507,7 @@ function addTicketsToWebsite() {
   document.getElementById("tickets").innerHTML = "";
   if(selectedSeats.length > 0) {
     var date = new Date(screeningTime);
-    var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+    var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear() + ", " + date.getHours() + ":" + checkForCorrectMinuteWriting(date.getMinutes());
     console.log(selectedSeats[0]);
     for(var i = 0; i < selectedSeats.length; i++) {
       var seat = selectedSeats[i];
@@ -519,55 +521,55 @@ function addTicketsToWebsite() {
 }
 
 function createTicket(title, hall, row, seat, date, price) {
-    var tickets = document.getElementById("tickets");
-    var ticket = document.createElement("div");
-    ticket.classList.add("ticket");
+  var tickets = document.getElementById("tickets");
+  var ticket = document.createElement("div");
+  ticket.classList.add("ticket");
       var ticketInformation = document.createElement("div");
       ticketInformation.classList.add("ticketInformation");
-        var movieTitle = document.createElement("div");
-        movieTitle.classList.add("ticketMovieTitle");
-        movieTitle.innerHTML = title;
+          var movieTitle = document.createElement("div");
+          movieTitle.classList.add("ticketMovieTitle");
+          movieTitle.innerHTML = title;
       ticketInformation.appendChild(movieTitle);
-        var detailsTable = document.createElement("table");
-          var rowHall = document.createElement("tr");
-            var tHall = document.createElement("td");
-            tHall.innerHTML = "Hall";
-            var tHallValue = document.createElement("td");
-            tHallValue.innerHTML = hall;
-            rowHall.appendChild(tHall);
-            rowHall.appendChild(tHallValue);
-            var tDate = document.createElement("td");
-            tDate.innerHTML = "Date";
-            var tDateValue = document.createElement("td");
-            tDateValue.innerHTML = date;
-            rowHall.appendChild(tDate);
-            rowHall.appendChild(tDateValue);
+          var detailsTable = document.createElement("table");
+              var rowHall = document.createElement("tr");
+              var tHall = document.createElement("td");
+              tHall.innerHTML = "Hall";
+              var tHallValue = document.createElement("td");
+              tHallValue.innerHTML = hall;
+              rowHall.appendChild(tHall);
+              rowHall.appendChild(tHallValue);
+              var tDate = document.createElement("td");
+              tDate.innerHTML = "Date";
+              var tDateValue = document.createElement("td");
+              tDateValue.innerHTML = date;
+              rowHall.appendChild(tDate);
+              rowHall.appendChild(tDateValue);
           detailsTable.appendChild(rowHall);
           var rowRow = document.createElement("tr");
-            var tRow = document.createElement("td");
-            tRow.innerHTML = "Row";
-            var tRowValue = document.createElement("td");
-            tRowValue.innerHTML = row;
-            rowRow.appendChild(tRow);
-            rowRow.appendChild(tRowValue);
-            var tPrice = document.createElement("td");
-            tPrice.innerHTML = "Price";
-            var tPriceValue = document.createElement("td");
-            tPriceValue.innerHTML = formatAsCurrency(price) + " €";
-            rowRow.appendChild(tPrice);
-            rowRow.appendChild(tPriceValue);
+              var tRow = document.createElement("td");
+              tRow.innerHTML = "Row";
+              var tRowValue = document.createElement("td");
+              tRowValue.innerHTML = row;
+              rowRow.appendChild(tRow);
+              rowRow.appendChild(tRowValue);
+              var tPrice = document.createElement("td");
+              tPrice.innerHTML = "Price";
+              var tPriceValue = document.createElement("td");
+              tPriceValue.innerHTML = formatAsCurrency(price) + " €";
+              rowRow.appendChild(tPrice);
+              rowRow.appendChild(tPriceValue);
           detailsTable.appendChild(rowRow);
-          var rowSeat = document.createElement("tr");
-            var tSeat = document.createElement("td");
-            tSeat.innerHTML = "Seat";
-            var tSeatValue = document.createElement("td");
-            tSeatValue.innerHTML = seat;
-            rowSeat.appendChild(tSeat);
-            rowSeat.appendChild(tSeatValue);
+              var rowSeat = document.createElement("tr");
+              var tSeat = document.createElement("td");
+              tSeat.innerHTML = "Seat";
+              var tSeatValue = document.createElement("td");
+          tSeatValue.innerHTML = seat;
+          rowSeat.appendChild(tSeat);
+          rowSeat.appendChild(tSeatValue);
           detailsTable.appendChild(rowSeat);
-        ticketInformation.appendChild(detailsTable);
+      ticketInformation.appendChild(detailsTable);
       ticket.appendChild(ticketInformation);
-    tickets.appendChild(ticket);
+  tickets.appendChild(ticket);
     //createQrCode(ticket, value);
     movieLogo(ticket);
 }
