@@ -58,7 +58,7 @@ async function loadContent() {
     saveMovieInfos(allMovies);
     moviesDataSorted = moviesData;
     if(preSearchRedirection) {
-        search(preSearch);
+        searchWithParameter(preSearch);
     } else {
         addMoviesToWebsite();
     } //end of if-else
@@ -388,7 +388,7 @@ function search() {
     } //end of if
 } //end of search
 
-function search(searchString) {
+function searchWithParameter(searchString) {
     console.log(searchString);
     foundResults = [];
     var movie;
