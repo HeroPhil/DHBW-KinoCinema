@@ -6,7 +6,7 @@ Die Software hat in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde 
 Sie wurde nicht, auch nicht auszugsweise, für eine andere Prüfungs- oder Studienleistung verwendet.
 Die open-source Lizensierung erfolgt nach der GNU Lizenz (siehe [COPYING)](./COPYING)).
 
-Karotten Kameraderen
+### Karotten Kameraderen
 - Christian Bettermann
 - Christoph Fischer
 - Philip Herold
