@@ -139,7 +139,7 @@ async function loadLastTickets(count) {
     let result = await functions.httpsCallable('database-getTicketsOfCurrentUser')(param);
     let tickets = result.data;
     tickets.sort((a, b) => {
-        return a.data.screening.data.startTime - b.data.screening.data.startTime;
+        return b.data.screening.data.startTime - a.data.screening.data.startTime;
     });
     console.log(tickets);
     
