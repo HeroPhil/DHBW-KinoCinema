@@ -251,7 +251,7 @@ async function loadMoviesOfCategory(categoryIndex) {
 
 function search() {
     var inputObject = document.getElementById("search-input");
-    var searchString = new String(inputObject.value);
+    var searchString = inputObject.value;
     sessionStorage.setItem("Search", searchString);
     window.location.href = "../search/";
 } //end of search
