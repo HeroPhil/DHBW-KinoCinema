@@ -55,6 +55,9 @@
     flex-wrap: wrap;
     justify-content: space-around;
     align-content: space-between;
+    padding: 0.7rem 0.4rem 0.5rem;
+    border-radius: 1rem;
+    box-shadow: 0px 2px 12px -2px var(--accent-Light);
 }
 
 .input-field {
