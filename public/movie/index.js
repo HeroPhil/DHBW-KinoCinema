@@ -70,9 +70,9 @@ async function loadContent() {
                 categoriesListed += ((index !== 0 ? ", " : "") + category);
             });
             categories.innerHTML = "Categories: " + categoriesListed;
-        list.appendChild(duration);
-        list.appendChild(rating);
         list.appendChild(categories);
+        list.appendChild(rating);
+        list.appendChild(duration);
     information.appendChild(list);
 
 

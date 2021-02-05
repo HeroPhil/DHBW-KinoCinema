@@ -26,6 +26,25 @@
     border-top: 0.2rem solid var(--accent);
 }
 
+#movie-information {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    border-bottom: 0.2rem solid var(--accent);
+}
+
+#movie-information ul li {
+    margin-bottom: 0.7rem;
+    font-style: bold;
+    list-style-type: none;
+}
+
+#movie-information ul li::before {
+    font-size: 1.5rem;
+    color: var(--accent-Light);
+    content: "🥕";
+    padding-right: 0.7rem;
+}
+
 .times{
     margin-top: 2rem;
 }
