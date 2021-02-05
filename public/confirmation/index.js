@@ -39,7 +39,7 @@ function loadContent() {
     billInfo = JSON.parse(sessionStorage.getItem("BillInfo"));
     ticketsInfo = JSON.parse(sessionStorage.getItem("Tickets"));
     if (ticketsInfo === null) {
-      throw "no tickets";
+      throw new Error("no tickets");
     }
     console.log(billInfo);
     console.log(ticketsInfo);
