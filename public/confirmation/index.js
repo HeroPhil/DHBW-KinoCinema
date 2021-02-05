@@ -293,3 +293,7 @@ function validateFormatOfPicture(pHeigth, pWidth) {
       return 1;
     } //end if else.if
 }
+
+function home(){
+  window.location = "../index/"
+}
