@@ -759,8 +759,14 @@ function printError(type, errorMessage) {
       //errorParagraph.appendChild(errorText);
       //errorPlaceholder.appendChild(errorParagraph);
       errorText = "";
+      var seatid;
+      var seatHTMLObject;
       if(corruptedSeats.length !== 0) {
         for(var i = 0; i < parseInt(corruptedSeats.length); i++) {
+          seatid = corruptedSeats[i].id;
+          seatHTMLObject = document.getElementById(seatid);
+          seatHTMLObject.classList.remove('selected');
+          seatHTMLObject.classList.add('occupied');
           errorText = errorText + "Seat number " + (corruptedSeats[i].seat + 1) + " in row " + (corruptedSeats[i].row + 1) + " was already booked!\n";
         } //end of for
       } //end of if
