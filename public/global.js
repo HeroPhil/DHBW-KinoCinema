@@ -1,8 +1,10 @@
+/*-------------------End-Loading Animation-------------------*/
 function endLoading(){
     document.getElementById("loading").hidden = true;
     document.getElementById("main").hidden = false;
 }
 
+/*-------------------Show logged in Icon in nav-bar-------------------*/
 async function showUserLoginStatus(){
     await new Promise(resolve => setTimeout(resolve, 3000));
     if(firebase.auth().currentUser === null){

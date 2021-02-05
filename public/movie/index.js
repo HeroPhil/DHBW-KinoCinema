@@ -57,6 +57,34 @@ async function loadContent() {
     var title = document.getElementById("movie-title");
     var description = document.getElementById("movie-description");
     var cover = document.getElementById("movie-cover");
+    const information = document.getElementById("movie-information");
+
+    const list = document.createElement("ul");
+        const duration = document.createElement("li");
+            duration.innerHTML = "Playtime: ";
+            const minDesign = document.createElement("span");
+                minDesign.innerHTML = movieData.data.duration + " Minuten";
+            duration.appendChild(minDesign);
+        const rating = document.createElement("li");
+            rating.innerHTML = "Rating: ";
+            const iconOr = document.createElement("span"); 
+                iconOr.innerHTML = (movieData.data.priority / 10).toFixed(1) + "&#x269D;";
+            rating.appendChild(iconOr);
+        const categories = document.createElement("li");
+            categoriesListed = "";
+            movieData.data.categories.forEach((category, index) => {
+                categoriesListed += ((index !== 0 ? ", " : "") + category);
+            });
+            categories.innerHTML = "Categories: ";
+            const catStyle = document.createElement("span");
+                catStyle.innerHTML = categoriesListed;
+            categories.appendChild(catStyle);
+        list.appendChild(categories);
+        list.appendChild(rating);
+        list.appendChild(duration);
+    information.appendChild(list);
+
+
     var storage = firebase.storage();
     title.innerHTML = movieData.data.name;
     sessionStorage.setItem('movieTitle', movieData.data.name);

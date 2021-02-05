@@ -80,10 +80,19 @@
     
                 <div class="flexSearch"> 
                     <!--Hier fehlt Funktion!-->
-                    <form class="field" action="void">
+                    <form class="field" action="javascript:search()">
                         <input id="search-input" type="text" placeholder="Search.." name="search">
-                    </form>   
-                    <button id="searchButton" onclick="search()" type="submit"><i class="fa fa-search"></i></button>
+                        <button id="searchButton" type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                    <script>
+                        var searchDir = document.getElementById("search-input");
+                        searchDir.addEventListener("keyup" , pevent => {
+                            if(pevent.keyCode === 13) {
+                                pevent.preventDefault();
+                                document.getElementById("searchButton").click();
+                            }
+                        });
+                    </script>
                 </div>
 
 

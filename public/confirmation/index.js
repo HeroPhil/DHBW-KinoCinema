@@ -273,13 +273,8 @@ function addTicketsToPDF(pdfDocument) {
 } //end of addImageToPDF
 
 
-function formatAsCurrency(number) {
-  const sp = number.toString().split(".");
-  if (sp.length > 1) {
-    sp[sp.length-1] = sp[sp.length-1].concat("0".repeat(2 - sp[sp.length-1].length));
-    return sp.join(".");
-  }
-  return sp[0].concat(".00");
+function formatAsCurrency(number)  {
+  return number.toFixed(2);
 }
 
 function validateFormatOfPicture(pHeigth, pWidth) {
@@ -292,4 +287,8 @@ function validateFormatOfPicture(pHeigth, pWidth) {
     } else {
       return 1;
     } //end if else.if
+}
+
+function home(){
+  window.location = "../index/"
 }

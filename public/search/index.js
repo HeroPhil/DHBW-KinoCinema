@@ -61,6 +61,11 @@ async function loadContent() {
     endLoading();
 } ///end of loadContent
 
+function press() {
+    document.getElementById("search-button").click();
+}
+
+
 function addMoviesToWebsite() {
     var numberOfMovies = parseInt(moviesDataSorted.length);
     for(var i = 0; i < numberOfMovies; i++) {
@@ -157,6 +162,7 @@ function sortMoviesDESC() {
     } //end of for
 } //end of sortMoviesDESC
 
+/*
 function sortMoviesByPlayTime() {
     movieContainer.innerHTML = "";
     moviesDataSorted.sort((movieOne, movieTwo) =>{
@@ -174,6 +180,7 @@ function sortMoviesByPlayTime() {
         createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
     } //end of for
 } //end of sortMoviesByPlayTime
+*/
 
 function sortMoviesByRating() {
     if(sortRatingMode) {
