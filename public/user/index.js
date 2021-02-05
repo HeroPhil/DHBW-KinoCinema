@@ -195,7 +195,7 @@ function createTicket(title, hall, row, seat, date, price, value) {
                 var tPrice = document.createElement("td");
                 tPrice.innerHTML = "Price";
                 var tPriceValue = document.createElement("td");
-                tPriceValue.innerHTML = price.toFixed(2) + " €";
+                tPriceValue.innerHTML = parseFloat(price).toFixed(2) + " €";
                 rowRow.appendChild(tPrice);
                 rowRow.appendChild(tPriceValue);
             detailsTable.appendChild(rowRow);

@@ -95,6 +95,7 @@
     align-items: center;
     justify-content: center;
     margin: 0 1rem;
+    padding-top: 2rem;
 }
 
 .showcase li small {
@@ -467,6 +468,9 @@ summary:focus {
     .showcase ul{
         padding: 10px;
     }
+    #prizing li{
+        margin-top: 0.2rem;
+    }
 }
 
 @media only screen and (min-width: 720px) and (max-width: 1099px){
@@ -476,6 +480,9 @@ summary:focus {
     
     .ticket{
         width: 40rem;
+    }
+    #prizing li{
+        margin-top: -0.19rem;
     }
 }
   
@@ -505,6 +512,10 @@ summary:focus {
     .seat:nth-last-of-type(4) {
         margin-left: 1.2rem;
     }
+    
+    #prizing li{
+        margin-top: -0.01rem;
+    }
 }
     
 @media only screen and (min-width: 1500px) and (max-width: 1899px){
@@ -530,6 +541,17 @@ summary:focus {
     
     .seat:nth-last-of-type(4) {
         margin-left: 1.5rem;
+    }
+
+    
+    #prizing li:nth-of-type(2){
+        margin-top: 0.2rem;
+    }
+    #prizing li:nth-of-type(3){
+        margin-top: 0.75rem;
+    }
+    #prizing li:nth-of-type(4){
+        margin-top: 0.4rem;
     }
 }
     
@@ -557,6 +579,10 @@ summary:focus {
     .seat:nth-last-of-type(4) {
         margin-left: 1.75rem;
     }
+
+    #prizing li{
+        margin-top: 0.73rem;
+    }
 }
     
 @media only screen and (min-width: 2300px){
@@ -582,5 +608,15 @@ summary:focus {
     
     .seat:nth-last-of-type(4) {
         margin-left: 2rem;
+    }
+
+    #prizing li:nth-of-type(2){
+        margin-top: 0.75rem;
+    }
+    #prizing li:nth-of-type(3){
+        margin-top: 1.75rem;
+    }
+    #prizing li:nth-of-type(4){
+        margin-top: 1.75rem;
     }
 }

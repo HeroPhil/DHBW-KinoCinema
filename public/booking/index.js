@@ -85,7 +85,7 @@ const updateSelectedSeatsCount = () => {
 }; //end of lambda expression
 
 function formatAsCurrency(number) {
-  return number.toFixed(2);
+  return parseFloat(number).toFixed(2);
 }
 
 // Seat select event

@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", event => {
 // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 
-
+/*-------------------onload admin-page-------------------*/
 async function testForCurrentUser() {
     document.getElementById("loading").hidden = false;
     document.getElementById("main").hidden = true;
@@ -39,7 +39,7 @@ async function testForCurrentUser() {
     endLoading();
 }
 
-
+/*-------------------login methods-------------------*/
 async function loginWithGoogle() {
     const providerGoogle = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(providerGoogle).then(result => {
@@ -80,6 +80,8 @@ async function loginWithUserCredentials() {
     });   
 } //end of loginWithUserCredentials
 
+/*-------------------furture login methods-------------------*/
+/*
 async function loginWithMicrosoft() {
     const providerMicrosoft = new firebase.auth.OAuthProvider('microsoft.com');
     firebase.auth().signInWithPopup(providerMicrosoft).then(result => {
@@ -119,4 +121,4 @@ async function loginWithApple() {
     }).catch((error) => {console.error(error)});
 } //end of loginWithFacebook
 
-
+*/
