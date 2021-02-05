@@ -39,20 +39,19 @@ function loadContent() {
     numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
     billInfo = JSON.parse(sessionStorage.getItem("BillInfo"));
     ticketsInfo = JSON.parse(sessionStorage.getItem("Tickets"));
+    if (ticketsInfo === null) {
+      throw new Error("no tickets");
+    }
     console.log(billInfo);
     console.log(ticketsInfo);
   } catch(err) {
     console.log(err);
-    window.location.href = "../index/";
+    window.location = "../index/";
   } //end of try-catch
   loadTicketsWithQRCode();
   console.log(imgFormats);
   endLoading();
 } //end of loadContent
-
-function home() {
-  window.location.href = "../index/";
-}
 
 function checkForCorrectMinuteWriting(timeStamp) {
   if(timeStamp < 10) {

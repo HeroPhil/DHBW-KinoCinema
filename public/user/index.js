@@ -138,6 +138,9 @@ async function loadLastTickets(count) {
 
     let result = await functions.httpsCallable('database-getTicketsOfCurrentUser')(param);
     let tickets = result.data;
+    tickets.sort((a, b) => {
+        return b.data.screening.data.startTime - a.data.screening.data.startTime;
+    });
     console.log(tickets);
     
     var displayCount = count > tickets.length ? tickets.length : count;
@@ -192,7 +195,7 @@ function createTicket(title, hall, row, seat, date, price, value) {
                 var tPrice = document.createElement("td");
                 tPrice.innerHTML = "Price";
                 var tPriceValue = document.createElement("td");
-                tPriceValue.innerHTML = formatAsCurrency(price) + " €";
+                tPriceValue.innerHTML = price.toFixed(2) + " €";
                 rowRow.appendChild(tPrice);
                 rowRow.appendChild(tPriceValue);
             detailsTable.appendChild(rowRow);
@@ -208,15 +211,6 @@ function createTicket(title, hall, row, seat, date, price, value) {
         ticket.appendChild(ticketInformation);
     tickets.appendChild(ticket);
     createQrCode(ticket, value);
-}
-
-function formatAsCurrency(number) {
-    const sp = number.toString().split(".");
-    if (sp.length > 1) {
-      sp[sp.length-1] = sp[sp.length-1].concat("0".repeat(2 - sp[sp.length-1].length));
-      return sp.join(".");
-    }
-    return sp[0].concat(".00");
 }
 
 function createQrCode(element, textValue) {

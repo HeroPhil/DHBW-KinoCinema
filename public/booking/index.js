@@ -435,9 +435,9 @@ async function ausgabe() {
   var payment = document.getElementById("Zahlungsmethode");
   var ausPayment = document.getElementById("ausKartennummer");
   if(payment.checked === true) {
-    ausPayment.innerHTML = "<td colspan=\"2\"><center>Vor Ort Bezahlung</center></td>"
+    ausPayment.innerHTML = "<td colspan=\"2\"><center>Pay on Site</center></td>"
   } else {
-    document.getElementById("ausKartennummer").innerHTML = "<td>Kartennummer:</td><td>" + document.getElementById("Kartennummer").value + "</td>";
+    document.getElementById("ausKartennummer").innerHTML = "<td>Card Number:</td><td>" + document.getElementById("Kartennummer").value + "</td>";
   }
   
   if(document.getElementById("saveCeck").checked === true) {
