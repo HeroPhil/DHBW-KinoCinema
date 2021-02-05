@@ -40,9 +40,13 @@
 
 #movie-information ul li::before {
     font-size: 1.5rem;
-    color: var(--accent-Light);
     content: "🥕";
     padding-right: 0.7rem;
+}
+
+#movie-information span {
+    font-weight: bolder;
+    color: var(--accent);
 }
 
 .times{

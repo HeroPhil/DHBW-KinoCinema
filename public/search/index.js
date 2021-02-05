@@ -60,9 +60,9 @@ async function loadContent() {
     endLoading();
 } ///end of loadContent
 
-/*function press() {
+function press() {
     document.getElementById("search-button").click();
-}*/
+}
 
 
 function addMoviesToWebsite() {
@@ -161,6 +161,7 @@ function sortMoviesDESC() {
     } //end of for
 } //end of sortMoviesDESC
 
+/*
 function sortMoviesByPlayTime() {
     movieContainer.innerHTML = "";
     moviesDataSorted.sort((movieOne, movieTwo) =>{
@@ -178,6 +179,7 @@ function sortMoviesByPlayTime() {
         createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
     } //end of for
 } //end of sortMoviesByPlayTime
+*/
 
 function sortMoviesByRating() {
     movieContainer.innerHTML = "";
