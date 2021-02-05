@@ -108,15 +108,11 @@ async function createResultGraphic(gsLink, title, rating, id , position) {
     movieTitle.innerHTML = title;
     var movieCategorie = document.createElement("div");
     movieCategorie.classList.add("movieCategory");
-<<<<<<< HEAD
-    movieCategorie.innerHTML = "Rating : " + (rating / 10).toFixed(1);
-=======
     movieCategorie.innerHTML = "Rating : ";
     var ratingSpan = document.createElement("span");
     ratingSpan.innerHTML = (rating / 10).toFixed(1) + "&#x269D;";
     movieCategorie.appendChild(ratingSpan);
     movieInfoContainer.appendChild(movieCover);
->>>>>>> d8b948aaba67ed3fcf42408166094e53b11e2c52
     movieInfoContainer.appendChild(movieTitle);
     movieInfoContainer.appendChild(movieCover);
     movieInfoContainer.appendChild(movieCategorie);

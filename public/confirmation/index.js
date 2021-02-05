@@ -226,6 +226,7 @@ function addTicketsToPDF(pdfDocument) {
   var format = 0;
   var pictureAddedCounter = 0;
   var pictureAddedBySideCounter = 0;
+  var img;
   for(var i = 0; i < qrcodesAsImg.length; i++) {
     formatData = imgFormats[i];
     format = validateFormatOfPicture(formatData.height, formatData.width);
@@ -243,7 +244,7 @@ function addTicketsToPDF(pdfDocument) {
         pictureAddedBySideCounter = 0;
         y = 10;
       } //end of if
-      var img = qrcodesAsImg[i];
+      img = qrcodesAsImg[i];
       console.log(width * format);
       pdfDocument.addImage(img, "png", x, y, width, (width * format));
       y = y + height + 10;
@@ -261,7 +262,7 @@ function addTicketsToPDF(pdfDocument) {
         pictureAddedBySideCounter = 0;
         y = 10;
       } //end of if
-      var img = qrcodesAsImg[i];
+      img = qrcodesAsImg[i];
       console.log(width * format);
       pdfDocument.addImage(img, "png", (x + 20), y, (height * format), height);
       y = y + height + 10;
