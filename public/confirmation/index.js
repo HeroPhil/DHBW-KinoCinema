@@ -274,7 +274,7 @@ function addTicketsToPDF(pdfDocument) {
 
 
 function formatAsCurrency(number)  {
-  return number.toFixed(2);
+  return parseFloat(number).toFixed(2);
 }
 
 function validateFormatOfPicture(pHeigth, pWidth) {
