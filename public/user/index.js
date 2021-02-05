@@ -130,6 +130,9 @@ async function updateDetails() {
 }
 
 async function loadLastTickets(count) {
+    document.getElementById("loadingWhile").hidden = false;
+    document.getElementById("ticketBox").hidden = true;
+
     document.getElementById("tickets").innerHTML = "";
     //getTickets
     const param = {
@@ -158,6 +161,9 @@ async function loadLastTickets(count) {
         let ticketID = ticket.id;
         createTicket(title, hall, row, seat, date, price, ticketID);
     }
+
+    document.getElementById("loadingWhile").hidden = true;
+    document.getElementById("ticketBox").hidden = false;
 }
 
 function createTicket(title, hall, row, seat, date, price, value) {

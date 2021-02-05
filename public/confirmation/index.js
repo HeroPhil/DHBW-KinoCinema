@@ -34,6 +34,7 @@ let billInfo;
 let writtenPixels;
 const spaceBetweenText = 15;
 
+/*-------------------onload-------------------*/
 function loadContent() {
   try {
     numberOfTickets = parseInt(sessionStorage.getItem("NumberOfTickets"));
@@ -53,6 +54,7 @@ function loadContent() {
   endLoading();
 } //end of loadContent
 
+/*-------------------format Time on ticket-------------------*/
 function checkForCorrectMinuteWriting(timeStamp) {
   if(timeStamp < 10) {
       return "0" + timeStamp;
@@ -61,6 +63,7 @@ function checkForCorrectMinuteWriting(timeStamp) {
   } //end of if-else
 } //end of checkForCorrectMinuteWriting
 
+/*-------------------generate Tickets with QR-Code-------------------*/
 function loadQRCodes() {
   if(numberOfTickets > 0) {
     for(var i = 0; i < numberOfTickets; i++) {
@@ -176,6 +179,8 @@ function createQrCode(element, textValue) {
   qrcode.makeCode(textValue);
 } //end of createQrCode
 
+
+/*-------------------print xor save Ticket as PDF-------------------*/
 async function printAndSaveTickets() {
   var downloadablePDF = createPDF();
   downloadablePDF.save("kinocinema_order_list");
@@ -272,7 +277,7 @@ function addTicketsToPDF(pdfDocument) {
   } //end of for
 } //end of addImageToPDF
 
-
+/*-------------------format screening time-------------------*/
 function formatAsCurrency(number)  {
   return parseFloat(number).toFixed(2);
 }
@@ -289,6 +294,8 @@ function validateFormatOfPicture(pHeigth, pWidth) {
     } //end if else.if
 }
 
+
+/*-------------------function for back to shop button-------------------*/
 function home(){
   window.location = "../index/"
 }
