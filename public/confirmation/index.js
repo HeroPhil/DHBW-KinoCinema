@@ -247,7 +247,7 @@ function addTicketsToPDF(pdfDocument) {
       img = qrcodesAsImg[i];
       console.log(width * format);
       pdfDocument.addImage(img, "png", x, y, width, (width * format));
-      y = y + height + 10;
+      y = y + parseInt(width * format) + 10;
       pictureAddedBySideCounter++;
       pictureAddedCounter++;
     } else {
