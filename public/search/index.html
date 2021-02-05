@@ -68,8 +68,17 @@
                         </div>
                     </div>
                     <div class="col-6" id="inputs">
-                        <input id="search-input" class="input-field" type="text" placeholder="Search..." name="search">
+                        <input id="search-input" class="input-field" type="text" placeholder="Search..." name="search" //onkeypress = //press()>
                         <button id="search-button" class="input-field" onclick="search()"><i class="fa fa-search"></i></button>
+                        <script>
+                            var screening = document.getElementById("search-input");
+                            screening.addEventListener("keyup" , pevent => {
+                                if(pevent.keyCode === 13) {
+                                    pevent.preventDefault();
+                                    document.getElementById("search-button").click();
+                                }
+                            });
+                        </script>
                     </div>
                 </div>
                 <div class="row">

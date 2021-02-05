@@ -60,6 +60,11 @@ async function loadContent() {
     endLoading();
 } ///end of loadContent
 
+/*function press() {
+    document.getElementById("search-button").click();
+}*/
+
+
 function addMoviesToWebsite() {
     var numberOfMovies = parseInt(moviesDataSorted.length);
     for(var i = 0; i < numberOfMovies; i++) {
