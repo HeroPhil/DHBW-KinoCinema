@@ -67,7 +67,7 @@ async function loadContent() {
         const categories = document.createElement("li");
             categoriesListed = "";
             movieData.data.categories.forEach((category, index) => {
-                categoriesListed += ((index != 0 ? ", " : "") + category);
+                categoriesListed += ((index !== 0 ? ", " : "") + category);
             });
             categories.innerHTML = "Categories: " + categoriesListed;
         list.appendChild(duration);
