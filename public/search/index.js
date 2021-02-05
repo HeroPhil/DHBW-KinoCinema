@@ -31,6 +31,7 @@ let moviesData = [];
 let moviesDataSorted = [];
 let foundResults = [];
 let sortNameMode = false;
+let sortRatingMode = false;
 let preSearchRedirection;
 let movieContainer;
 
@@ -175,12 +176,39 @@ function sortMoviesByPlayTime() {
 } //end of sortMoviesByPlayTime
 
 function sortMoviesByRating() {
+    if(sortRatingMode) {
+        sortMoviesByRatingASC();
+    } else {
+        sortMoviesByRatingDESC();
+    } //end of if-else
+    sortRatingMode = !sortRatingMode;
+} //end of sortMoviesByPlayTime
+
+function sortMoviesByRatingASC() {
     movieContainer.innerHTML = "";
     moviesDataSorted.sort((movieOne, movieTwo) => {
         if(movieTwo.rating < movieOne.rating) {
             return -1;
         } else if(movieTwo.rating > movieOne.rating) {
             return 1;
+        } else {
+            return 0;
+        } //end of if-else 
+    });
+    console.log(moviesDataSorted);
+    for(var j = 0; j < moviesDataSorted.length; j++) {
+        var movie = moviesDataSorted[j];
+        createResultGraphic(movie.cover, movie.name, movie.rating, movie.id, j);
+    } //end of for
+} //end of sortMoviesByPlayTime
+
+function sortMoviesByRatingDESC() {
+    movieContainer.innerHTML = "";
+    moviesDataSorted.sort((movieOne, movieTwo) => {
+        if(movieTwo.rating < movieOne.rating) {
+            return 1;
+        } else if(movieTwo.rating > movieOne.rating) {
+            return -1;
         } else {
             return 0;
         } //end of if-else 
