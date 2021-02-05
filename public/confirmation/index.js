@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", event => {
 let numberOfTickets;
 let ticketsInfo = [];
 let qrcodesAsImg = [];
+let imgFormats = [];
 let billInfo;
 let writtenPixels;
 const spaceBetweenText = 15;
@@ -45,6 +46,7 @@ function loadContent() {
     window.location.href = "../index/";
   } //end of try-catch
   loadTicketsWithQRCode();
+  console.log(imgFormats);
   endLoading();
 } //end of loadContent
 
@@ -137,10 +139,20 @@ function createTicket(title, hall, row, seat, date, price, value) {
         ticket.appendChild(ticketInformation);
     tickets.appendChild(ticket);
     createQrCode(ticket, value);
-    html2canvas(ticket).then(canvas => {
+    imgFormats = [];
+    html2canvas(ticket, {
+      allowTaint : true
+    }).then(canvas => {
       var imgBase64Coded = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
       var imgPNG = canvas.toDataURL("image/png");
       var imgJPG = canvas.toDataURL("image/jpeg");
+      console.log(canvas.width);
+      console.log(canvas.height);
+      var imgFormat = {
+        width: canvas.width,
+        height : canvas.height
+      } //end of imgFormat
+      imgFormats.push(imgFormat);
       qrcodesAsImg.push(imgPNG);
       console.log(imgBase64Coded);
       console.log(imgPNG);
@@ -209,27 +221,54 @@ function addTicketsToPDF(pdfDocument) {
   var x = 25;
   var y = 40;
   var width = 160;
-  var height = 55;
+  var height = 85;
   var firstPageFinished = false;
+  var formatData;
+  var format = 0;
   var pictureAddedCounter = 0;
   var pictureAddedBySideCounter = 0;
   for(var i = 0; i < qrcodesAsImg.length; i++) {
-    if(!firstPageFinished && pictureAddedBySideCounter === 3) {
-      firstPageFinished = true;
-      pictureAddedBySideCounter = 0;
-      pdfDocument.addPage();
-      y = 10;
-    } //end of if
-    if(firstPageFinished && pictureAddedBySideCounter === 4) {
-      pdfDocument.addPage();
-      pictureAddedBySideCounter = 0;
-      y = 10;
-    } //end of if
-    var img = qrcodesAsImg[i];
-    pdfDocument.addImage(img, "png", x, y, width, height);
-    y = y + height + 10;
-    pictureAddedBySideCounter++;
-    pictureAddedCounter++;
+    formatData = imgFormats[i];
+    format = validateFormatOfPicture(formatData.height, formatData.width);
+    console.log(format);
+    console.log(format < 1);
+    if(format < 1) {
+      if(!firstPageFinished && pictureAddedBySideCounter === 3) {
+        firstPageFinished = true;
+        pictureAddedBySideCounter = 0;
+        pdfDocument.addPage();
+        y = 10;
+      } //end of if
+      if(firstPageFinished && pictureAddedBySideCounter === 4) {
+        pdfDocument.addPage();
+        pictureAddedBySideCounter = 0;
+        y = 10;
+      } //end of if
+      var img = qrcodesAsImg[i];
+      console.log(width * format);
+      pdfDocument.addImage(img, "png", x, y, width, (width * format));
+      y = y + height + 10;
+      pictureAddedBySideCounter++;
+      pictureAddedCounter++;
+    } else {
+      if(!firstPageFinished && pictureAddedBySideCounter === 2) {
+        firstPageFinished = true;
+        pictureAddedBySideCounter = 0;
+        pdfDocument.addPage();
+        y = 10;
+      } //end of if
+      if(firstPageFinished && pictureAddedBySideCounter === 3) {
+        pdfDocument.addPage();
+        pictureAddedBySideCounter = 0;
+        y = 10;
+      } //end of if
+      var img = qrcodesAsImg[i];
+      console.log(width * format);
+      pdfDocument.addImage(img, "png", (x + 20), y, (height * format), height);
+      y = y + height + 10;
+      pictureAddedBySideCounter++;
+      pictureAddedCounter++;
+    }
   } //end of for
 } //end of addImageToPDF
 
@@ -241,4 +280,16 @@ function formatAsCurrency(number) {
     return sp.join(".");
   }
   return sp[0].concat(".00");
+}
+
+function validateFormatOfPicture(pHeigth, pWidth) {
+    pHeigth = parseFloat(pHeigth);
+    pWidth = parseFloat(pWidth);
+    if(pHeigth < pWidth) {
+      return pHeigth / pWidth;
+    } else if(pWidth < pHeigth) {
+      return pWidth / pHeigth;
+    } else {
+      return 1;
+    } //end if else.if
 }
