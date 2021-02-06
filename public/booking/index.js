@@ -85,12 +85,7 @@ const updateSelectedSeatsCount = () => {
 }; //end of lambda expression
 
 function formatAsCurrency(number) {
-  const sp = number.toString().split(".");
-  if (sp.length > 1) {
-    sp[sp.length-1] = sp[sp.length-1].concat("0".repeat(2 - sp[sp.length-1].length));
-    return sp.join(".");
-  }
-  return sp[0].concat(".00");
+  return parseFloat(number).toFixed(2);
 }
 
 // Seat select event
@@ -142,11 +137,12 @@ async function loadContent() {
     screeningReference = information.screeningId;
     screeningTime = information.time;
     var screeningDate = new Date(screeningTime);
-    screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + " - " + screeningDate.getHours() + ":" + screeningDate.getMinutes() + " Uhr";
+    screeningDate = screeningDate.getDate() + "." + (screeningDate.getMonth() + 1) + "." + screeningDate.getFullYear() + " - " + screeningDate.getHours() + ":" + checkForCorrectMinuteWriting(screeningDate.getMinutes()) + " Uhr";
     var movieTitle = sessionStorage.getItem('movieTitle');
     movieName = sessionStorage.getItem('movieTitle');
   } catch(err) {
     console.log(err);
+    window.location.href = "../index/";
   } //end of try-catch
   var titlePlaceHolder = document.getElementById("movie");
   titlePlaceHolder.innerHTML = movieTitle + "<br>" + screeningDate;
@@ -162,6 +158,14 @@ async function loadContent() {
   loadCurrentUserData();
 } //end of loadContent
 
+function checkForCorrectMinuteWriting(timeStamp) {
+  if(timeStamp < 10) {
+      return "0" + timeStamp;
+  } else {
+      return timeStamp;
+  } //end of if-else
+} //end of checkForCorrectMinuteWriting
+
 // dynamic seats
 async function seatGeneration(hallInfo) {
   var seatContainer = document.getElementById("seatContainer");
@@ -174,6 +178,7 @@ async function seatGeneration(hallInfo) {
   rowScreen.appendChild(screen);
   seatContainer.appendChild(rowScreen);
   for(var i = 0; i < hallInfo.rows.length; i++) {
+    console.log(hallInfo.rows[i]);
     var rowAmount = hallInfo.rows[i].count;
     var seatPrice = hallInfo.rows[i].type.data.price;
     seatPrice = normalTicketPrice * parseFloat(seatPrice);
@@ -185,38 +190,42 @@ async function seatGeneration(hallInfo) {
       var row = document.createElement("div");
       row.classList.add("seat-row");
       for(var j = 0; j < numberOfSeats; j++) {
-        var seat = document.createElement("div");
-        var seatIdentificationObject = {
-          id : seatCounter,
-          row : rowCounter,
-          seat : j
-        } //end of seatObject
-        seatsMap[seatCounter] = seatIdentificationObject;
-        seat.id = seatCounter;
-        seatCounter++;
-        seat.setAttribute("value", seatPrice);
-        seat.classList.add("seat");
-        seatType = seatType.replace(/\s/g, '');
-        seat.classList.add(seatType);
-        
-        if(seat.classList.contains('withspecialneeds')) {
-          document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
-          var design = document.createElement("img");
-          design.setAttribute("id", "seatDesign");
-          design.setAttribute("src", "../icons/png/special.png");
-          seat.appendChild(design);
-        }
-        if(seat.classList.contains('lodge')) {
-          document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
-          var lodgDesin = document.createElement("img");
-          lodgDesin.setAttribute("id", "seatDesign");
-          lodgDesin.setAttribute("src", "../icons/png/krone1.png");
-          seat.appendChild(lodgDesin);
-        }
-        if(seat.classList.contains('normal')) {
-          document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
-        }
-        
+        console.log(seatType);
+        try {
+          var seat = document.createElement("div");
+          var seatIdentificationObject = {
+            id : seatCounter,
+            row : rowCounter,
+            seat : j
+          } //end of seatObject
+          seatsMap[seatCounter] = seatIdentificationObject;
+          seat.id = seatCounter;
+          seatCounter++;
+          seat.setAttribute("value", seatPrice);
+          seat.classList.add("seat");
+          seatType = seatType.replace(/\s/g, '');
+          seat.classList.add(seatType);
+          
+          if(seat.classList.contains('withspecialneeds')) {
+            document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            var design = document.createElement("img");
+            design.setAttribute("id", "seatDesign");
+            design.setAttribute("src", "../icons/png/special.png");
+            seat.appendChild(design);
+          }
+          if(seat.classList.contains('lodge')) {
+            document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            var lodgDesin = document.createElement("img");
+            lodgDesin.setAttribute("id", "seatDesign");
+            lodgDesin.setAttribute("src", "../icons/png/krone1.png");
+            seat.appendChild(lodgDesin);
+          }
+          if(seat.classList.contains('normal')) {
+            document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+          }
+        } catch(err) {
+          console.log(err);
+        } //end of try-catch
         row.appendChild(seat);
       } //end of for
       seatContainer.appendChild(row);
@@ -395,19 +404,22 @@ function pay(id) {
       ausgabe.appendChild(field3);
       ausgabe.appendChild(field4);
       break;
-    case 2:
+    /*case 2:
       ausgabe.innerHTML = "";
       var button3 = document.createElement("button");
       button3.classList.add("button");
       button3.setAttribute("id","PayPal");
       button3.innerHTML = "PayPal";
       ausgabe.appendChild(button3);
-      break;
+      break;*/
   }
 }
  
 //weiter Button click event zur Zusammenfassung
 async function ausgabe() {
+  document.getElementById("hiddenInfo").hidden = true;
+  document.getElementById("loadWhile").hidden = false;
+
   document.getElementById("ausVorname").innerHTML = document.getElementById("Vorname").value;
   document.getElementById("ausNachname").innerHTML = document.getElementById("Nachname").value;
   document.getElementById("ausEmail").innerHTML = document.getElementById("Email").value;
@@ -418,9 +430,9 @@ async function ausgabe() {
   var payment = document.getElementById("Zahlungsmethode");
   var ausPayment = document.getElementById("ausKartennummer");
   if(payment.checked === true) {
-    ausPayment.innerHTML = "<td colspan=\"2\"><center>Vor Ort Bezahlung</center></td>"
+    ausPayment.innerHTML = "<td colspan=\"2\"><center>Pay on Site</center></td>"
   } else {
-    document.getElementById("ausKartennummer").innerHTML = "<td>Kartennummer:</td><td>" + document.getElementById("Kartennummer").value + "</td>";
+    document.getElementById("ausKartennummer").innerHTML = "<td>Card Number:</td><td>" + document.getElementById("Kartennummer").value + "</td>";
   }
   
   if(document.getElementById("saveCeck").checked === true) {
@@ -440,14 +452,13 @@ async function ausgabe() {
       document.getElementById("zusammenfassungDetails").hidden = false;
       location.href = '#Zusammenfassung';
     } else {
-      document.getElementById("anmeldung").hidden = true;
-      document.getElementById("guestLogin").hidden = true;
-      document.getElementById("Information1").hidden = false;
-      document.getElementById("Information2").hidden = false;
-      document.getElementById("Information3").hidden = false;
+      //document.getElementById("anmeldung").hidden = true;
+      //document.getElementById("guestLogin").hidden = true;
       userDataMissing = false;
     } //end of if-else
   } //end of if
+  document.getElementById("hiddenInfo").hidden = false;
+  document.getElementById("loadWhile").hidden = true;
 } //end of ausgabe
 
 async function updateUserDetails() {
@@ -491,67 +502,69 @@ function addTicketsToWebsite() {
   document.getElementById("tickets").innerHTML = "";
   if(selectedSeats.length > 0) {
     var date = new Date(screeningTime);
-    var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+    var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear() + ", " + date.getHours() + ":" + checkForCorrectMinuteWriting(date.getMinutes());
     console.log(selectedSeats[0]);
     for(var i = 0; i < selectedSeats.length; i++) {
       var seat = selectedSeats[i];
-      var seatObject = document.getElementById(seat.id);
-      var seatPrice = seatObject.getAttribute("value");
-      createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString, seatPrice);
+      if(seat !== null) {
+        var seatObject = document.getElementById(seat.id);
+        var seatPrice = seatObject.getAttribute("value");
+        createTicket(movieName, cinemaName, (seat.row + 1), (seat.seat + 1), dateAsString, seatPrice);
+      } //end of if
     } //end of for
   } //end of if
 }
 
 function createTicket(title, hall, row, seat, date, price) {
-    var tickets = document.getElementById("tickets");
-    var ticket = document.createElement("div");
-    ticket.classList.add("ticket");
+  var tickets = document.getElementById("tickets");
+  var ticket = document.createElement("div");
+  ticket.classList.add("ticket");
       var ticketInformation = document.createElement("div");
       ticketInformation.classList.add("ticketInformation");
-        var movieTitle = document.createElement("div");
-        movieTitle.classList.add("ticketMovieTitle");
-        movieTitle.innerHTML = title;
+          var movieTitle = document.createElement("div");
+          movieTitle.classList.add("ticketMovieTitle");
+          movieTitle.innerHTML = title;
       ticketInformation.appendChild(movieTitle);
-        var detailsTable = document.createElement("table");
-          var rowHall = document.createElement("tr");
-            var tHall = document.createElement("td");
-            tHall.innerHTML = "Hall";
-            var tHallValue = document.createElement("td");
-            tHallValue.innerHTML = hall;
-            rowHall.appendChild(tHall);
-            rowHall.appendChild(tHallValue);
-            var tDate = document.createElement("td");
-            tDate.innerHTML = "Date";
-            var tDateValue = document.createElement("td");
-            tDateValue.innerHTML = date;
-            rowHall.appendChild(tDate);
-            rowHall.appendChild(tDateValue);
+          var detailsTable = document.createElement("table");
+              var rowHall = document.createElement("tr");
+              var tHall = document.createElement("td");
+              tHall.innerHTML = "Hall";
+              var tHallValue = document.createElement("td");
+              tHallValue.innerHTML = hall;
+              rowHall.appendChild(tHall);
+              rowHall.appendChild(tHallValue);
+              var tDate = document.createElement("td");
+              tDate.innerHTML = "Date";
+              var tDateValue = document.createElement("td");
+              tDateValue.innerHTML = date;
+              rowHall.appendChild(tDate);
+              rowHall.appendChild(tDateValue);
           detailsTable.appendChild(rowHall);
           var rowRow = document.createElement("tr");
-            var tRow = document.createElement("td");
-            tRow.innerHTML = "Row";
-            var tRowValue = document.createElement("td");
-            tRowValue.innerHTML = row;
-            rowRow.appendChild(tRow);
-            rowRow.appendChild(tRowValue);
-            var tPrice = document.createElement("td");
-            tPrice.innerHTML = "Price";
-            var tPriceValue = document.createElement("td");
-            tPriceValue.innerHTML = price;
-            rowRow.appendChild(tPrice);
-            rowRow.appendChild(tPriceValue);
+              var tRow = document.createElement("td");
+              tRow.innerHTML = "Row";
+              var tRowValue = document.createElement("td");
+              tRowValue.innerHTML = row;
+              rowRow.appendChild(tRow);
+              rowRow.appendChild(tRowValue);
+              var tPrice = document.createElement("td");
+              tPrice.innerHTML = "Price";
+              var tPriceValue = document.createElement("td");
+              tPriceValue.innerHTML = formatAsCurrency(price) + " €";
+              rowRow.appendChild(tPrice);
+              rowRow.appendChild(tPriceValue);
           detailsTable.appendChild(rowRow);
-          var rowSeat = document.createElement("tr");
-            var tSeat = document.createElement("td");
-            tSeat.innerHTML = "Seat";
-            var tSeatValue = document.createElement("td");
-            tSeatValue.innerHTML = seat;
-            rowSeat.appendChild(tSeat);
-            rowSeat.appendChild(tSeatValue);
+              var rowSeat = document.createElement("tr");
+              var tSeat = document.createElement("td");
+              tSeat.innerHTML = "Seat";
+              var tSeatValue = document.createElement("td");
+          tSeatValue.innerHTML = seat;
+          rowSeat.appendChild(tSeat);
+          rowSeat.appendChild(tSeatValue);
           detailsTable.appendChild(rowSeat);
-        ticketInformation.appendChild(detailsTable);
+      ticketInformation.appendChild(detailsTable);
       ticket.appendChild(ticketInformation);
-    tickets.appendChild(ticket);
+  tickets.appendChild(ticket);
     //createQrCode(ticket, value);
     movieLogo(ticket);
 }
@@ -716,8 +729,8 @@ async function request(ticketParam) {
 } //end of requests
 
 function printError(type, errorMessage) {
-  var errorPlaceholder;
-  var errorParagraph;
+  //var errorPlaceholder;
+  //var errorParagraph;
   var errorText;
   switch(parseInt(type)) {
     case 1:
@@ -726,11 +739,11 @@ function printError(type, errorMessage) {
       document.getElementById("zusammenfassungDetails").open = false;
       document.getElementById("ZahlungDetails").hidden = false;
       location.href = '#Zahlung';
-      errorPlaceholder = document.getElementById("ErrorContainerZahlung");
-      errorParagraph = document.createElement("p");
-      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
-      errorParagraph.appendChild(errorText);
-      errorPlaceholder.appendChild(errorParagraph);
+      //errorPlaceholder = document.getElementById("ErrorContainerZahlung");
+      //errorParagraph = document.createElement("p");
+      //errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      //errorParagraph.appendChild(errorText);
+      //errorPlaceholder.appendChild(errorParagraph);
       var tickets = document.getElementById("tickets");
       tickets.innerHTML = "";
       alert('You are not looged in, please log in or select guest loggin!');
@@ -740,28 +753,31 @@ function printError(type, errorMessage) {
       document.getElementById("selectionDetails").open = true;
       document.getElementById("ZahlungDetails").hidden = true;
       location.href = '#Platzauswahl';
-      errorPlaceholder = document.getElementById("ErrorContainerSeats");
-      errorParagraph = document.createElement("p");
-      errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
-      errorParagraph.appendChild(errorText);
-      errorPlaceholder.appendChild(errorParagraph);
+      //errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      //errorParagraph = document.createElement("p");
+      //errorText = document.createTextNode("FEHLER: " + errorMessage + " please log in!");
+      //errorParagraph.appendChild(errorText);
+      //errorPlaceholder.appendChild(errorParagraph);
+      errorText = "";
+      var seatid;
+      var seatHTMLObject;
       if(corruptedSeats.length !== 0) {
         for(var i = 0; i < parseInt(corruptedSeats.length); i++) {
-          errorText = "Seat number " + (corruptedSeats[i].seat + 1) + " in row " + (corruptedSeats[i].row + 1) + " was already booked!";
-          var paragraphSaver = document.createElement("p");
-          var errorTextSaver = document.createTextNode(errorText);
-          paragraphSaver.appendChild(errorTextSaver);
-          errorPlaceholder.appendChild(paragraphSaver);
+          seatid = corruptedSeats[i].id;
+          seatHTMLObject = document.getElementById(seatid);
+          seatHTMLObject.classList.remove('selected');
+          seatHTMLObject.classList.add('occupied');
+          errorText = errorText + "Seat number " + (corruptedSeats[i].seat + 1) + " in row " + (corruptedSeats[i].row + 1) + " was already booked!\n";
         } //end of for
       } //end of if
-      alert('One of your selected seats was booked by another costumer please select a new one!')
+      alert('One of your selected seats was booked by another costumer please select a new one!\n' + errorText)
       break;
     case 3:
-      errorPlaceholder = document.getElementById("ErrorContainerSeats");
-      errorParagraph = document.createElement("p");
-      errorText = document.createTextNode("FEHLER: " + errorMessage);
-      errorParagraph.appendChild(errorText);
-      errorPlaceholder.appendChild(errorParagraph);
+      //errorPlaceholder = document.getElementById("ErrorContainerSeats");
+      //errorParagraph = document.createElement("p");
+      //errorText = document.createTextNode("FEHLER: " + errorMessage);
+      //errorParagraph.appendChild(errorText);
+      //errorPlaceholder.appendChild(errorParagraph);
       alert('You forgot to select a seat, please select a seat!')
       break;
     default:
@@ -819,6 +835,11 @@ async function loginWithUserCredentials() {
               }
           })
       }
+      if(error.code === "auth/invalid-email"){
+        document.getElementById("anmeldung").hidden = false;
+        //document.getElementById("guestLogin").hidden = true;
+        document.getElementById("loadWhile").hidden = true;
+      }
       
       return error;
   });   
@@ -830,10 +851,6 @@ async function loginWithUserCredentials() {
   document.getElementById("hiddenInfo").hidden = false;
   loggedIn = true;
 }*/
-
-function fillCurrentUserData() {
-
-}
 
 async function loadCurrentUserData() {
   if(firebase.auth().currentUser !== null){

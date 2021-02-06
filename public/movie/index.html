@@ -42,7 +42,7 @@
 
 
 
-    <body class="dark" onload="loadContent()">
+    <body class="dark" onload="loadContent(); showUserLoginStatus();">
 
         <div class="navbar">&nbsp;</div>
         
@@ -72,11 +72,12 @@
                             <div class="title" id="movie-title"></div>
                             <div class="description" id="movie-description"><br> 
                             </div>
+                            <div id="movie-information"></div>
                             <div class="times" id="movie-screening-list">
                                 
                             </div>
                         </div>
-                        <button id= "book-button" onclick="analyzeRadioInput()">Buchen</button>
+                        <button id= "book-button" onclick="analyzeRadioInput()">Book</button>
                     </div>
                 </div>
             </div>

@@ -35,12 +35,21 @@ async function loadContent() {
         sessionStorage.setItem("LoggedIn", "out");
         console.log(err);
     } //end of try-catch
+
+
+    promises = [];
+
+    promises.push(createCategorySections());
+    // for (let i = 0; i < categorySectionDetails.length; i++) {
+    //     loadMoviesOfCategory(i);
+    // }
+
     var i = 0;
     var storage = firebase.storage();
     var amount = "5";
     var param = {amount : amount};
     var topMovies = await functions.httpsCallable('database-getTopMovies')(param);
-    topMovies.data.forEach( movie => {
+    topMovies.data.forEach((movie) => {
         i++;
         content = movie.data;
         var dot = document.createElement("span");
@@ -90,7 +99,6 @@ async function loadContent() {
                 link.appendChild(box);
             slideContent.appendChild(link);
         slide.appendChild(slideContent);
-
         document.getElementById("slideshow-container").appendChild(slide);
     });
 
@@ -107,10 +115,8 @@ async function loadContent() {
 
     showSlides(1);
 
-    await createCategorySections();
-    // for (let i = 0; i < categorySectionDetails.length; i++) {
-    //     loadMoviesOfCategory(i);
-    // }
+    //console.log(promises);
+    await Promise.all(promises);
 
     endLoading();
 }
@@ -172,12 +178,15 @@ async function createCategorySections() {
                         const loading = document.createElement("div");
                             loading.classList.add("loadingContainer");
                             loading.id = "loadingWhileCategory" + index;
-                            const loadingSpinner = document.createElement("div");
-                                loadingSpinner.classList.add("ldio-t32oece7z3");
-                            loadingSpinner.appendChild(getLoadingImg());
-                            loadingSpinner.appendChild(getLoadingImg());
-                            loadingSpinner.appendChild(getLoadingImg());
-                        loading.appendChild(loadingSpinner);
+                            const loadingContainer = document.createElement("div");
+                                loadingContainer.classList.add("loadingio-spinner-pulse-utrg899k0nk");
+                                    const loadingSpinner = document.createElement("div");
+                                        loadingSpinner.classList.add("ldio-t32oece7z3");
+                                    loadingSpinner.appendChild(getLoadingImg());
+                                    loadingSpinner.appendChild(getLoadingImg());
+                                    loadingSpinner.appendChild(getLoadingImg());
+                                loadingContainer.appendChild(loadingSpinner);
+                        loading.appendChild(loadingContainer);
                     details.appendChild(summary);
                     details.appendChild(loading);
                 rowRight.appendChild(details);
@@ -248,4 +257,11 @@ async function loadMoviesOfCategory(categoryIndex) {
     document.getElementById("loadingWhileCategory" + categoryIndex).hidden = true;
     moviesContainer.hidden = false;
 }
+
+function search() {
+    var inputObject = document.getElementById("search-input");
+    var searchString = inputObject.value;
+    sessionStorage.setItem("Search", searchString);
+    window.location.href = "../search/";
+} //end of search
 

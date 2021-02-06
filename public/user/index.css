@@ -2,6 +2,7 @@
     margin-top: 1rem;
     background-color: var(--layer1);
     padding: 1rem;
+    width: auto;
 }
 
 #card table {
@@ -9,6 +10,7 @@
     border-radius: 1rem;
     margin: 0 auto 0 auto;
     padding: 2rem 5rem;
+    width: 50%;
 }
 
 #card table tr td {
@@ -22,6 +24,13 @@
     font-weight: bold;
     text-decoration: underline;
     text-decoration-color: var(--accent);
+}
+
+#loadingWhile{
+    width: 250px;
+    margin-left: auto;
+    justify-content: center;
+    margin-right: auto;
 }
 
 .expand{
@@ -165,25 +174,29 @@ fieldset {
     justify-content: center;
 }
 
-.tickets {
+#tickets {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
 }
+#tickets div:only-child {
+    object-fit: contain;
+    width: 100%;
+  }
 
 .ticket {
     color: var(--textPrimary);
     font-size: 1.2rem;
-    width: 50rem;
-    height: 15rem;
     background-color: var(--layer3);
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: row;
     justify-content: space-around;
-    border: 0.2rem solid var(--layer3);
+    align-items: center;
+    border: 0.2rem solid var(--layer1);
     border-radius: 2rem;
-    margin: 3rem;
+    margin: 1.5rem;
+    width: 43%;
 }
 
 .ticketInformation {
@@ -198,24 +211,37 @@ fieldset {
 .ticketMovieTitle {
     font-weight: bold;
     letter-spacing: 0.3ch;
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 0.25rem 1rem;
     width: 100%;
+    min-height: 30%;
+    max-height: 30%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-bottom: 0.2rem solid var(--accent);
 }
 
 .ticketInformation table {
     border-collapse: collapse;
-    width: 50%;
+    width: 100%;
     margin-left: 1rem;
 }
 
 .ticketInformation table tr td {
     padding-top: 5%;
-    border-bottom: 1px solid var(--layer3);
+    border-bottom: 1px dotted var(--layer8);
 }
 
-.ticketInformation table tr td:last-child {
+.ticketInformation table tr td:nth-child(2) {
+    border-right: 1px solid var(--accent-Light);
+    padding-right: 0.5rem;
+}
+
+.ticketInformation table tr td:nth-child(3) {
+    padding-left: 0.5rem;
+}
+
+.ticketInformation table tr td:nth-child(even) {
     text-align: right;
 }
 
@@ -245,22 +271,129 @@ fieldset {
 }
 
 
+
+/*---------------Media Queries--------------------*/ 
 @media only screen and (min-width: 0px) and (max-width: 719px){
+    html {
+      font-size: 12px;
+    }
+    #profile {
+        margin-top: 1rem;
+        background-color: var(--layer1);
+        padding: 0.5rem;
+        width: auto;
+    }
+    
+    #card table {
+        padding: 0.2rem 0.2rem;
+        width: 30%;
+    }
+    
+    #card table tr td {
+        padding: 0 0.4rem 0 0.5rem;
+        font-size: 1rem;
+    }
+    
+    #card table tbody tr:first-of-type td:nth-of-type(2) {
+        padding: 0 0.4rem 0 0.4rem;
+        font-size: 1.3rem;
+        font-weight: bold;
+        text-decoration: underline;
+        text-decoration-color: var(--accent);
+    }
+    #profile-picture img{
+        width: 100px;
+        height: auto;
+    }
+    .ticket{
+        flex-direction: column-reverse;
+        padding-top: 1.5rem;
+        width: 80%;
+        padding-bottom: 1.5rem;
+    }
 
-}
+    .ticketInformation{
+        width: 80%;
+        height: 15rem;
+    }
 
-@media only screen and (min-width: 720px) and (max-width: 899px){
+    .ticketMovieTitle{
+        padding: 0;
+    }
+    #onlyAdmins{
+        font-size: 1.5rem;
+        padding: 0.25rem 0.4rem;
+    }
+  }
+  @media only screen and (min-width: 720px) and (max-width: 1099px){
+    html{
+      font-size: 13px;
+    }
+    #card table {
+        padding: 0.5rem 0.5rem;
+    }
+    
+    #card table tr td {
+        padding: 0 0.7rem 0 0.7rem;
+        font-size: 1.3rem;
+    }
+    
+    #card table tbody tr:first-of-type td:nth-of-type(2) {
+        padding: 0 0.5rem 0 0.5rem;
+        font-size: 2.2rem;
+    }
+    #onlyAdmins{
+        font-size: 1.5rem;
+        padding: 0.5rem 0.7rem;
+    }
+    .ticket{
+        width: 80%;
+    }
 
-}
+    .ticketInformation{
+        width: 50%;
+    }
+  }
+  
+  @media only screen and (min-width: 1100px) and (max-width: 1499px){
+    html{
+      font-size: 14px;
+    }
+    #card table {
+        padding: 0.5rem 3rem;
+        width: 50%;
+    }
+    #card table tr td {
+        padding: 0 2.5rem 0 3rem;
+        font-size: 1.5rem;
+    }
+    
+    #card table tbody tr:first-of-type td:nth-of-type(2) {
+        padding: 0 3.5rem 0 2.5rem;
+    }
+    .ticket{
+        width: 45%;
+    }
 
-@media only screen and (min-width: 900px) and (max-width: 1079px){
-
-}
-
-@media only screen and (min-width: 1080px) and (max-width: 1259px){
-
-}
-
-@media only screen and (min-width: 12px) and (max-width: 899px){
-
-}
+    .ticketInformation{
+        width: 50%;
+    }
+  }
+  
+  @media only screen and (min-width: 1500px) and (max-width: 1899px){
+    html{
+      font-size: 15px;
+    }
+  }
+  
+  @media only screen and (min-width: 1900px) and (max-width: 2299px){
+    html{
+      font-size: 16px;
+    }
+  }
+  
+  @media only screen and (min-width: 2300px){
+    html{
+      font-size: 18px;
+    }
+  }

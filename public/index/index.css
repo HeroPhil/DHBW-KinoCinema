@@ -77,6 +77,7 @@ form.field input[type=text] {
 #slideshow-container {
   box-sizing:border-box;
   position: relative;
+  margin-top: 1rem;
 }
 
 /* Hide the images by default */
@@ -202,32 +203,14 @@ form.field input[type=text] {
 }
 
 
-
-
-@media only screen and (min-width: 0px) and (max-width: 719px){
-  html {
-    font-size: 12px;
-  }
-  form.field input[type=text] {
-    width: 75vw;
-    margin-left: 1rem;
-  }
-  
-  #searchButton {
-    width: 15vw;
-  }
-  
-  .flexSearch{
-    justify-content: left;
-    flex-direction: row;
-    margin-right: none;
-  }
-  .box {
-    width: 15rem;
-  }
-}
-
 /* -----Kategorie---*/
+
+#loadingWhileCategory0{
+  width: 250px;
+  margin-left: auto;
+  justify-content: center;
+  margin-right: auto;
+}
 
 .searchResults {
   background-color: var(--layer1);
@@ -247,6 +230,9 @@ form.field input[type=text] {
   flex-wrap: wrap;
   justify-content: space-around;
   align-content: space-between;
+  padding: 0.7rem 0.4rem 0.5rem;
+  border-radius: 1rem;
+  box-shadow: 0px 2px 12px -2px var(--accent-Light);
 }
 
 .resultMovie img {
@@ -264,7 +250,7 @@ form.field input[type=text] {
 
 .expand{
   height: 5rem;
-  background-color: var(--layer3);
+  background-color: var(--layer5);
   color: var(--textPrimary);
   align-items: center;
   margin-top: 1rem;
@@ -294,8 +280,9 @@ summary:focus {
 .moviesContainer{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   min-height: 5rem;
+  background-color: var(--layer1);
 }
 
 .loadingContainer{
@@ -305,7 +292,54 @@ summary:focus {
   margin-right: auto;
 }
 
-/*------------Media Queries -----------------*/
+/*---------------Media Queries--------------------*/ 
+@media only screen and (min-width: 0px) and (max-width: 719px){
+  html {
+    font-size: 12px;
+  }
+  form.field input[type=text] {
+    width: 75vw;
+    margin-left: 1rem;
+  }
+  
+  #searchButton {
+    width: 15vw;
+  }
+  
+  .flexSearch{
+    justify-content: left;
+    flex-direction: row;
+    margin-right: none;
+  }
+  .box {
+    width: 35rem;
+  }
+  .tableSl tr:nth-child(2){
+    display: none;
+  }
+  .tableSl tr > *{
+    display: block;
+  }
+  .tableSl tr{
+    display: table-cell;
+  }
+  .imageSl{
+    width: 90%;
+    height: 20rem;
+    max-height: 20rem;
+    margin: auto;
+  }
+  .titleSl{
+    width: 90%;
+    height: 8rem;
+    font-size: 2rem;
+    text-align: center;
+    margin: 1rem auto auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
 @media only screen and (min-width: 720px) and (max-width: 1099px){
   html{
     font-size: 13px;

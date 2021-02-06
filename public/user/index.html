@@ -45,7 +45,7 @@
 
 
 
-    <body class="dark" onload="loadUserDetails()">
+    <body class="dark" onload="loadUserDetails(); showUserLoginStatus();">
         <div class="navbar"></div>
 
         <main>
@@ -63,8 +63,8 @@
                     <div class="col-2">
                         <button class="button" onclick = logout()>Logout</button>
                     </div>
-                    <div class="col-11">&nbsp;</div>
-                    <div class="col-3">
+                    <div class="col-12">&nbsp;</div>
+                    <div class="col-2">
                         <button class="button" id="onlyAdmins" onclick = adminPage()>Edit Website</button>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                     <div class="col-14">
                     <div id="profile">
                         <div id="card">
-                            <table>
+                            <table id="cardTable">
                                 <tr>
                                     <td rowspan="5" id="Profilpos">
                                         <div id="profile-picture"></div>
@@ -123,15 +123,27 @@
                         </details>
                         <details>
                             <summary id="history" class="expand">Orders</summary>
-                            <div id="selection-buttons">
-                                <button class="button" type="button" onclick = loadLastTickets(5)>5</button>
-                                <button class="button" type="button" onclick = loadLastTickets(25)>25</button>
-                                <button class="button" type="button" onclick = loadLastTickets(99999)>All</button>
+                            <div id="loadingWhile" hidden>
+                                <div>
+                                    <div class="loadingio-spinner-pulse-utrg899k0nk">
+                                        <div class="ldio-t32oece7z3">
+                                            <img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png"><img class="carrotAnimation" src="../icons/png/karotte.png">
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div id="ticketBox"> 
+                                <div id="selection-buttons">
+                                    <!--<button class="button" type="button" onclick = loadLastTickets(5)>5</button>
+                                    <button class="button" type="button" onclick = loadLastTickets(25)>25</button>-->
+                                    <button class="button" type="button" onclick = loadLastTickets(99999)>All</button>
+                                </div>
+                                
+                                <div id="ticketsContainer">
+                                    <div id="tickets"></div>
+                                </div>
                             </div>
                             
-                            <div id="ticketsContainer">
-                                <div id="tickets"></div>
-                            </div>
                         </details>
                     </div>
                 </div>

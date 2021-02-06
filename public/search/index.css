@@ -32,34 +32,195 @@
 
 
 .searchResults {
-    background-color: var(--layer1);
-    display: flex;
-    flex-wrap: wrap;
-    height: auto;
-    width: auto;
-    justify-content: flex-start;
+  background-color: var(--layer1);
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  width: auto;
+  justify-content: center;
+}
+
+.searchResults a{
+  text-decoration: none;
+  color: var(--textPrimary);
 }
 
 .resultMovie {
-    height: 24rem;
-    width: 18rem;
-    background-color: var(--layer3);
-    margin: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-content: space-between;
+  height: 27rem;
+  max-height: 27rem;
+  width: 18rem;
+  background-color: var(--layer3);
+  margin: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-content: space-between;
+  padding: 0.7rem 0.4rem 0.5rem;
+  border-radius: 1rem;
+  box-shadow: 0px 2px 12px -2px var(--accent-Light);
 }
 
 .resultMovie img {
-    height: 20rem;
-    width: auto;
-    width: 18rem;
-    object-fit: contain;
-    margin: 0.2rem;
+  height: 20rem;
+  width: 18rem;
+  object-fit: contain;
+  margin: 0.2rem;
 }
 
 .movieTitle {
-    font-size: 1.2rem;
-    padding: 0rem 1rem 0.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0rem 1rem 0.5rem;
+}
+
+.movieCategory {
+  text-align : center;
+  width: 90%;
+  font-size: 1.2rem;
+  padding: 1rem 1rem 0.5rem;
+  border-top: 1px dotted var(--accent-Light);
+}
+
+.movieCategory span {
+  font-weight: bolder;
+  color: var(--accent)
+}
+
+.sortbutton {
+  display : flex;
+  justify-content: flex-end;
+  float: left;
+  color: var(--textPrimary);
+  font-size: 1.2rem;
+  margin-right : 0.5rem;
+  border: 0.2rem solid var(--accent);
+  border-radius: 1rem;
+  padding: 10px 50px;
+  align-items: center;
+  cursor: pointer;
+  background-color: var(--layer1);
+}
+
+.sort-buttons {
+  width : 100%;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1.0rem;
+  align-items: center;
+}
+
+#inputs{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  margin-right: 0;
+}
+
+#search-input{
+  padding: 1rem;
+  float: right;
+  border: none;
+  width: 15rem;
+  background: var(--textPrimary);
+  color: var(--layer3);
+  height: 1rem;
+  margin-top: 1rem; 
+  font-size: 1rem;
+}
+
+#search-button{
+  float: right;
+  width: 8rem;
+  padding: 0.5rem;
+  background: var(--layer3);
+  color: var(--textPrimary);
+  cursor: pointer;
+  height: 3rem;
+  border: none;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+}
+
+.input-field {
+  justify-content: flex-end;
+}
+
+li {
+    display : inline;
+}
+
+ul {
+    background-color: var(--layer1);
+    list-style-type: none;
+    margin : 0;
+    padding : 0;
+}
+
+
+/*---------------Media Queries--------------------*/ 
+@media only screen and (min-width: 0px) and (max-width: 719px){
+    html {
+      font-size: 12px;
+    }
+    #search-input {
+      width: 75vw;
+      margin-left: 1rem;
+    }
+    
+    #search-button{
+      width: 15vw;
+    }
+    
+    #inputs{
+      justify-content: left;
+      flex-direction: row;
+      margin-right: none;
+    }
+}
+  
+@media only screen and (min-width: 720px) and (max-width: 1099px){
+    html{
+      font-size: 13px;
+    }
+    #search-input {
+        width: 75vw;
+        margin-left: 1rem;
+    }
+      
+    #search-button{
+      width: 15vw;
+    }
+    
+    #inputs{
+      justify-content: left;
+      flex-direction: row;
+      margin-right: none;
+    }
+}
+
+@media only screen and (min-width: 1100px) and (max-width: 1499px){
+    html{
+      font-size: 14px;
+    }
+}
+  
+@media only screen and (min-width: 1500px) and (max-width: 1899px){
+    html{
+      font-size: 15px;
+    }
+}
+  
+@media only screen and (min-width: 1900px) and (max-width: 2299px){
+    html{
+      font-size: 16px;
+    }
+}
+  
+@media only screen and (min-width: 2300px){
+    html{
+      font-size: 18px;
+    }
 }

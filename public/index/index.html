@@ -45,7 +45,7 @@
 
 
 
-    <body class="dark" onload="loadContent()">
+    <body class="dark" onload="loadContent(); showUserLoginStatus();">
 
         <div class="navbar"></div>
 
@@ -81,10 +81,19 @@
     
                 <div class="flexSearch"> 
                     <!--Hier fehlt Funktion!-->
-                    <form class="field" action="void">
-                        <input type="text" placeholder="Search.." name="search">
-                    </form>   
-                    <button id="searchButton" type="submit"><i class="fa fa-search"></i></button>
+                    <form class="field" action="javascript:search()">
+                        <input id="search-input" type="text" placeholder="Search.." name="search">
+                        <button id="searchButton" type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                    <script>
+                        var searchDir = document.getElementById("search-input");
+                        searchDir.addEventListener("keyup" , pevent => {
+                            if(pevent.keyCode === 13) {
+                                pevent.preventDefault();
+                                document.getElementById("searchButton").click();
+                            }
+                        });
+                    </script>
                 </div>
 
 
