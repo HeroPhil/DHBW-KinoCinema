@@ -87,7 +87,7 @@ function loadTicketsWithQRCode() {
   } //end of for
 } //end of loadTicketsWithQRCode
 
-function createTicket(title, hall, row, seat, date, price, value) {
+async function createTicket(title, hall, row, seat, date, price, value) {
   var tickets = document.getElementById("tickets");
     var ticket = document.createElement("div");
     ticket.classList.add("ticket");
@@ -139,7 +139,7 @@ function createTicket(title, hall, row, seat, date, price, value) {
     tickets.appendChild(ticket);
     createQrCode(ticket, value);
     imgFormats = [];
-    html2canvas(ticket, {
+    await html2canvas(ticket, {
       allowTaint : true
     }).then(canvas => {
       var imgBase64Coded = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
@@ -152,7 +152,7 @@ function createTicket(title, hall, row, seat, date, price, value) {
         height : canvas.height
       } //end of imgFormat
       imgFormats.push(imgFormat);
-      qrcodesAsImg.push(imgPNG);
+      qrcodesAsImg.push(imgJPG);
       console.log(imgBase64Coded);
       console.log(imgPNG);
       console.log(imgJPG);
@@ -218,9 +218,9 @@ function addLine(pdfDocument, positionX, positionY) {
 
 function addTicketsToPDF(pdfDocument) {
   var x = 25;
-  var y = 40;
-  var width = 160;
-  var height = 85;
+  var y = 40.0;
+  var width = 160.0;
+  var height = 80.0;
   var firstPageFinished = false;
   var formatData;
   var format = 0;
@@ -229,7 +229,7 @@ function addTicketsToPDF(pdfDocument) {
   var img;
   for(var i = 0; i < qrcodesAsImg.length; i++) {
     formatData = imgFormats[i];
-    format = validateFormatOfPicture(formatData.height, formatData.width);
+    format = validateFormatOfPicture(parseFloat(formatData.height), parseFloat(formatData.width));
     console.log(format);
     console.log(format < 1);
     if(format < 1) {
@@ -245,9 +245,13 @@ function addTicketsToPDF(pdfDocument) {
         y = 10;
       } //end of if
       img = qrcodesAsImg[i];
-      console.log(width * format);
-      pdfDocument.addImage(img, "png", x, y, width, (width * format));
-      y = y + parseInt(width * format) + 10;
+      console.log(parseFloat(width) * format);
+      console.log("X: " + x);
+      console.log("Y: " + y);
+      console.log("Width: " + width);
+      console.log("Height: " + (width * format));
+      pdfDocument.addImage(img, "jpeg", x, y, width, ((parseFloat(width) * format)), 'None');
+      y = parseFloat(y + width * format + 10);
       pictureAddedBySideCounter++;
       pictureAddedCounter++;
     } else {
@@ -264,7 +268,7 @@ function addTicketsToPDF(pdfDocument) {
       } //end of if
       img = qrcodesAsImg[i];
       console.log(width * format);
-      pdfDocument.addImage(img, "png", (x + (((160 - (height * format))) / 2)), y, (height * format), height);
+      pdfDocument.addImage(img, "jpeg", (x + (((160 - (height * format))) / 2)), y, (height * format), height, 'None');
       y = y + height + 10;
       pictureAddedBySideCounter++;
       pictureAddedCounter++;
