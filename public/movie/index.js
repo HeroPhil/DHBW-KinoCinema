@@ -98,7 +98,7 @@ async function loadContent() {
     cover.src = url;
     var subLevel = 4;
     var sinceDate = Math.floor(Date.now());
-    var untilDate = Math.floor(Date.now() + (1000 * 60 *60 *24 *7));
+    var untilDate = Math.floor(Date.now() + (1000 * 60 *60 *24 *7) - ((new Date().getHours() * 60 + new Date().getMinutes()) * 60 * 1000));
     var paramScreenings = {
         id : movieData.id,
         sublevel : subLevel,

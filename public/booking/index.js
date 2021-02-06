@@ -687,23 +687,33 @@ async function book() {
   if(seatCounter > 0) {
     var paramBlockedSeats = {id: screeningReference};
     var blockedSeats = await functions.httpsCallable('database-getBookedSeatsByScreeningID')(paramBlockedSeats);
-    var corruptedSeats = checkSeatsAreNotAlreadyBooked(blockedSeats);
-    var bookingError = corruptedSeats;
-    if(bookingError) {
-      bookingConflict = true;
-      console.log("Found error:");
-      printError(2, "Seat is blocked");
-    } else {
-      await requestSeats();
-      success = loadTicketInfoIntoLocalStorage();
-    } //end of if-else
-    console.log(bookedTickets);
-    if(success && loggedIn) {
-      window.location.href = "../confirmation/"; // forward to next page
-    } else {
-      console.log("Error user not logged in!");
-      printError(1, "Not logged in");
-    }//end of if
+    bookingConflict = checkSeatsAreNotAlreadyBooked(blockedSeats);
+
+    if (bookingConflict) {
+      printError(2);
+      window.location.reload();
+      return;
+    }
+
+    if (!loggedIn) {
+      printError(1);
+      document.getElementById("loading").hidden = true;
+      document.getElementById("main").hidden = false;
+      return;
+    }
+
+    await requestSeats();
+    success = loadTicketInfoIntoLocalStorage();
+
+    if (!success) {
+      printError(0);
+      window.location.href = "../index";
+      return;
+    }
+
+    window.location.href = "../confirmation/";
+
+
   } //end of if
 } //end of book
 
@@ -782,6 +792,7 @@ function printError(type, errorMessage) {
       break;
     default:
       //Nothing todo
+      alert('Unknown error occured');
       break;
   } //end of switch-case
 } //end of printError
