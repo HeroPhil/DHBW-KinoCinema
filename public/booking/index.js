@@ -207,22 +207,14 @@ async function seatGeneration(hallInfo) {
           seat.classList.add(seatType);
           
           if(seat.classList.contains('withspecialneeds')) {
-            if(seatPrice === null || seatPrice === undefined || seatPrice === "") {
-              document.getElementById("specialPrice").innerHTML = "Not available in this hall";
-            } else {
-              document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
-            }
+            document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
             var design = document.createElement("img");
             design.setAttribute("id", "seatDesign");
             design.setAttribute("src", "../icons/png/special.png");
             seat.appendChild(design);
           }
           if(seat.classList.contains('lodge')) {
-            if(seatPrice === null || seatPrice === undefined || seatPrice === "") {
-              document.getElementById("lodgePrice").innerHTML = "Not available in this hall";
-            } else {
-              document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
-            }
+            document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
             var lodgDesin = document.createElement("img");
             lodgDesin.setAttribute("id", "seatDesign");
             lodgDesin.setAttribute("src", "../icons/png/krone1.png");
@@ -240,6 +232,12 @@ async function seatGeneration(hallInfo) {
       rowCounter++;
     } //end of for
   } //end of for
+  if(document.getElementById("specialPrice").innerHTML === "") {
+    document.getElementById("specialPrice").innerHTML = "Not available in this hall";
+  }
+  if(document.getElementById("lodgePrice").innerHTML === "") {
+    document.getElementById("lodgePrice").innerHTML = "Not available in this hall";
+  }
 } //end of seatGeneration
 
 async function blockAlreadyBookedSeats(seatInfo) {
