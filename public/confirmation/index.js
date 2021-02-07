@@ -84,7 +84,7 @@ function loadTicketsWithQRCode() {
       var ticketId = actualTicket.id;
       var hallId = actualTicket.data.screening.data.hall.data.name;
       var dateOfScreening = new Date(parseInt(actualTicket.data.screening.data.startTime));
-      var date = dateOfScreening.getDate() + "." + (dateOfScreening.getMonth() + 1) + "." + dateOfScreening.getFullYear() + " - " + dateOfScreening.getHours() + ":" + checkForCorrectMinuteWriting(dateOfScreening.getMinutes());
+      var date = dateOfScreening.getDate() + "/" + (dateOfScreening.getMonth() + 1) + "/" + dateOfScreening.getFullYear() + ", " + dateOfScreening.getHours() + ":" + checkForCorrectMinuteWriting(dateOfScreening.getMinutes());
       createTicket(movieTitle, hallId, actualTicket.data.row, actualTicket.data.seat, date, actualTicket.data.price, ticketId);
     } //end of if
   } //end of for

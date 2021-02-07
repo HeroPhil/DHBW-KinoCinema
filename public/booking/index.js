@@ -212,6 +212,13 @@ async function seatGeneration(hallInfo) {
             design.setAttribute("id", "seatDesign");
             design.setAttribute("src", "../icons/png/special.png");
             seat.appendChild(design);
+            document.getElementById("Specialist").hidden = false;
+            document.getElementById("Specialist2").hidden = false;
+            document.getElementById("Specialist3").hidden = false;
+          } else {
+            document.getElementById("Specialist").hidden = true;
+            document.getElementById("Specialist2").hidden = true;
+            document.getElementById("Specialist3").hidden = true;
           }
           if(seat.classList.contains('lodge')) {
             document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
@@ -219,6 +226,13 @@ async function seatGeneration(hallInfo) {
             lodgDesin.setAttribute("id", "seatDesign");
             lodgDesin.setAttribute("src", "../icons/png/krone1.png");
             seat.appendChild(lodgDesin);
+            document.getElementById("Lodgist").hidden = false;
+            document.getElementById("Lodgist2").hidden = false;
+            document.getElementById("Lodgist3").hidden = false;
+          } else {
+            document.getElementById("Lodgist").hidden = true;
+            document.getElementById("Lodgist2").hidden = true;
+            document.getElementById("Lodgist3").hidden = true;
           }
           if(seat.classList.contains('normal')) {
             document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
@@ -502,7 +516,7 @@ function addTicketsToWebsite() {
   document.getElementById("tickets").innerHTML = "";
   if(selectedSeats.length > 0) {
     var date = new Date(screeningTime);
-    var dateAsString = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear() + " - " + date.getHours() + ":" + checkForCorrectMinuteWriting(date.getMinutes());
+    var dateAsString = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + ", " + date.getHours() + ":" + checkForCorrectMinuteWriting(date.getMinutes());
     console.log(selectedSeats[0]);
     for(var i = 0; i < selectedSeats.length; i++) {
       var seat = selectedSeats[i];
