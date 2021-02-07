@@ -207,10 +207,10 @@ async function seatGeneration(hallInfo) {
           seat.classList.add(seatType);
           
           if(seat.classList.contains('withspecialneeds')) {
-            if(seatPrice !== null || seatPrice !== undefined) {
-              document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            if(seatPrice === null || seatPrice === undefined || seatPrice === "") {
+              document.getElementById("specialPrice").innerHTML = "Not available in this hall";
             } else {
-              document.getElementById("specialPrice").innerHTML = "not available in this hall";
+              document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
             }
             var design = document.createElement("img");
             design.setAttribute("id", "seatDesign");
@@ -218,7 +218,11 @@ async function seatGeneration(hallInfo) {
             seat.appendChild(design);
           }
           if(seat.classList.contains('lodge')) {
-            document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            if(seatPrice === null || seatPrice === undefined || seatPrice === "") {
+              document.getElementById("lodgePrice").innerHTML = "Not available in this hall";
+            } else {
+              document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            }
             var lodgDesin = document.createElement("img");
             lodgDesin.setAttribute("id", "seatDesign");
             lodgDesin.setAttribute("src", "../icons/png/krone1.png");
