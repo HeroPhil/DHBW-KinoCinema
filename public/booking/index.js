@@ -207,7 +207,7 @@ async function seatGeneration(hallInfo) {
           seat.classList.add(seatType);
           
           if(seat.classList.contains('withspecialneeds')) {
-            if(seatPrice !== null) {
+            if(seatPrice !== null || seatPrice !== undefined) {
               document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
             } else {
               document.getElementById("specialPrice").innerHTML = "not available in this hall";
