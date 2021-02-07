@@ -207,18 +207,15 @@ async function seatGeneration(hallInfo) {
           seat.classList.add(seatType);
           
           if(seat.classList.contains('withspecialneeds')) {
-            document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            if(seatPrice !== null) {
+              document.getElementById("specialPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
+            } else {
+              document.getElementById("specialPrice").innerHTML = "not available in this hall";
+            }
             var design = document.createElement("img");
             design.setAttribute("id", "seatDesign");
             design.setAttribute("src", "../icons/png/special.png");
             seat.appendChild(design);
-            document.getElementById("Specialist").hidden = false;
-            document.getElementById("Specialist2").hidden = false;
-            document.getElementById("Specialist3").hidden = false;
-          } else {
-            document.getElementById("Specialist").hidden = true;
-            document.getElementById("Specialist2").hidden = true;
-            document.getElementById("Specialist3").hidden = true;
           }
           if(seat.classList.contains('lodge')) {
             document.getElementById("lodgePrice").innerHTML = formatAsCurrency(seatPrice) + "€";
@@ -226,13 +223,6 @@ async function seatGeneration(hallInfo) {
             lodgDesin.setAttribute("id", "seatDesign");
             lodgDesin.setAttribute("src", "../icons/png/krone1.png");
             seat.appendChild(lodgDesin);
-            document.getElementById("Lodgist").hidden = false;
-            document.getElementById("Lodgist2").hidden = false;
-            document.getElementById("Lodgist3").hidden = false;
-          } else {
-            document.getElementById("Lodgist").hidden = true;
-            document.getElementById("Lodgist2").hidden = true;
-            document.getElementById("Lodgist3").hidden = true;
           }
           if(seat.classList.contains('normal')) {
             document.getElementById("normalPrice").innerHTML = formatAsCurrency(seatPrice) + "€";
