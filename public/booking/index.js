@@ -502,7 +502,7 @@ function addTicketsToWebsite() {
   document.getElementById("tickets").innerHTML = "";
   if(selectedSeats.length > 0) {
     var date = new Date(screeningTime);
-    var dateAsString = (date.getDay() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear() + ", " + date.getHours() + ":" + checkForCorrectMinuteWriting(date.getMinutes());
+    var dateAsString = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear() + " - " + date.getHours() + ":" + checkForCorrectMinuteWriting(date.getMinutes());
     console.log(selectedSeats[0]);
     for(var i = 0; i < selectedSeats.length; i++) {
       var seat = selectedSeats[i];
