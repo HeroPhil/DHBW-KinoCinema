@@ -145,12 +145,12 @@ async function createTicket(title, hall, row, seat, date, price, value) {
     await html2canvas(ticket, {
       allowTaint : true
     }).then(canvas => {
-      var imgBase64Coded = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-      var imgPNG = canvas.toDataURL("image/png");
-      var imgJPG = canvas.toDataURL("image/jpeg");
+      let imgBase64Coded = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+      let imgPNG = canvas.toDataURL("image/png");
+      let imgJPG = canvas.toDataURL("image/jpeg");
       console.log(canvas.width);
       console.log(canvas.height);
-      var imgFormat = {
+      let imgFormat = {
         width: canvas.width,
         height : canvas.height
       } //end of imgFormat
@@ -255,7 +255,7 @@ function addTicketsToPDF(pdfDocument) {
       console.log("Y: " + y);
       console.log("Width: " + width);
       console.log("Height: " + (width * format));
-      pdfDocument.addImage(img, "jpeg", x, y, width, ((parseFloat(width) * format)), 'None');
+      pdfDocument.addImage(img, "jpeg", x, y, width, ((parseFloat(width) * format)));
       y = parseFloat(y + width * format + 10);
       pictureAddedBySideCounter++;
       pictureAddedCounter++;
@@ -273,7 +273,7 @@ function addTicketsToPDF(pdfDocument) {
       } //end of if
       img = qrcodesAsImg[i];
       console.log(width * format);
-      pdfDocument.addImage(img, "jpeg", (x + (((160 - (height * format))) / 2)), y, (height * format), height, 'None');
+      pdfDocument.addImage(img, "jpeg", (x + (((160 - (height * format))) / 2)), y, (height * format), height);
       y = y + height + 10;
       pictureAddedBySideCounter++;
       pictureAddedCounter++;
