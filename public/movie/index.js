@@ -59,30 +59,34 @@ async function loadContent() {
     var cover = document.getElementById("movie-cover");
     const information = document.getElementById("movie-information");
 
-    const list = document.createElement("ul");
-        const duration = document.createElement("li");
-            duration.innerHTML = "Playtime: ";
-            const minDesign = document.createElement("span");
-                minDesign.innerHTML = movieData.data.duration + " Minuten";
-            duration.appendChild(minDesign);
-        const rating = document.createElement("li");
-            rating.innerHTML = "Rating: ";
-            const iconOr = document.createElement("span"); 
-                iconOr.innerHTML = (movieData.data.priority / 10).toFixed(1) + "&#x269D;";
-            rating.appendChild(iconOr);
-        const categories = document.createElement("li");
-            categoriesListed = "";
-            movieData.data.categories.forEach((category, index) => {
-                categoriesListed += ((index !== 0 ? ", " : "") + category);
-            });
-            categories.innerHTML = "Categories: ";
-            const catStyle = document.createElement("span");
-                catStyle.innerHTML = categoriesListed;
-            categories.appendChild(catStyle);
-        list.appendChild(categories);
-        list.appendChild(rating);
-        list.appendChild(duration);
-    information.appendChild(list);
+    try {
+        const list = document.createElement("ul");
+            const duration = document.createElement("li");
+                duration.innerHTML = "Playtime: ";
+                const minDesign = document.createElement("span");
+                    minDesign.innerHTML = movieData.data.duration + " Minuten";
+                duration.appendChild(minDesign);
+            const rating = document.createElement("li");
+                rating.innerHTML = "Rating: ";
+                const iconOr = document.createElement("span"); 
+                    iconOr.innerHTML = (movieData.data.priority / 10).toFixed(1) + "&#x269D;";
+                rating.appendChild(iconOr);
+            const categories = document.createElement("li");
+                categoriesListed = "";
+                movieData.data.categories.forEach((category, index) => {
+                    categoriesListed += ((index !== 0 ? ", " : "") + category);
+                });
+                categories.innerHTML = "Categories: ";
+                const catStyle = document.createElement("span");
+                    catStyle.innerHTML = categoriesListed;
+                categories.appendChild(catStyle);
+            list.appendChild(categories);
+            list.appendChild(rating);
+            list.appendChild(duration);
+        information.appendChild(list);
+    } catch(err) {
+        console.log(err);
+    }
 
 
     var storage = firebase.storage();
@@ -94,7 +98,7 @@ async function loadContent() {
     cover.src = url;
     var subLevel = 4;
     var sinceDate = Math.floor(Date.now());
-    var untilDate = Math.floor(Date.now() + (1000 * 60 *60 *24 *7));
+    var untilDate = Math.floor(Date.now() + (1000 * 60 *60 *24 *7) - ((new Date().getHours() * 60 + new Date().getMinutes()) * 60 * 1000));
     var paramScreenings = {
         id : movieData.id,
         sublevel : subLevel,
